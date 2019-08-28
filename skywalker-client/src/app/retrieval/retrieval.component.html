@@ -1,0 +1,47 @@
+<!--<mat-card>-->
+  <!--<mat-card-title><h3>Extraction</h3></mat-card-title>-->
+  <!--<form #patternForm="ngForm">-->
+    <!--<mat-card-content>-->
+      <!--<textarea class="full-width" matInput placeholder="Pattern Constraint" #constraint></textarea>-->
+    <!--</mat-card-content>-->
+    <!--<mat-card-actions>-->
+      <!--<button mat-raised-button color="primary" type="submit"-->
+              <!--[disabled]="!patternForm.form.valid">Save</button>-->
+      <!--<button mat-raised-button color="secondary" type="button">Delete</button>-->
+      <!--<a mat-button>Cancel</a>-->
+    <!--</mat-card-actions>-->
+  <!--</form>-->
+<!--</mat-card>-->
+
+<mat-card>
+  <mat-card-title><h3>Extraction</h3></mat-card-title>
+  <mat-accordion multi="false">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Crawling
+        </mat-panel-title>
+        <mat-panel-description>
+          Extraction from platform
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <input matInput placeholder="Some input">
+      </mat-form-field>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Template
+        </mat-panel-title>
+        <mat-panel-description>
+          Input of available template
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <input matInput placeholder="Some input">
+      </mat-form-field>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-card>
+
