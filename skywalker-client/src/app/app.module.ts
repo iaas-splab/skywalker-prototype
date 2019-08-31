@@ -12,12 +12,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatCardModule, MatButtonModule, MatInputModule, MatExpansionModule, MatGridListModule, MatSelectModule, MatOptionModule } from "@angular/material";
 import { FormsModule } from '@angular/forms';
+import { FileInputComponent } from './file-input/file-input.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
-    RetrievalComponent
+    RetrievalComponent,
+    FileInputComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,39 @@
+<form #templateForm="ngForm" (ngSubmit)="onUpload()">
+  <div>
+    <p>
+      Extract relevant sources directly from the platform the application is deployed on. Please make sure that
+      you have proper access rights and configured them accordingly in the corresponding CLI of the provider.
+    </p>
+  </div>
+  <div>
+    <input required ngModel name="fileInput" type="file" (change)="onFileSelected($event)">
+  </div>
+  <mat-action-row>
+  <!--<button mat-button type="submit" [disabled]="templateInputForm.invalid">Submit</button>-->
+    <button mat-button type="submit" [disabled]="templateForm.invalid" (click)="onUpload()">Submit</button>
+  </mat-action-row>
+</form>
+
+<!--<form #templateInputForm="ngForm" (ngSubmit)="analyzeTemplate(templateInputForm.value)">-->
+  <!--<mat-expansion-panel>-->
+    <!--<mat-expansion-panel-header>-->
+      <!--<mat-panel-title>Template</mat-panel-title>-->
+      <!--<mat-panel-description>Input of available template</mat-panel-description>-->
+    <!--</mat-expansion-panel-header>-->
+    <!--<div>-->
+      <!--<p>-->
+        <!--Input of available sources or deployment packages. This can be in form of provider-specific format (AWS Lambda-->
+        <!--deployment packages with SAM templates, etc.) or some deployment packages using third-party tools (Terraform, Serverless, etc.)-->
+      <!--</p>-->
+    <!--</div>-->
+    <!--<mat-form-field>-->
+      <!--<input required matInput placeholder="Some input" id="templateInput" ngModel name="templateInput">-->
+    <!--</mat-form-field>-->
+    <!--<button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>-->
+    <!--<input hidden (change)="onFileSelected()" #fileInput type="file" id="file">-->
+    <!--&lt;!&ndash;Actions&ndash;&gt;-->
+    <!--<mat-action-row>-->
+      <!--<button mat-button type="submit" [disabled]="templateInputForm.invalid">Submit</button>-->
+    <!--</mat-action-row>-->
+  <!--</mat-expansion-panel>-->
+<!--</form>-->

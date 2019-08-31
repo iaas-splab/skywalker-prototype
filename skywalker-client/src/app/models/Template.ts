@@ -1,6 +1,7 @@
 export class Template {
   constructor(
-    public arn: string,
-    public provider: string
+    public fileFormat: string,
+    public templateFileBody: string
   ){}
+
 }

@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  SAMSNSFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs8.10
+      Events:
+        SAMSNSAPI:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt SAMSNSTopic.TopicName
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN: !Ref SAMSNSTopic
+  SAMSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: kaplay4@gmail.com
+          Protocol: email

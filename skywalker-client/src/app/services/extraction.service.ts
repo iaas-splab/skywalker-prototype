@@ -14,7 +14,11 @@ export class ExtractionService {
 
   constructor(private http: HttpClient) { }
 
-  extract(template: any): Observable<any> {
-    return this.http.post(this.extractionApi, template);
+  extract(platformDeployment: any): Observable<any> {
+    return this.http.post(this.extractionApi, platformDeployment);
+  }
+
+  analyze(template: Template): Observable<any> {
+    return this.http.post(this.extractionApi + 'template/', template);
   }
 }
