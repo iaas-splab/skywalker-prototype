@@ -2,7 +2,7 @@
   <!--<mat-card-title><h3>Extraction</h3></mat-card-title>-->
   <!--<form #patternForm="ngForm">-->
     <!--<mat-card-content>-->
-      <!--<textarea class="full-width" matInput placeholder="Pattern Constraint" #constraint></textarea>-->
+      <!--<textarea class="width-80" matInput placeholder="Pattern Constraint" #constraint></textarea>-->
     <!--</mat-card-content>-->
     <!--<mat-card-actions>-->
       <!--<button mat-raised-button color="primary" type="submit"-->
@@ -14,34 +14,67 @@
 <!--</mat-card>-->
 
 <mat-card>
-  <mat-card-title><h3>Extraction</h3></mat-card-title>
-  <mat-accordion multi="false">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Crawling
-        </mat-panel-title>
-        <mat-panel-description>
-          Extraction from platform
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <mat-form-field>
-        <input matInput placeholder="Some input">
-      </mat-form-field>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Template
-        </mat-panel-title>
-        <mat-panel-description>
-          Input of available template
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <mat-form-field>
-        <input matInput placeholder="Some input">
-      </mat-form-field>
-    </mat-expansion-panel>
-  </mat-accordion>
-</mat-card>
+  <mat-card-title><h4>Extraction</h4></mat-card-title>
+  <mat-card-content>
+    <mat-accordion multi="false">
 
+
+      <form #extractionForm="ngForm" (ngSubmit)="extractFunction(extractionForm.value)">
+        <mat-expansion-panel>
+          <!--Header-->
+          <mat-expansion-panel-header>
+            <mat-panel-title>Crawling</mat-panel-title>
+            <mat-panel-description>Extraction from platform</mat-panel-description>
+          </mat-expansion-panel-header>
+          <div>
+            <p>
+              Extract relevant sources directly from the platform the application is deployed on. Please make sure that
+              you have proper access rights and configured them accordingly in the corresponding CLI of the provider.
+            </p>
+          </div>
+          <!--Content-->
+          <div class="example-container">
+            <mat-form-field>
+              <input required matInput placeholder="Application Resource Name" id="arn" name="arn" ngModel>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Provider</mat-label>
+              <select required matNativeControl id="provider" name="provider" ngModel>
+                <option value="aws">AWS Lambda</option>
+                <option value="azure">Azure Functions</option>
+                <option value="ibm">IBM Cloud Functions</option>
+              </select>
+            </mat-form-field>
+          </div>
+          <!--Actions-->
+          <mat-action-row>
+            <button mat-button type="submit" [disabled]="extractionForm.invalid">Submit</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </form>
+
+      <form #templateInputForm="ngForm" (ngSubmit)="analyzeTemplate(templateInputForm.value)">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Template</mat-panel-title>
+            <mat-panel-description>Input of available template</mat-panel-description>
+          </mat-expansion-panel-header>
+          <div>
+            <p>
+              Input of available sources or deployment packages. This can be in form of provider-specific format (AWS Lambda
+              deployment packages with SAM templates, etc.) or some deployment packages using third-party tools (Terraform, Serverless, etc.)
+            </p>
+          </div>
+          <mat-form-field>
+            <input required matInput placeholder="Some input" id="templateInput" ngModel name="templateInput">
+          </mat-form-field>
+          <!--Actions-->
+          <mat-action-row>
+            <button mat-button type="submit" [disabled]="templateInputForm.invalid">Submit</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </form>
+
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>

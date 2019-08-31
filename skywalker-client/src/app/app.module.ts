@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { HttpClientModule } from "@angular/common/http";
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
@@ -8,7 +10,7 @@ import { RetrievalComponent } from './retrieval/retrieval.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatCardModule, MatButtonModule, MatInputModule, MatExpansionModule } from "@angular/material";
+import { MatCardModule, MatButtonModule, MatInputModule, MatExpansionModule, MatGridListModule, MatSelectModule, MatOptionModule } from "@angular/material";
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -25,7 +27,11 @@ import { FormsModule } from '@angular/forms';
     MatButtonModule,
     MatInputModule,
     MatExpansionModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatGridListModule,
+    MatSelectModule,
+    MatOptionModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
