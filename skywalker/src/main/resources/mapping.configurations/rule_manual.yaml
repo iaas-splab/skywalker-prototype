@@ -1,0 +1,73 @@
+# If there are no constraints at all, please simply pass the 'root' path for crawling the appropriate sources:
+Function:
+  select:
+    root:
+      - path
+      - to
+      - all
+      - functions
+
+# If there are constraints inside of the property that is a potential match, define a root in which the potential properties
+# are located (like above) and define a WHERE statement where you can look into each of these properties and check for
+# certain values:
+Function:
+  select:
+    root:
+      - path
+      - to
+      - mixed
+      - resources
+  where:
+    path:
+      - path
+      - to
+      - property
+    value: <value that the property must have to fulfill the requirement>
+
+# If there are constraints inside a object that is on a higher level of the seeked property but must be checked to make sure
+# the property is of the right type e.g., please locate the root on a proper level and use the SELECT rule's PATH:
+EventSources:
+  select:
+    root:
+      - path
+      - to
+      - mixed
+      - resources
+    path:
+      - path
+      - to
+      - eventsources
+      - from
+      - root
+  where:
+    path:
+      - path
+      - to
+      - property
+    value: <value that the property must have to fulfill the requirement>
+
+# Example: Events are inside of a key inside of Functions, called, funcParams, however, we have a property called
+# Resources in which functions and other resources are defined. We wish to find the functions inside of resources
+# and map Events to EventSources so we first check the 'Type' of the current resource for value 'Function'.
+EventSources:
+  select:
+    root:
+      - Resources
+    path:
+      - funcParams
+      - Events
+  where:
+    path:
+      - Type
+    value: Function
+
+# Example: We want all resources of type Function to be mapped to our property 'Function'. For this we need to set the
+# root inside 'Resources' and check for the defined resources if they are of 'Type' 'Function'.
+Function:
+  select:
+    root:
+      - Resources
+  where:
+    path:
+      - Type
+    value: Function

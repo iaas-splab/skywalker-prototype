@@ -1,18 +1,30 @@
 package de.iaas.skywalker.controller;
 
+import de.iaas.skywalker.mapper.ModelMapper;
 import de.iaas.skywalker.models.PlatformDeployment;
 import de.iaas.skywalker.models.TemplateFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileWriter;
-import java.nio.file.Path;
+import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/extract")
 public class ExtractionController {
+
+    private final List<String> genericPropertyTypes = new ArrayList<String>() {{
+        add("EventSources");
+        add("Function");
+        add("InvokedServices");
+    }};
 
     public ExtractionController() {}
 
@@ -28,11 +40,14 @@ public class ExtractionController {
     public ResponseEntity<Object> putAvailableTemplate(@RequestBody TemplateFormat templateFormat) {
         String currentPath = Paths.get("").toAbsolutePath().toString() + "\\src\\main\\resources";
         try {
-            FileWriter fw = new FileWriter(currentPath + "\\test\\template." + templateFormat.fileFormat);
+            FileWriter fw = new FileWriter(currentPath + "\\templates\\template." + templateFormat.fileFormat);
             fw.write(templateFormat.templateFileBody);
             fw.close();
         } catch (Exception e) {
             System.out.println(e);
+        } finally {
+            Map<String, Object> template = this.parseYAMLInHashMap();
+            Map<String, Map<String, Object>> generic_SAM_Template = this.analyzeTemplate(template, "mapping.configurations/rule_serverless_v2.yaml");
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -42,4 +57,23 @@ public class ExtractionController {
 
     @DeleteMapping(path = "/")
     public int deleteExtraction() { return 0; }
+
+    private Map<String, Object> parseYAMLInHashMap() {
+        Yaml yaml = new Yaml();
+        InputStream inputStream = this.getClass()
+                .getClassLoader()
+                .getResourceAsStream("test/template.yml");
+        Map<String, Object> templateMap = yaml.load(inputStream);
+        return templateMap;
+    }
+
+    public Map<String, Map<String, Object>> analyzeTemplate(Map<String, Object> template, String ruleFilePath) {
+        ModelMapper mapper = new ModelMapper(template, ruleFilePath);
+        Map<String, Map<String, Object>> results = new HashMap<>();
+        for(String genericPropType : genericPropertyTypes) {
+            Map<String, Object> collectionOfResults = mapper.modelTransformationWithMappingTemplate(genericPropType);
+            results.put(genericPropType, collectionOfResults);
+        }
+        return results;
+    }
 }
