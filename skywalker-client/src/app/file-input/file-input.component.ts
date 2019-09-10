@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient} from "@angular/common/http";
-import {ExtractionService} from "../services/extraction.service";
+import {TemplateService} from "../services/template.service";
 import {Template} from "../models/Template";
 
 @Component({
@@ -21,7 +21,7 @@ export class FileInputComponent implements OnInit {
     fileReader.onload = (e) => {
       this.templateContent = (<string>fileReader.result);
       const template: Template = new Template(this.selectedFile.name, this.templateContent);
-      this.extractionService.analyze(template).subscribe(response => {
+      this.extractionService.upload(template).subscribe(response => {
         console.log(response);
       });
     };
@@ -30,7 +30,7 @@ export class FileInputComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private extractionService: ExtractionService
+    private extractionService: TemplateService
   ) { }
 
   ngOnInit() {

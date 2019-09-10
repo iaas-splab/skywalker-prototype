@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs8.10
+      Events:
+        HelloWorldApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+        PopoApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName:
+              Fn::GetAtt:
+                - HelloWorldTopic
+                - TopicName
+        - PopoMessagePolicy:
+                    TopicName:
+                      Fn::GetAtt:
+                        - HelloWorldTopic
+                        - TopicName
+        - MumuPolicyTemplate:
+                    TopicName:
+                      Fn::GetAtt:
+                        - HelloWorldTopic
+                        - TopicName
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN:
+            Ref: HelloWorldTopic
+      CodeUri: s3://ayhans-lambdas/084b55658168cf644d0923ea8c301843
+  PopoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs8.10
+      Events:
+        HelloWorldApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+        PopoApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName:
+              Fn::GetAtt:
+                - HelloWorldTopic
+                - TopicName
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN:
+            Ref: HelloWorldTopic
+      CodeUri: s3://ayhans-lambdas/084b55658168cf644d0923ea8c301843
+  HelloWorldTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: kaplay4@gmail.com
+          Protocol: email
+  PopoTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: kaplay4@gmail.com
+          Protocol: email

@@ -10,16 +10,32 @@ import { RetrievalComponent } from './retrieval/retrieval.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatCardModule, MatButtonModule, MatInputModule, MatExpansionModule, MatGridListModule, MatSelectModule, MatOptionModule } from "@angular/material";
+import {
+  MatCardModule,
+  MatButtonModule,
+  MatInputModule,
+  MatExpansionModule,
+  MatGridListModule,
+  MatSelectModule,
+  MatOptionModule,
+  MatSnackBarModule,
+  MatListModule
+} from "@angular/material";
 import { FormsModule } from '@angular/forms';
 import { FileInputComponent } from './file-input/file-input.component';
+import { TemplateListComponent } from './template-list/template-list.component';
+import { MappingListComponent } from './mapping-list/mapping-list.component';
+import { AddMappingComponent } from './add-mapping/add-mapping.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
     RetrievalComponent,
-    FileInputComponent
+    FileInputComponent,
+    TemplateListComponent,
+    MappingListComponent,
+    AddMappingComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +49,9 @@ import { FileInputComponent } from './file-input/file-input.component';
     MatGridListModule,
     MatSelectModule,
     MatOptionModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSnackBarModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

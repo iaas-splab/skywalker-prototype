@@ -1,5 +1,6 @@
 package de.iaas.skywalker;
 
+import de.iaas.skywalker.repository.MappingModuleRepository;
 import de.iaas.skywalker.repository.TemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -15,10 +16,12 @@ public class SkywalkerApplication {
 	@Autowired
 	TemplateRepository templateRepository;
 
+	@Autowired
+	MappingModuleRepository mappingModuleRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(SkywalkerApplication.class, args);
 	}
-
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurerAdapter() {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NgForm} from "@angular/forms";
-import {ExtractionService} from "../services/extraction.service";
+import {TemplateService} from "../services/template.service";
+import {MappingModule} from "../models/MappingModule";
 
 @Component({
   selector: 'app-retrieval',
@@ -11,14 +12,15 @@ import {ExtractionService} from "../services/extraction.service";
 
 export class RetrievalComponent implements OnInit {
 
+
   constructor(
-    private extractionService: ExtractionService,
+    private extractionService: TemplateService,
   ) {}
 
   ngOnInit() {}
 
   extractFunction(form: NgForm) {
-    this.extractionService.extract(form).subscribe(response => {
+    this.extractionService.crawlPlatform(form).subscribe(response => {
       console.log(response);
     });
   }
