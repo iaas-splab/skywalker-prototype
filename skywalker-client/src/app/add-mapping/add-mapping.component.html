@@ -77,15 +77,14 @@
 
 
 <mat-card>
-  <mat-card-title><h4>Extraction</h4></mat-card-title>
+  <mat-card-title>Add Mapping Module</mat-card-title>
   <mat-card-content>
     <mat-card>
-      <mat-card-title>Write in browser</mat-card-title>
-      <form #mappingForm="ngForm" (ngSubmit)="uploadModule(mappingForm.value)">
+      <mat-card-title><h5>Write in browser</h5></mat-card-title>
+      <form #mappingForm="ngForm" (ngSubmit)="onModuleFormSubmit(mappingForm.value)">
         <div>
           <p>
-            Extract relevant sources directly from the platform the application is deployed on. Please make sure that
-            you have proper access rights and configured them accordingly in the corresponding CLI of the provider.
+            Write the rules of the Mapping Module direct in this application and push it to the repository.
           </p>
         </div>
         <!--Content-->
@@ -95,22 +94,21 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Rules</mat-label>
-            <textarea  matInput placeholder="Write rules here" required name="body" #body></textarea>
+            <textarea  matInput placeholder="Write rules here" required name="body" id="body" ngModel></textarea>
           </mat-form-field>
         </div>
         <!--Actions-->
         <mat-action-row>
-          <button [routerLink]="['/template-list']" mat-button type="submit" [disabled]="mappingForm.invalid">Submit</button>
+          <button [routerLink]="['/mapping-list']" mat-button type="button" (click)="onModuleFormSubmit(mappingForm.value)" [disabled]="mappingForm.invalid">Submit</button>
         </mat-action-row>
       </form>
     </mat-card>
     <mat-card>
-      <mat-card-title>Upload existing file</mat-card-title>
+      <mat-card-title><h5>Upload existing file</h5></mat-card-title>
       <form #templateForm="ngForm" (ngSubmit)="onUpload()">
         <div>
           <p>
-            Extract relevant sources directly from the platform the application is deployed on. Please make sure that
-            you have proper access rights and configured them accordingly in the corresponding CLI of the provider.
+            Upload an already existing Mapping Module to the repository.
           </p>
         </div>
         <div>

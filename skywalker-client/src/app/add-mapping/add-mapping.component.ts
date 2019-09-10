@@ -14,9 +14,10 @@ export class AddMappingComponent implements OnInit {
   constructor(private mappingService: MappingService) { }
 
   ngOnInit() {
+
   }
 
-  uploadModule(form: MappingModule) {
+  onModuleFormSubmit(form: MappingModule) {
     this.mappingService.upload(form).subscribe(response => {
       console.log(response);
     });

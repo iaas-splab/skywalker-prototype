@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/index";
-import {Template} from "../models/Template";
 import {MappingModule} from "../models/MappingModule";
 
 @Injectable({
