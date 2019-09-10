@@ -2,7 +2,8 @@ package de.iaas.skywalker.controller;
 
 import de.iaas.skywalker.mapper.ModelMapper;
 import de.iaas.skywalker.models.PlatformDeployment;
-import de.iaas.skywalker.models.TemplateFormat;
+import de.iaas.skywalker.models.Template;
+import de.iaas.skywalker.repository.TemplateRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/extract")
-public class ExtractionController {
+public class TemplateController {
+    private TemplateRepository repository;
 
     private final List<String> genericPropertyTypes = new ArrayList<String>() {{
         add("EventSources");
@@ -26,7 +28,9 @@ public class ExtractionController {
         add("InvokedServices");
     }};
 
-    public ExtractionController() {}
+    public TemplateController(TemplateRepository templateRepository) {
+        this.repository = templateRepository;
+    }
 
     @GetMapping(path = "/")
     public int getExtraction() { return 0; }
@@ -37,17 +41,18 @@ public class ExtractionController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @PostMapping(path = "/template")
-    public ResponseEntity<Object> putAvailableTemplate(@RequestBody TemplateFormat templateFormat) {
+    public ResponseEntity<Object> putTemplateFile(@RequestBody Template template) {
+        this.repository.save(template);
         String currentPath = Paths.get("").toAbsolutePath().toString() + "\\src\\main\\resources";
         try {
-            FileWriter fw = new FileWriter(currentPath + "\\templates\\template." + templateFormat.fileFormat);
-            fw.write(templateFormat.templateFileBody);
+            FileWriter fw = new FileWriter(currentPath + "\\templates\\" + template.getName());
+            fw.write(template.getBody());
             fw.close();
         } catch (Exception e) {
             System.out.println(e);
         } finally {
-            Map<String, Object> template = this.parseYAMLInHashMap();
-            Map<String, Map<String, Object>> generic_SAM_Template = this.analyzeTemplate(template, "mapping.configurations/rule_serverless_v2.yaml");
+            Map<String, Object> yamlInHashMap = this.parseYAMLInHashMap();
+            Map<String, Map<String, Object>> generic_SAM_Template = this.analyzeTemplate(yamlInHashMap, "mapping.configurations/rule_serverless_v2.yaml");
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -62,7 +67,7 @@ public class ExtractionController {
         Yaml yaml = new Yaml();
         InputStream inputStream = this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("test/template.yml");
+                .getResourceAsStream("templates/serverless.yml");
         Map<String, Object> templateMap = yaml.load(inputStream);
         return templateMap;
     }
