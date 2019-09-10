@@ -1,5 +1,7 @@
 package de.iaas.skywalker;
 
+import de.iaas.skywalker.repository.TemplateRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +11,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @SpringBootApplication
 public class SkywalkerApplication {
+
+	@Autowired
+	TemplateRepository templateRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SkywalkerApplication.class, args);

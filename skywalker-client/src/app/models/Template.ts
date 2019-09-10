@@ -1,7 +1,7 @@
 export class Template {
   constructor(
-    public fileFormat: string,
-    public templateFileBody: string
+    public name: string,
+    public body: string
   ){}
 
 }
