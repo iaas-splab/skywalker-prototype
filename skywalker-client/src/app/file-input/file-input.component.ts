@@ -17,18 +17,15 @@ export class FileInputComponent implements OnInit {
   }
 
   onUpload() {
-    let fileReader = new FileReader();
+    const fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.templateContent = (<string>fileReader.result);
-      let fileFormat = this.selectedFile.name.split('.').pop();
-      let temp: Template = new Template(fileFormat, this.templateContent);
-      console.log(temp);
-      this.extractionService.analyze(temp).subscribe(response => {
+      const template: Template = new Template(this.selectedFile.name, this.templateContent);
+      this.extractionService.analyze(template).subscribe(response => {
         console.log(response);
       });
     };
     fileReader.readAsText(this.selectedFile);
-    console.log("NAME: " + this.selectedFile.name);
   }
 
   constructor(
