@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.io.IOException;
+
 @SpringBootApplication
 public class SkywalkerApplication {
 
@@ -19,7 +21,7 @@ public class SkywalkerApplication {
 	@Autowired
 	MappingModuleRepository mappingModuleRepository;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		SpringApplication.run(SkywalkerApplication.class, args);
 	}
 	@Bean
@@ -33,5 +35,4 @@ public class SkywalkerApplication {
 			}
 		};
 	}
-
 }
