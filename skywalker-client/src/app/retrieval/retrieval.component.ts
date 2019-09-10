@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NgForm} from "@angular/forms";
 import {TemplateService} from "../services/template.service";
+import {MappingModule} from "../models/MappingModule";
 
 @Component({
   selector: 'app-retrieval',
@@ -10,6 +11,7 @@ import {TemplateService} from "../services/template.service";
 
 
 export class RetrievalComponent implements OnInit {
+
 
   constructor(
     private extractionService: TemplateService,

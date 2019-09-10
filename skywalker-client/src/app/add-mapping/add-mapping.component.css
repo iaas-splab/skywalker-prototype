@@ -1,0 +1,11 @@
+.full-width {
+  width: 1000px;
+}
+.example-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.example-container > * {
+  width: 100%;
+}
