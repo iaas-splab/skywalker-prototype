@@ -2,3 +2,6 @@
   flex: 1 1 auto;
 }
 
+.small-text {
+  font-size: small;
+}

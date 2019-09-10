@@ -1,0 +1,42 @@
+<mat-card>
+  <mat-card-title>Migration Jobs</mat-card-title>
+  <mat-card-content>
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <mat-card-title><h5><b>Template to generic application model</b></h5></mat-card-title>
+      </mat-toolbar-row>
+      <mat-toolbar-row class="small-text">
+          <span>
+            <mat-form-field>
+              <mat-label>Template</mat-label>
+              <mat-select>
+                <mat-option *ngFor="let template of templates" [value]="template.body">
+                  {{template.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </span>
+      </mat-toolbar-row>
+      <mat-toolbar-row class="small-text">
+        <span>
+          <mat-form-field>
+            <mat-label>Mapping Module</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let module of mappingModules" [value]="module.body">
+                {{module.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </span>
+        <span class="spacer"></span>
+        <span>
+          <button mat-button mat-fab (click)="onStart()" matTooltip="Mapping Module + Template = Generic Application Model">
+            <span><i class="fa fa-bolt"></i></span>
+            <span><i class="fa fa-bolt"></i></span>
+          </button>
+        </span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </mat-card-content>
+</mat-card>
+
