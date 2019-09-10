@@ -12,13 +12,10 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
-@RequestMapping("/extract")
+@RequestMapping("/templates")
 public class TemplateController {
     private TemplateRepository repository;
 
@@ -33,16 +30,17 @@ public class TemplateController {
     }
 
     @GetMapping(path = "/")
-    public int getExtraction() { return 0; }
+    public Collection<Template> getTemplates() { return this.repository.findAll(); }
 
-    @PostMapping(path = "/")
+    @PostMapping(path = "/crawl")
     public ResponseEntity<Object> extractFromPlatform(@RequestBody PlatformDeployment platformDeployment) {
         System.out.println("ARN: " + platformDeployment.getArn() + "\n" + "Provider: " + platformDeployment.getProvider());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @PostMapping(path = "/template")
+    @PostMapping(path = "/upload")
     public ResponseEntity<Object> putTemplateFile(@RequestBody Template template) {
-        this.repository.save(template);
+        this.repository.deleteByName(template.getName());
+        if(this.repository.findByName(template.getName()) != null) this.repository.save(template);
         String currentPath = Paths.get("").toAbsolutePath().toString() + "\\src\\main\\resources";
         try {
             FileWriter fw = new FileWriter(currentPath + "\\templates\\" + template.getName());

@@ -10,7 +10,7 @@
   </div>
   <mat-action-row>
   <!--<button mat-button type="submit" [disabled]="templateInputForm.invalid">Submit</button>-->
-    <button mat-button type="submit" [disabled]="templateForm.invalid" (click)="onUpload()">Submit</button>
+    <button [routerLink]="['/template-list']" mat-button type="submit" [disabled]="templateForm.invalid" (click)="onUpload()">Submit</button>
   </mat-action-row>
 </form>
 
