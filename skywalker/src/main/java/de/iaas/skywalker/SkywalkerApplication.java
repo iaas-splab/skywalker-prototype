@@ -18,7 +18,6 @@ public class SkywalkerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SkywalkerApplication.class, args);
 	}
-
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurerAdapter() {

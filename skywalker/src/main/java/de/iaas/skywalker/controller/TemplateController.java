@@ -51,8 +51,8 @@ public class TemplateController {
         } catch (Exception e) {
             System.out.println(e);
         } finally {
-            Map<String, Object> yamlInHashMap = this.parseYAMLInHashMap();
-            Map<String, Map<String, Object>> generic_SAM_Template = this.analyzeTemplate(yamlInHashMap, "mapping.configurations/rule_serverless_v2.yaml");
+            //Map<String, Object> yamlInHashMap = this.parseYAMLInHashMap();
+            //Map<String, Map<String, Object>> generic_SAM_Template = this.analyzeTemplate(yamlInHashMap, "mapping.configurations/rule_serverless_v2.yaml");
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
