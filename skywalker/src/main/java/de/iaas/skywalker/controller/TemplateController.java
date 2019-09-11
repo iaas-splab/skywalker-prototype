@@ -19,12 +19,6 @@ import java.util.*;
 public class TemplateController {
     private TemplateRepository repository;
 
-    private final List<String> genericPropertyTypes = new ArrayList<String>() {{
-        add("EventSources");
-        add("Function");
-        add("InvokedServices");
-    }};
-
     public TemplateController(TemplateRepository templateRepository) {
         this.repository = templateRepository;
     }
@@ -48,10 +42,7 @@ public class TemplateController {
             fw.close();
         } catch (Exception e) {
             System.out.println(e);
-        } finally {
-            //Map<String, Object> yamlInHashMap = this.parseYAMLInHashMap();
-            //Map<String, Map<String, Object>> generic_SAM_Template = this.analyzeTemplate(yamlInHashMap, "mapping.configurations/rule_serverless_v2.yaml");
-        }
+        } finally {}
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -60,23 +51,4 @@ public class TemplateController {
 
     @DeleteMapping(path = "/")
     public int deleteExtraction() { return 0; }
-
-    private Map<String, Object> parseYAMLInHashMap() {
-        Yaml yaml = new Yaml();
-        InputStream inputStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream("templates/serverless.yml");
-        Map<String, Object> templateMap = yaml.load(inputStream);
-        return templateMap;
-    }
-
-    public Map<String, Map<String, Object>> analyzeTemplate(Map<String, Object> template, String ruleFilePath) {
-        ModelMapper mapper = new ModelMapper(template, ruleFilePath);
-        Map<String, Map<String, Object>> results = new HashMap<>();
-        for(String genericPropType : genericPropertyTypes) {
-            Map<String, Object> collectionOfResults = mapper.modelTransformationWithMappingTemplate(genericPropType);
-            results.put(genericPropType, collectionOfResults);
-        }
-        return results;
-    }
 }

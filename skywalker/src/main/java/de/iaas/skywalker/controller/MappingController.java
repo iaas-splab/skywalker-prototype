@@ -19,21 +19,21 @@ import java.util.*;
 @RestController
 @RequestMapping("/mapping")
 public class MappingController {
-    private MappingModuleRepository repository;
+    private MappingModuleRepository mappingModuleRepository;
     private TemplateRepository templateRepository;
 
-    public MappingController(MappingModuleRepository repository, TemplateRepository templateRepository) {
-        this.repository = repository;
+    public MappingController(MappingModuleRepository mappingModuleRepository, TemplateRepository templateRepository) {
+        this.mappingModuleRepository = mappingModuleRepository;
         this.templateRepository = templateRepository;
     }
 
     @GetMapping(path = "/")
-    public Collection<MappingModule> getMappingModules() { return this.repository.findAll(); }
+    public Collection<MappingModule> getMappingModules() { return this.mappingModuleRepository.findAll(); }
 
     @PostMapping(path = "/upload")
     public ResponseEntity<Object> putMappingModuleFile(@RequestBody MappingModule module) {
-        this.repository.deleteByName(module.getName());
-        if(this.repository.findByName(module.getName()) != null) this.repository.save(module);
+        this.mappingModuleRepository.deleteByName(module.getName());
+        if(this.mappingModuleRepository.findByName(module.getName()) != null) this.mappingModuleRepository.save(module);
         String currentPath = Paths.get("").toAbsolutePath().toString() + "\\src\\main\\resources";
         try {
             FileWriter fw = new FileWriter(currentPath + "\\mapping.configurations\\" + module.getName());
@@ -49,7 +49,7 @@ public class MappingController {
     public ResponseEntity<Object> generateGenericApplicationModelMapping(@RequestBody MappingConfiguration mappingConfiguration) {
         List<Template> findingsByTemplateName = this.templateRepository.findByName(mappingConfiguration.getTemplate());
         Template template = ((!(findingsByTemplateName.size() > 1)) ? findingsByTemplateName.get(0) : new Template());
-        List<MappingModule> findingsByMappingName =  this.repository.findByName(mappingConfiguration.getMappingModule());
+        List<MappingModule> findingsByMappingName =  this.mappingModuleRepository.findByName(mappingConfiguration.getMappingModule());
         MappingModule mappingModule = ((!(findingsByMappingName.size() > 1)) ? findingsByMappingName.get(0) : new MappingModule());
 
         Map<String, Object> templateYAML = parseYAMLInHashMap(template.getName());
