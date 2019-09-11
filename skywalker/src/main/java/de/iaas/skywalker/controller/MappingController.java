@@ -1,6 +1,7 @@
 package de.iaas.skywalker.controller;
 
 import de.iaas.skywalker.mapper.ModelMapper;
+import de.iaas.skywalker.mapper.PlatformSpecificModel;
 import de.iaas.skywalker.models.MappingConfiguration;
 import de.iaas.skywalker.models.MappingModule;
 import de.iaas.skywalker.models.Template;
@@ -57,7 +58,11 @@ public class MappingController {
         MappingModule mappingModule = ((!(findingsByMappingName.size() > 1)) ? findingsByMappingName.get(0) : new MappingModule());
 
         ModelMapper mapper = new ModelMapper(template, "mapping.configurations/" + mappingModule.getName());
-        Map<String, Map<String, Object>> genericTemplate = mapper.translateIntoGenericModel(genericPropertyTypes);
+        Map<String, Map<String, Object>> mappedTemplate = mapper.translateIntoGenericModel(genericPropertyTypes);
+
+        PlatformSpecificModel psm = new PlatformSpecificModel(mappedTemplate);
+        psm.mapEntryToStringList("EventSources");
+        psm.mapEntryToStringList("Function");
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
