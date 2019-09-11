@@ -1,11 +1,9 @@
 package de.iaas.skywalker.controller;
 
 import de.iaas.skywalker.mapper.ModelMapper;
-import de.iaas.skywalker.models.GenericApplicationModel;
 import de.iaas.skywalker.models.MappingConfiguration;
 import de.iaas.skywalker.models.MappingModule;
 import de.iaas.skywalker.models.Template;
-import de.iaas.skywalker.repository.GenericApplicationModelRepository;
 import de.iaas.skywalker.repository.MappingModuleRepository;
 import de.iaas.skywalker.repository.TemplateRepository;
 import org.springframework.http.HttpStatus;
@@ -22,13 +20,10 @@ import java.util.*;
 @RequestMapping("/mapping")
 public class MappingController {
     private MappingModuleRepository repository;
-    private GenericApplicationModelRepository gamRepository;
     private TemplateRepository templateRepository;
 
-    public MappingController(MappingModuleRepository repository, GenericApplicationModelRepository gamRepository,
-                             TemplateRepository templateRepository) {
+    public MappingController(MappingModuleRepository repository, TemplateRepository templateRepository) {
         this.repository = repository;
-        this.gamRepository = gamRepository;
         this.templateRepository = templateRepository;
     }
 
@@ -46,32 +41,21 @@ public class MappingController {
             fw.close();
         } catch (Exception e) {
             System.out.println(e);
-        } finally {
-//            Map<String, Object> yamlInHashMap = this.parseYAMLInHashMap();
-//            Map<String, Map<String, Object>> generic_SAM_Template = this.analyzeTemplate(yamlInHashMap, "mapping.configurations/rule_serverless_v2.yaml");
-        }
+        } finally {}
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping(path = "/generate")
     public ResponseEntity<Object> generateGenericApplicationModelMapping(@RequestBody MappingConfiguration mappingConfiguration) {
-        Template template = (Template) this.templateRepository.findByName(mappingConfiguration.getTemplate());
-        MappingModule mappingModule = (MappingModule) this.repository.findByName(mappingConfiguration.getMappingModule());
+        List<Template> findingsByTemplateName = this.templateRepository.findByName(mappingConfiguration.getTemplate());
+        Template template = ((!(findingsByTemplateName.size() > 1)) ? findingsByTemplateName.get(0) : new Template());
+        List<MappingModule> findingsByMappingName =  this.repository.findByName(mappingConfiguration.getMappingModule());
+        MappingModule mappingModule = ((!(findingsByMappingName.size() > 1)) ? findingsByMappingName.get(0) : new MappingModule());
 
-        Map<String, Object> templateYAML = parseYAMLInHashMap(mappingConfiguration.getTemplate());
+        Map<String, Object> templateYAML = parseYAMLInHashMap(template.getName());
         Map<String, Map<String, Object>> genericTemplate = analyzeTemplate(templateYAML,
-                "mapping.configurations/" + mappingConfiguration.getMappingModule());
-        GenericApplicationModel GAM = new GenericApplicationModel();
-        GAM.setName(generateUniqueAppModelName(template, mappingModule));
-        GAM.setGenericApplicationProperties(genericTemplate);
-        this.gamRepository.deleteByName(GAM.getName());
-        if(this.gamRepository.findByName(GAM.getName()) != null)
-            this.gamRepository.save(GAM);
+                "mapping.configurations/" + mappingModule.getName());
         return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    private String generateUniqueAppModelName(Template template, MappingModule mappingModule) {
-        return mappingModule.getName().split(".")[0] + template.getId();
     }
 
     private final List<String> genericPropertyTypes = new ArrayList<String>() {{

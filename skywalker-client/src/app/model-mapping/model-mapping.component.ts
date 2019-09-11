@@ -33,7 +33,10 @@ export class ModelMappingComponent implements OnInit {
   }
 
   onStart() {
+    console.log(this.selectedTemplate);
+    console.log(this.selectedModule);
     this.mappingConfig = new MappingConfiguration(this.selectedTemplate.name, this.selectedModule.name);
+    console.log("MAPPING CONFIG: " + this.mappingConfig.templateName);
     this.mappingService.passMappingConfiguration(this.mappingConfig).subscribe(data => {
       console.log(data);
     });

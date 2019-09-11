@@ -1,7 +1,7 @@
 export class MappingConfiguration {
   constructor(
-    public templateName: string,
-    public mappingModuleName: string
+    public template: string,
+    public mappingModule: string
   ){}
 
 }
