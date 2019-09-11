@@ -19,13 +19,16 @@ import {
   MatSelectModule,
   MatOptionModule,
   MatSnackBarModule,
-  MatListModule
+  MatListModule,
+  MatToolbarModule,
+  MatTooltipModule
 } from "@angular/material";
 import { FormsModule } from '@angular/forms';
 import { FileInputComponent } from './file-input/file-input.component';
 import { TemplateListComponent } from './template-list/template-list.component';
 import { MappingListComponent } from './mapping-list/mapping-list.component';
 import { AddMappingComponent } from './add-mapping/add-mapping.component';
+import { ModelMappingComponent } from './model-mapping/model-mapping.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,8 @@ import { AddMappingComponent } from './add-mapping/add-mapping.component';
     FileInputComponent,
     TemplateListComponent,
     MappingListComponent,
-    AddMappingComponent
+    AddMappingComponent,
+    ModelMappingComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +55,10 @@ import { AddMappingComponent } from './add-mapping/add-mapping.component';
     MatOptionModule,
     HttpClientModule,
     MatSnackBarModule,
-    MatListModule
+    MatListModule,
+    MatToolbarModule,
+    MatTooltipModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

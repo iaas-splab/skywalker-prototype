@@ -1,0 +1,19 @@
+.free-real-estate {
+  margin-top: 50%;
+}
+
+.spacer {
+  flex: 30%;
+}
+
+.horizontal-padding {
+  padding-left: 10%;
+}
+
+.title-center {
+  flex: 1 1 auto;
+}
+
+.small-text {
+  font-size: small;
+}
