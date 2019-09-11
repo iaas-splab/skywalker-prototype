@@ -1,5 +1,6 @@
 package de.iaas.skywalker.mapper;
 
+import de.iaas.skywalker.models.Template;
 import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
 import java.util.*;
@@ -11,18 +12,32 @@ public class ModelMapper {
     private String ruleFilePath;
 
     private static final String SELECT = "select";
-    private static final String ROOT= "root";
+    private static final String ROOT = "root";
     private static final String PATH = "path";
-    private static final String TYPE = "type";
-    private static final String MAP = "map";
-    private static final String LIST = "list";
     private static final String VALUE = "value";
     private static final String WHERE = "where";
-    private static final String ARRAYLIST = "ArrayList";
+    private static final String ARRAY_LIST = "ArrayList";
 
-    public ModelMapper(Map<String, Object> template, String ruleFilePath) {
-        this.template = template;
+    public ModelMapper(Template template, String ruleFilePath) {
+        this.template = this.parseYAMLInHashMap(template.getName());
         this.ruleFilePath = ruleFilePath;
+    }
+
+    private Map<String, Object> parseYAMLInHashMap(String templateName) {
+        Yaml yaml = new Yaml();
+        InputStream inputStream = this.getClass()
+                .getClassLoader()
+                .getResourceAsStream("templates/" + templateName);
+        Map<String, Object> templateMap = yaml.load(inputStream);
+        return templateMap;
+    }
+
+    public Map<String, Map<String, Object>> translateIntoGenericModel(List<String> genericPropertyTypes) {
+        Map<String, Map<String, Object>> genericModel = new HashMap<>();
+        for(String genericPropType : genericPropertyTypes) {
+            genericModel.put(genericPropType, this.modelTransformationWithMappingTemplate(genericPropType));
+        }
+        return genericModel;
     }
 
     public Map<String, Object> modelTransformationWithMappingTemplate(String appProperty) {
@@ -48,7 +63,7 @@ public class ModelMapper {
             try {
                 root = (Map<String, Object>) root.get(node);
             } catch (ClassCastException e) {
-                if (root.get(node).getClass().getSimpleName().equals(ARRAYLIST))
+                if (root.get(node).getClass().getSimpleName().equals(ARRAY_LIST))
                     root = this.handleArrayListCastExceptions(root, node);
             }
         }
@@ -80,7 +95,7 @@ public class ModelMapper {
                         try {
                             thisRootTree = (Map<String, Object>) thisRootTree.get(node);
                         } catch (ClassCastException e) {
-                            if (thisRootTree.get(node).getClass().getSimpleName().equals(ARRAYLIST))
+                            if (thisRootTree.get(node).getClass().getSimpleName().equals(ARRAY_LIST))
                                 thisRootTree = this.handleArrayListCastExceptions(thisRootTree, node);
                         }
                     }

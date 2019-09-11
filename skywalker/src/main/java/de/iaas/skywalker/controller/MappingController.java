@@ -9,10 +9,7 @@ import de.iaas.skywalker.repository.TemplateRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.FileWriter;
-import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -21,6 +18,12 @@ import java.util.*;
 public class MappingController {
     private MappingModuleRepository mappingModuleRepository;
     private TemplateRepository templateRepository;
+
+    private final List<String> genericPropertyTypes = new ArrayList<String>() {{
+        add("EventSources");
+        add("Function");
+        add("InvokedServices");
+    }};
 
     public MappingController(MappingModuleRepository mappingModuleRepository, TemplateRepository templateRepository) {
         this.mappingModuleRepository = mappingModuleRepository;
@@ -47,39 +50,15 @@ public class MappingController {
 
     @PostMapping(path = "/generate")
     public ResponseEntity<Object> generateGenericApplicationModelMapping(@RequestBody MappingConfiguration mappingConfiguration) {
+
         List<Template> findingsByTemplateName = this.templateRepository.findByName(mappingConfiguration.getTemplate());
         Template template = ((!(findingsByTemplateName.size() > 1)) ? findingsByTemplateName.get(0) : new Template());
         List<MappingModule> findingsByMappingName =  this.mappingModuleRepository.findByName(mappingConfiguration.getMappingModule());
         MappingModule mappingModule = ((!(findingsByMappingName.size() > 1)) ? findingsByMappingName.get(0) : new MappingModule());
 
-        Map<String, Object> templateYAML = parseYAMLInHashMap(template.getName());
-        Map<String, Map<String, Object>> genericTemplate = analyzeTemplate(templateYAML,
-                "mapping.configurations/" + mappingModule.getName());
+        ModelMapper mapper = new ModelMapper(template, "mapping.configurations/" + mappingModule.getName());
+        Map<String, Map<String, Object>> genericTemplate = mapper.translateIntoGenericModel(genericPropertyTypes);
+
         return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    private final List<String> genericPropertyTypes = new ArrayList<String>() {{
-        add("EventSources");
-        add("Function");
-        add("InvokedServices");
-    }};
-
-    private Map<String, Object> parseYAMLInHashMap(String templateName) {
-        Yaml yaml = new Yaml();
-        InputStream inputStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream("templates/" + templateName);
-        Map<String, Object> templateMap = yaml.load(inputStream);
-        return templateMap;
-    }
-
-    public Map<String, Map<String, Object>> analyzeTemplate(Map<String, Object> template, String ruleFilePath) {
-        ModelMapper mapper = new ModelMapper(template, ruleFilePath);
-        Map<String, Map<String, Object>> results = new HashMap<>();
-        for(String genericPropType : genericPropertyTypes) {
-            Map<String, Object> collectionOfResults = mapper.modelTransformationWithMappingTemplate(genericPropType);
-            results.put(genericPropType, collectionOfResults);
-        }
-        return results;
     }
 }
