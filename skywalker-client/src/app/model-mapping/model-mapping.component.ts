@@ -3,6 +3,7 @@ import {TemplateService} from "../services/template.service";
 import {Template} from "../models/Template";
 import {MappingModule} from "../models/MappingModule";
 import {MappingService} from "../services/mapping.service";
+import {MappingConfiguration} from "../models/MappingConfiguration";
 
 @Component({
   selector: 'app-model-mapping',
@@ -12,6 +13,9 @@ import {MappingService} from "../services/mapping.service";
 export class ModelMappingComponent implements OnInit {
   templates: Array<Template>;
   mappingModules: Array<MappingModule>;
+  selectedModule: MappingModule;
+  selectedTemplate: Template;
+  mappingConfig: MappingConfiguration;
 
   constructor(
     private templateService: TemplateService,
@@ -21,6 +25,7 @@ export class ModelMappingComponent implements OnInit {
   ngOnInit() {
     this.templateService.getAll().subscribe(data => {
       this.templates = data;
+      console.log(this.templates);
     });
     this.mappingService.getAll().subscribe(data => {
       this.mappingModules = data;
@@ -28,7 +33,10 @@ export class ModelMappingComponent implements OnInit {
   }
 
   onStart() {
-    console.log("started");
+    this.mappingConfig = new MappingConfiguration(this.selectedTemplate.name, this.selectedModule.name);
+    this.mappingService.passMappingConfiguration(this.mappingConfig).subscribe(data => {
+      console.log(data);
+    });
   }
 
 }
