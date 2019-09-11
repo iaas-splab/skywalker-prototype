@@ -5,8 +5,13 @@ import {FileInputComponent} from "./file-input/file-input.component";
 import {TemplateListComponent} from "./template-list/template-list.component";
 import {MappingListComponent} from "./mapping-list/mapping-list.component";
 import {AddMappingComponent} from "./add-mapping/add-mapping.component";
+import {ModelMappingComponent} from "./model-mapping/model-mapping.component";
 
 const routes: Routes = [
+  {
+    path: '',
+    component: ModelMappingComponent
+  },
   {
     path: 'template-list',
     component: TemplateListComponent

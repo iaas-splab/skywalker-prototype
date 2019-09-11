@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/index";
 import {MappingModule} from "../models/MappingModule";
+import {MappingConfiguration} from "../models/MappingConfiguration";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import {MappingModule} from "../models/MappingModule";
 export class MappingService {
 
   private baseUrl: string = 'http://localhost:8080/';
-  private mappingApi: string = this.baseUrl + 'mapmodules';
+  private mappingApi: string = this.baseUrl + 'mapping';
 
   constructor(private http: HttpClient) { }
 
@@ -19,5 +20,9 @@ export class MappingService {
 
   upload(module: MappingModule): Observable<any> {
     return this.http.post(this.mappingApi + '/' +  'upload/', module);
+  }
+
+  passMappingConfiguration(mappingConfig: MappingConfiguration): Observable<any> {
+    return this.http.post(this.mappingApi + '/' + 'generate/', mappingConfig);
   }
 }

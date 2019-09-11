@@ -9,3 +9,7 @@
 .example-container > * {
   width: 100%;
 }
+
+.margin-cards{
+  margin-top: 2%;
+}
