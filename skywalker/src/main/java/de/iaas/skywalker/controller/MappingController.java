@@ -64,6 +64,8 @@ public class MappingController {
         psm.mapEntryToStringList("EventSources");
         psm.mapEntryToStringList("Function");
 
+        psm.makePAM();
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
