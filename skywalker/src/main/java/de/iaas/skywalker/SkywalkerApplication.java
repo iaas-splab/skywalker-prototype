@@ -26,6 +26,11 @@ public class SkywalkerApplication {
 	@Autowired
 	MappingModuleRepository mappingModuleRepository;
 
+	private static final String MACOS_MAPPINGS = "/src/main/resources/mapping.configurations/rule_serverless_v2.yaml";
+	private static final String MACOS_TEMPLATES = "/src/main/resources/templates/serverless.yml";
+	private static final String WIN_MAPPINGS = "\\src\\main\\resources\\mapping.configurations\\rule_serverless_v2.yaml";
+	private static final String WIN_TEMPLATES = "\\src\\main\\resources\\templates\\serverless.yml";
+
 	public static void main(String[] args) {
 
 		SpringApplication.run(SkywalkerApplication.class, args);
@@ -56,12 +61,12 @@ public class SkywalkerApplication {
 	private void initRepos() throws IOException {
 		Template template = new Template();
 		template.setName("serverless.yml");
-		template.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + "\\src\\main\\resources\\templates\\serverless.yml"));
+		template.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + MACOS_TEMPLATES));
 		templateRepository.save(template);
 
 		MappingModule mappingModule = new MappingModule();
 		mappingModule.setName("rule_serverless_v2.yaml");
-		mappingModule.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + "\\src\\main\\resources\\mapping.configurations\\rule_serverless_v2.yaml"));
+		mappingModule.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + MACOS_MAPPINGS));
 		mappingModuleRepository.save(mappingModule);
 	}
 
