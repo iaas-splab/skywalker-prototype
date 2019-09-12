@@ -5,6 +5,34 @@ import java.util.*;
 public class PlatformSpecificModel {
     private Map<String, Map<String, Object>> templateMap;
     private Map<String, Map<String, List<String>>> mapOfApplicationPropsSimplified = new HashMap<>();
+    Map<String, List<String>> pam = new HashMap<>();
+    private  Map<String, List<String>> GRID_LIST = new HashMap<String, List<String>>() {{
+        put("objectstorage", new ArrayList<String>() {{
+            add("s3");
+            add("blob");
+            add("storage");
+        }});put("endpoint", new ArrayList<String>() {{
+            add("http");
+            add("http");
+            add("http");
+        }});put("pubsub", new ArrayList<String>() {{
+            add("sns");
+            add("sns");
+            add("sns");
+        }});put("messagequeueing", new ArrayList<String>() {{
+            add("sqs");
+            add("sqs");
+            add("sqs");
+        }});put("eventstreaming", new ArrayList<String>() {{
+            add("stream");
+            add("stream");
+            add("stream");
+        }});put("schedule", new ArrayList<String>() {{
+            add("schedule");
+            add("timer");
+            add("schedule");
+        }});
+    }};
 
     public PlatformSpecificModel(Map<String, Map<String, Object>> templateMap) {
         this.templateMap = templateMap;
@@ -31,4 +59,19 @@ public class PlatformSpecificModel {
         this.mapOfApplicationPropsSimplified.put(entry, filterConfig);
     }
 
+    public void makePAM() {
+        Iterator it = this.mapOfApplicationPropsSimplified.get("EventSources").entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry event = (Map.Entry) it.next();
+            String eventName = (String) event.getKey();
+            Iterator itg = this.GRID_LIST.entrySet().iterator();
+            while(itg.hasNext()) {
+                Map.Entry grid = (Map.Entry) itg.next();
+                String gridName = (String) grid.getKey();
+                List<String> gridVal = (List<String>) grid.getValue();
+                System.out.println("EVENT NAME: " + eventName);
+                if(gridVal.contains(eventName)) this.pam.put(gridName, (List<String>) event.getValue());
+            }
+        }
+    }
 }
