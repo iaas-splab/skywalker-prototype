@@ -13,9 +13,10 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+
+import java.io.IOException;
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.stream.Stream;
 
 @SpringBootApplication
 public class SkywalkerApplication {
@@ -46,6 +47,7 @@ public class SkywalkerApplication {
 			}
 		};
 	}
+
 
 	@Bean
 	ApplicationRunner init(){
