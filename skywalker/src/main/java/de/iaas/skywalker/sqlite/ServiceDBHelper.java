@@ -8,43 +8,46 @@ public class ServiceDBHelper {
 
     private static String dbName = "grid.db";
 
-    public static void main(String[] args) {
-        ServiceDBHelper serviceDBHelper = new ServiceDBHelper();
-//        serviceDBHelper.createNewDatabase(dbName);
-//        serviceDBHelper.initDatabase(dbName);
-//        serviceDBHelper.insert("objectstorage", "s3");
-//        serviceDBHelper.insert("objectstorage", "blob");
-//        serviceDBHelper.insert("objectstorage", "storage");
-//
-//        serviceDBHelper.insert("endpoint", "http");
-//        serviceDBHelper.insert("endpoint", "http");
-//        serviceDBHelper.insert("endpoint", "http");
-//
-//        serviceDBHelper.insert("schedule", "schedule");
-//        serviceDBHelper.insert("schedule", "timer");
-//        serviceDBHelper.insert("schedule", "schedule");
-//
-//        serviceDBHelper.insert("database", "dynamo");
-//        serviceDBHelper.insert("database", "cosmosdb");
-//        serviceDBHelper.insert("database", "cloudant");
-//
-//        serviceDBHelper.insert("pubsub", "sns");
-//        serviceDBHelper.insert("pubsub", "eventgrid");
-//        serviceDBHelper.insert("pubsub", "eventstreams");
-//
-//        serviceDBHelper.insert("eventstreaming", "kinsis");
-//        serviceDBHelper.insert("eventstreaming", "eventhubs");
-//        serviceDBHelper.insert("eventstreaming", "eventstreams");
-//
-//        serviceDBHelper.insert("messagequeueing", "sqs");
-//        serviceDBHelper.insert("messagequeueing", "queue");
-//        serviceDBHelper.insert("messagequeueing", "eventstreams");
-
-//        serviceDBHelper.selectAll();
-        List<String> list = serviceDBHelper.selectForGRN("objectstorage");
-        System.out.println("ijgier");
+    public ServiceDBHelper() {
+        this.selectAllGrid();
     }
 
+    //    public static void main(String[] args) {
+//        ServiceDBHelper serviceDBHelper = new ServiceDBHelper();
+////        serviceDBHelper.createNewDatabase(dbName);
+////        serviceDBHelper.initDatabaseGrid(dbName);
+////        serviceDBHelper.insert("objectstorage", "s3");
+////        serviceDBHelper.insert("objectstorage", "blob");
+////        serviceDBHelper.insert("objectstorage", "storage");
+////
+////        serviceDBHelper.insert("endpoint", "http");
+////        serviceDBHelper.insert("endpoint", "http");
+////        serviceDBHelper.insert("endpoint", "http");
+////
+////        serviceDBHelper.insert("schedule", "schedule");
+////        serviceDBHelper.insert("schedule", "timer");
+////        serviceDBHelper.insert("schedule", "schedule");
+////
+////        serviceDBHelper.insert("database", "dynamo");
+////        serviceDBHelper.insert("database", "cosmosdb");
+////        serviceDBHelper.insert("database", "cloudant");
+////
+////        serviceDBHelper.insert("pubsub", "sns");
+////        serviceDBHelper.insert("pubsub", "eventgrid");
+////        serviceDBHelper.insert("pubsub", "eventstreams");
+////
+////        serviceDBHelper.insert("eventstreaming", "kinsis");
+////        serviceDBHelper.insert("eventstreaming", "eventhubs");
+////        serviceDBHelper.insert("eventstreaming", "eventstreams");
+////
+////        serviceDBHelper.insert("messagequeueing", "sqs");
+////        serviceDBHelper.insert("messagequeueing", "queue");
+////        serviceDBHelper.insert("messagequeueing", "eventstreams");
+//
+////        serviceDBHelper.selectAllGrid();
+//        List<String> list = serviceDBHelper.gridSelectForGRN("objectstorage");
+//    }
+//
     private Connection connect() {
         // SQLite connection string
         String url = "jdbc:sqlite:sqlite/db/" + this.dbName;
@@ -70,7 +73,7 @@ public class ServiceDBHelper {
         }
     }
 
-    private void initDatabase(String fileName) {
+    private void initDatabaseGrid(String fileName) {
         String url = "jdbc:sqlite:sqlite/db/" + fileName;
         String sql = "CREATE TABLE IF NOT EXISTS grid (\n"
                 + "    id integer PRIMARY KEY,\n"
@@ -102,7 +105,7 @@ public class ServiceDBHelper {
         }
     }
 
-    public void selectAll(){
+    public void selectAllGrid(){
         String sql = "SELECT id, genericResourceName, providerResourceName FROM grid";
 
         try (Connection conn = this.connect();
@@ -120,9 +123,8 @@ public class ServiceDBHelper {
         }
     }
 
-    public List<String> selectForGRN(String genericResourceType){
-        List<String> providerResources = new ArrayList<>();
-//        String sql = "SELECT * FROM grid WHERE genericResourceName=" + genericResourceType;
+    public List<String> gridSelectForGRN(String genericResourceType){
+        List<String> resources = new ArrayList<>();
         String sql = "SELECT * FROM " + "grid" + " WHERE " + "genericResourceName" + " = " + "\"" + genericResourceType + "\"";
 
         try (Connection conn = this.connect();
@@ -131,18 +133,32 @@ public class ServiceDBHelper {
 
             // loop through the result set
             while (rs.next()) {
-//                System.out.println(rs.getInt("id") +  "\t" +
-//                        rs.getString("genericResourceName") + "\t" +
-//                        rs.getString("providerResourceName"));
-                providerResources.add(rs.getString("providerResourceName"));
+                resources.add(rs.getString("providerResourceName"));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return providerResources;
+        return resources;
     }
 
-    public void update(int id, String grn, String prn) {
+    public String gridSelectForPRN(String providerResourceName){
+        String sql = "SELECT * FROM " + "grid" + " WHERE " + "providerResourceName" + " = " + "\"" + providerResourceName + "\"";
+
+        try (Connection conn = this.connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+
+            // loop through the result set
+            while (rs.next()) {
+                return rs.getString("genericResourceName");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public void gridUpdate(int id, String grn, String prn) {
         String sql = "UPDATE grid SET genericResourceName = ? , "
                 + "providerResourceName = ? "
                 + "WHERE id = ?";
@@ -154,14 +170,13 @@ public class ServiceDBHelper {
             pstmt.setString(1, grn);
             pstmt.setString(2, prn);
             pstmt.setInt(3, id);
-            // update
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void delete(int id) {
+    public void gridDelete(int id) {
         String sql = "DELETE FROM grid WHERE id = ?";
 
         try (Connection conn = this.connect();
@@ -169,7 +184,7 @@ public class ServiceDBHelper {
 
             // set the corresponding param
             pstmt.setInt(1, id);
-            // execute the delete statement
+            // execute the gridDelete statement
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

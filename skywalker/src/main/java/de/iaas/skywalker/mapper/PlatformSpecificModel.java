@@ -1,5 +1,7 @@
 package de.iaas.skywalker.mapper;
 
+import de.iaas.skywalker.sqlite.ServiceDBHelper;
+
 import java.util.*;
 
 public class PlatformSpecificModel {
@@ -64,14 +66,19 @@ public class PlatformSpecificModel {
         while(it.hasNext()) {
             Map.Entry event = (Map.Entry) it.next();
             String eventName = (String) event.getKey();
-            Iterator itg = this.GRID_LIST.entrySet().iterator();
-            while(itg.hasNext()) {
-                Map.Entry grid = (Map.Entry) itg.next();
-                String gridName = (String) grid.getKey();
-                List<String> gridVal = (List<String>) grid.getValue();
-                System.out.println("EVENT NAME: " + eventName);
-                if(gridVal.contains(eventName)) this.pam.put(gridName, (List<String>) event.getValue());
-            }
+            ServiceDBHelper dbHelper = new ServiceDBHelper();
+            String grid = dbHelper.gridSelectForPRN(eventName);
+            if (grid != null) this.pam.put(grid, (List<String>) event.getValue());
+
+
+//            Iterator itg = this.GRID_LIST.entrySet().iterator();
+//            while(itg.hasNext()) {
+//                Map.Entry grid = (Map.Entry) itg.next();
+//                String gridName = (String) grid.getKey();
+//                List<String> gridVal = (List<String>) grid.getValue();
+//                System.out.println("EVENT NAME: " + eventName);
+//                if(gridVal.contains(eventName)) this.pam.put(gridName, (List<String>) event.getValue());
+//            }
         }
     }
 }
