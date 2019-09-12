@@ -69,16 +69,6 @@ public class PlatformSpecificModel {
             ServiceDBHelper dbHelper = new ServiceDBHelper();
             String grid = dbHelper.gridSelectForPRN(eventName);
             if (grid != null) this.pam.put(grid, (List<String>) event.getValue());
-
-
-//            Iterator itg = this.GRID_LIST.entrySet().iterator();
-//            while(itg.hasNext()) {
-//                Map.Entry grid = (Map.Entry) itg.next();
-//                String gridName = (String) grid.getKey();
-//                List<String> gridVal = (List<String>) grid.getValue();
-//                System.out.println("EVENT NAME: " + eventName);
-//                if(gridVal.contains(eventName)) this.pam.put(gridName, (List<String>) event.getValue());
-//            }
         }
     }
 }
