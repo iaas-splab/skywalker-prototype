@@ -76,10 +76,18 @@ public class MappingController {
 //        GAM.setInvokedServices(utils.makeGrid(GAM.getInvokedServices().entrySet().iterator(), this.serviceMappingRepository));
 
         List<ServiceMapping> azureServices = this.serviceMappingRepository.findByProvider("azure");
+        Map<String, List<String>> azureEventSources = new HashMap<String, List<String>>() {{
+            for(ServiceMapping sm : azureServices) {
+                put(sm.getGenericResourceId(), sm.getServiceProperties());
+            }
+        }};
+        azureEventSources = utils.genericPropertiesForGAM(azureEventSources, this.servicePropertyMappingRepository);
 
         List<GenericServiceProperty> serviceProperties = this.servicePropertyMappingRepository.findAll();
 
-        GAM.setEventSources(utils.genericPropertiesForGAM(GAM, this.servicePropertyMappingRepository));
+        GAM.setEventSources(utils.genericPropertiesForGAM(GAM.getEventSources(), this.servicePropertyMappingRepository));
+
+
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

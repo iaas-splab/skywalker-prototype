@@ -179,7 +179,7 @@ public class SkywalkerApplication {
 						new HashMap<String, List<String>>() {{
 							put("path", Arrays.asList("path", "route"));
 							put("methods", Arrays.asList("method", "methods"));
-							put("rules", Arrays.asList("rules", "path"));
+							put("rules", Arrays.asList("rules"));
 							put("auth", Arrays.asList("authorizer", "authLevel"));
 							put("cors", Arrays.asList("cors"));
 							put("endpointConfig", Arrays.asList("private"));
@@ -222,7 +222,7 @@ public class SkywalkerApplication {
 						new HashMap<String, List<String>>() {{
 							put("resourceId", Arrays.asList("bucket", "path"));
 							put("events", Arrays.asList("event"));
-							put("rules", Arrays.asList("rules", "path"));
+							put("rules", Arrays.asList("rules"));
 						}}
 				)
 		);

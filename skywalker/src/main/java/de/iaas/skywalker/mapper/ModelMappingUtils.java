@@ -66,9 +66,9 @@ public class ModelMappingUtils {
         return genericEventSources;
     }
 
-    public Map<String, List<String>> genericPropertiesForGAM(GenericApplicationModel GAM, ServicePropertyMappingRepository repository) {
-        Iterator it = GAM.getEventSources().entrySet().iterator();
-        Map<String, List<String>> updatedEventSources = GAM.getEventSources();
+    public Map<String, List<String>> genericPropertiesForGAM(Map<String, List<String>> eventSources, ServicePropertyMappingRepository repository) {
+        Iterator it = eventSources.entrySet().iterator();
+        Map<String, List<String>> updatedEventSources = eventSources;
         while(it.hasNext()) {
             Map.Entry eventSource = (Map.Entry) it.next();
             String eventName = (String) eventSource.getKey();
@@ -78,9 +78,9 @@ public class ModelMappingUtils {
                 Iterator gpit = propertyMap.getGenericServicePropertyMap().entrySet().iterator();
                 while(gpit.hasNext()) {
                     Map.Entry genericPropMap = (Map.Entry) gpit.next();
-                    System.out.println("PROPS: " + eventName + " : " + genericPropMap.getValue());
                     String genericProperty = (String) genericPropMap.getKey();
                     if(((List<String>)genericPropMap.getValue()).stream().anyMatch(prop -> prop.trim().equals(property))) {
+                        System.out.println(eventName + ": " + property);
                         serviceProperties.set(serviceProperties.indexOf(property), genericProperty);
                     }
                 }
