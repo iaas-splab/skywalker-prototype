@@ -180,6 +180,7 @@ public class SkywalkerApplication {
 							put("path", Arrays.asList("path", "route"));
 							put("methods", Arrays.asList("method", "methods"));
 							put("rules", Arrays.asList("rules", "path"));
+							put("auth", Arrays.asList("authorizer", "authLevel"));
 							put("cors", Arrays.asList("cors"));
 							put("endpointConfig", Arrays.asList("private"));
 						}}

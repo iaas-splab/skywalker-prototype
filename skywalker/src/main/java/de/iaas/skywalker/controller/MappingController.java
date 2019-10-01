@@ -79,6 +79,8 @@ public class MappingController {
 
         List<GenericServiceProperty> serviceProperties = this.servicePropertyMappingRepository.findAll();
 
+        GAM.setEventSources(utils.genericPropertiesForGAM(GAM, this.servicePropertyMappingRepository));
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -1,7 +1,10 @@
 package de.iaas.skywalker.mapper;
 
 import de.iaas.skywalker.models.ApplicationProperties;
+import de.iaas.skywalker.models.GenericApplicationModel;
+import de.iaas.skywalker.models.GenericServiceProperty;
 import de.iaas.skywalker.repository.ServiceMappingRepository;
+import de.iaas.skywalker.repository.ServicePropertyMappingRepository;
 
 import java.util.*;
 
@@ -61,5 +64,29 @@ public class ModelMappingUtils {
             }
         }
         return genericEventSources;
+    }
+
+    public Map<String, List<String>> genericPropertiesForGAM(GenericApplicationModel GAM, ServicePropertyMappingRepository repository) {
+        Iterator it = GAM.getEventSources().entrySet().iterator();
+        Map<String, List<String>> updatedEventSources = GAM.getEventSources();
+        while(it.hasNext()) {
+            Map.Entry eventSource = (Map.Entry) it.next();
+            String eventName = (String) eventSource.getKey();
+            List<String> serviceProperties = (List<String>) eventSource.getValue();
+            for(String property : serviceProperties) {
+                GenericServiceProperty propertyMap = repository.findByGenericResourceId(eventName).get(0);
+                Iterator gpit = propertyMap.getGenericServicePropertyMap().entrySet().iterator();
+                while(gpit.hasNext()) {
+                    Map.Entry genericPropMap = (Map.Entry) gpit.next();
+                    System.out.println("PROPS: " + eventName + " : " + genericPropMap.getValue());
+                    String genericProperty = (String) genericPropMap.getKey();
+                    if(((List<String>)genericPropMap.getValue()).stream().anyMatch(prop -> prop.trim().equals(property))) {
+                        serviceProperties.set(serviceProperties.indexOf(property), genericProperty);
+                    }
+                }
+            }
+            updatedEventSources.put(eventName, serviceProperties);
+        }
+        return updatedEventSources;
     }
 }
