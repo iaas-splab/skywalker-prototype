@@ -68,11 +68,8 @@ public class PlatformSpecificModel {
             Map.Entry event = (Map.Entry) it.next();
             String eventName = (String) event.getKey();
             ServiceDBHelper dbHelper = new ServiceDBHelper();
-            if(eventName.equals("S3") || eventName.equals("SNS") || eventName.equals("http")) {
-                String grid = dbHelper.gridSelectForPRN(eventName).getKey();
-                if (grid != null) this.pam.put(grid, (List<String>) event.getValue());
-                System.out.println("one time for " + eventName);
-            }
+            String grid = (dbHelper.gridSelectForPRN(eventName) != null) ? dbHelper.gridSelectForPRN(eventName).getKey() : null;
+            if (grid != null) this.pam.put(grid, (List<String>) event.getValue());
         }
     }
 }

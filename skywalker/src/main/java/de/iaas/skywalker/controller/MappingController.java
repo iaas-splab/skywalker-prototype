@@ -7,6 +7,7 @@ import de.iaas.skywalker.models.MappingModule;
 import de.iaas.skywalker.models.Template;
 import de.iaas.skywalker.repository.MappingModuleRepository;
 import de.iaas.skywalker.repository.TemplateRepository;
+import de.iaas.skywalker.sqlite.ServiceDBHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +66,10 @@ public class MappingController {
         psm.mapEntryToStringList("Function");
 
         psm.makePAM();
+
+        // PS_x tryout
+        ServiceDBHelper serviceDBHelper = new ServiceDBHelper();
+        Map<String, String> ps_azure = serviceDBHelper.gridSelectForProvider("azure");
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

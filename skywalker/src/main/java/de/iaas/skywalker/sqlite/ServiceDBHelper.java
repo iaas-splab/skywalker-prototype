@@ -148,6 +148,27 @@ public class ServiceDBHelper {
         return resources;
     }
 
+    public Map<String, String> gridSelectForProvider(String providerName){
+        Map<String, String> platformCandidateGrids = new HashMap<>();
+        String sql = "SELECT * FROM " + "grid" + " WHERE " + "providerName" + " = " + "\"" + providerName + "\"";
+
+        try (Connection conn = this.connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+
+            // loop through the result set
+            while (rs.next()) {
+                platformCandidateGrids.put(
+                        rs.getString("genericResourceName"),
+                        rs.getString("providerResourceName")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return platformCandidateGrids;
+    }
+
     public MapEntryBundle<String, String> gridSelectForPRN(String providerResourceName){
         String sql = "SELECT * FROM " + "grid" + " WHERE " + "providerResourceName" + " = " + "\"" + providerResourceName + "\"";
 
