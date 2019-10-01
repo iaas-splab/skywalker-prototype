@@ -9,6 +9,8 @@ import de.iaas.skywalker.repository.DeploymentModelRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.ws.Service;
 import java.io.FileWriter;
 import java.nio.file.Paths;
 import java.util.*;
@@ -69,6 +71,7 @@ public class MappingController {
 //        GAM.setFunctions(utils.makeGrid(GAM.getFunctions().entrySet().iterator(), this.serviceMappingRepository));
 //        GAM.setInvokedServices(utils.makeGrid(GAM.getInvokedServices().entrySet().iterator(), this.serviceMappingRepository));
 
+        List<ServiceMapping> azureServices = this.serviceMappingRepository.findByProvider("azure");
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
