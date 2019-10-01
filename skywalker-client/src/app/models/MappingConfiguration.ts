@@ -1,6 +1,6 @@
 export class MappingConfiguration {
   constructor(
-    public template: string,
+    public deploymentModel: string,
     public mappingModule: string
   ){}
 
