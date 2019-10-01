@@ -18,7 +18,7 @@ public class ServiceMapping {
         this.provider = provider;
         this.providerResourceId = providerResourceId;
         this.serviceProperties = serviceProperties;
-        this.id = provider + "_" + genericResourceId;
+        this.id = provider + "_" + genericResourceId + "_" + providerResourceId;
     }
 
     public String getId() {

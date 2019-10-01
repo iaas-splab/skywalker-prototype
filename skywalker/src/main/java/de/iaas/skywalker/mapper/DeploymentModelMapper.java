@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.*;
 
 
-public class ModelMapper {
+public class DeploymentModelMapper {
 
     private Map<String, Object> deploymentModel;
     private String ruleFilePath;
@@ -18,7 +18,7 @@ public class ModelMapper {
     private static final String WHERE = "where";
     private static final String ARRAY_LIST = "ArrayList";
 
-    public ModelMapper(DeploymentModel deploymentModel, String ruleFilePath) {
+    public DeploymentModelMapper(DeploymentModel deploymentModel, String ruleFilePath) {
         this.deploymentModel = this.parseYAMLInHashMap(deploymentModel.getName());
         this.ruleFilePath = ruleFilePath;
     }
@@ -35,12 +35,12 @@ public class ModelMapper {
     public Map<String, Map<String, Object>> translateIntoGenericModel(List<String> genericPropertyTypes) {
         Map<String, Map<String, Object>> genericModel = new HashMap<>();
         for(String genericPropType : genericPropertyTypes) {
-            genericModel.put(genericPropType, this.modelTransformationWithMappingTemplate(genericPropType));
+            genericModel.put(genericPropType, this.extractApplicationProperties(genericPropType));
         }
         return genericModel;
     }
 
-    public Map<String, Object> modelTransformationWithMappingTemplate(String appProperty) {
+    public Map<String, Object> extractApplicationProperties(String appProperty) {
         // Read mapping template from config file
         Map<String, Object> mapping_template = getMappingTemplate();
 

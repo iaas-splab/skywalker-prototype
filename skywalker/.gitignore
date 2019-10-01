@@ -34,4 +34,4 @@ build/
 *.log
 
 ### DB stuff ###
-data/*
+data/
