@@ -1,53 +1,55 @@
 package de.iaas.skywalker.sqlite;
 
+import de.iaas.skywalker.models.MapEntryBundle;
+
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ServiceDBHelper {
 
     private static String dbName = "grid.db";
 
     public ServiceDBHelper() {
-        this.selectAllGrid();
+//        this.selectAllGrid();
     }
 
-    //    public static void main(String[] args) {
+//        public static void main(String[] args) {
 //        ServiceDBHelper serviceDBHelper = new ServiceDBHelper();
-////        serviceDBHelper.createNewDatabase(dbName);
-////        serviceDBHelper.initDatabaseGrid(dbName);
-////        serviceDBHelper.insert("objectstorage", "s3");
-////        serviceDBHelper.insert("objectstorage", "blob");
-////        serviceDBHelper.insert("objectstorage", "storage");
-////
-////        serviceDBHelper.insert("endpoint", "http");
-////        serviceDBHelper.insert("endpoint", "http");
-////        serviceDBHelper.insert("endpoint", "http");
-////
-////        serviceDBHelper.insert("schedule", "schedule");
-////        serviceDBHelper.insert("schedule", "timer");
-////        serviceDBHelper.insert("schedule", "schedule");
-////
-////        serviceDBHelper.insert("database", "dynamo");
-////        serviceDBHelper.insert("database", "cosmosdb");
-////        serviceDBHelper.insert("database", "cloudant");
-////
-////        serviceDBHelper.insert("pubsub", "sns");
-////        serviceDBHelper.insert("pubsub", "eventgrid");
-////        serviceDBHelper.insert("pubsub", "eventstreams");
-////
-////        serviceDBHelper.insert("eventstreaming", "kinsis");
-////        serviceDBHelper.insert("eventstreaming", "eventhubs");
-////        serviceDBHelper.insert("eventstreaming", "eventstreams");
-////
-////        serviceDBHelper.insert("messagequeueing", "sqs");
-////        serviceDBHelper.insert("messagequeueing", "queue");
-////        serviceDBHelper.insert("messagequeueing", "eventstreams");
+//////        serviceDBHelper.createNewDatabase(dbName);
+//////        serviceDBHelper.initDatabaseGrid(dbName);
+//        serviceDBHelper.insert("objectstorage", "s3", "aws");
+//        serviceDBHelper.insert("objectstorage", "blob", "azure");
+//        serviceDBHelper.insert("objectstorage", "storage", "ibm");
 //
-////        serviceDBHelper.selectAllGrid();
-//        List<String> list = serviceDBHelper.gridSelectForGRN("objectstorage");
+//        serviceDBHelper.insert("endpoint", "http", "aws");
+//        serviceDBHelper.insert("endpoint", "http", "azure");
+//        serviceDBHelper.insert("endpoint", "http", "ibm");
+//
+//        serviceDBHelper.insert("schedule", "schedule", "aws");
+//        serviceDBHelper.insert("schedule", "timer", "azure");
+//        serviceDBHelper.insert("schedule", "schedule", "ibm");
+//
+//        serviceDBHelper.insert("database", "dynamo", "aws");
+//        serviceDBHelper.insert("database", "cosmosdb", "azure");
+//        serviceDBHelper.insert("database", "cloudant", "ibm");
+//
+//        serviceDBHelper.insert("pubsub", "sns", "aws");
+//        serviceDBHelper.insert("pubsub", "eventgrid", "azure");
+//        serviceDBHelper.insert("pubsub", "eventstreams", "ibm");
+//
+//        serviceDBHelper.insert("eventstreaming", "kinsis", "aws");
+//        serviceDBHelper.insert("eventstreaming", "eventhubs", "azure");
+//        serviceDBHelper.insert("eventstreaming", "eventstreams", "ibm");
+//
+//        serviceDBHelper.insert("point2point", "sqs", "aws");
+//        serviceDBHelper.insert("point2point", "queue", "azure");
+//        serviceDBHelper.insert("point2point", "eventstreams", "ibm");
+//
+//        serviceDBHelper.selectAllGrid();
+//        Map<String, String> list = serviceDBHelper.gridSelectForGRN("objectstorage");
+//        System.out.println("done");
 //    }
-//
+
     private Connection connect() {
         // SQLite connection string
         String url = "jdbc:sqlite:sqlite/db/" + this.dbName;
@@ -60,13 +62,14 @@ public class ServiceDBHelper {
         return conn;
     }
 
-    public void insert(String grn, String prn) {
-        String sql = "INSERT INTO grid(genericResourceName,providerResourceName) VALUES(?,?)";
+    public void insert(String grn, String prn, String pf) {
+        String sql = "INSERT INTO grid(genericResourceName,providerResourceName, platformName) VALUES(?,?,?)";
 
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, grn);
             pstmt.setString(2, prn);
+            pstmt.setString(3, pf);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -106,7 +109,7 @@ public class ServiceDBHelper {
     }
 
     public void selectAllGrid(){
-        String sql = "SELECT id, genericResourceName, providerResourceName FROM grid";
+        String sql = "SELECT id, genericResourceName, providerResourceName, providerName FROM grid";
 
         try (Connection conn = this.connect();
              Statement stmt  = conn.createStatement();
@@ -116,6 +119,7 @@ public class ServiceDBHelper {
             while (rs.next()) {
                 System.out.println(rs.getInt("id") +  "\t" +
                         rs.getString("genericResourceName") + "\t" +
+                        rs.getString("providerName") + "\t" +
                         rs.getString("providerResourceName"));
             }
         } catch (SQLException e) {
@@ -123,8 +127,8 @@ public class ServiceDBHelper {
         }
     }
 
-    public List<String> gridSelectForGRN(String genericResourceType){
-        List<String> resources = new ArrayList<>();
+    public Map<String, String> gridSelectForGRN(String genericResourceType){
+        Map<String, String> resources = new HashMap<>();
         String sql = "SELECT * FROM " + "grid" + " WHERE " + "genericResourceName" + " = " + "\"" + genericResourceType + "\"";
 
         try (Connection conn = this.connect();
@@ -133,7 +137,10 @@ public class ServiceDBHelper {
 
             // loop through the result set
             while (rs.next()) {
-                resources.add(rs.getString("providerResourceName"));
+                resources.put(
+                        rs.getString("providerResourceName"),
+                        rs.getString("providerName")
+                );
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -141,7 +148,28 @@ public class ServiceDBHelper {
         return resources;
     }
 
-    public String gridSelectForPRN(String providerResourceName){
+    public Map<String, String> gridSelectForProvider(String providerName){
+        Map<String, String> platformCandidateGrids = new HashMap<>();
+        String sql = "SELECT * FROM " + "grid" + " WHERE " + "providerName" + " = " + "\"" + providerName + "\"";
+
+        try (Connection conn = this.connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+
+            // loop through the result set
+            while (rs.next()) {
+                platformCandidateGrids.put(
+                        rs.getString("genericResourceName"),
+                        rs.getString("providerResourceName")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return platformCandidateGrids;
+    }
+
+    public MapEntryBundle<String, String> gridSelectForPRN(String providerResourceName){
         String sql = "SELECT * FROM " + "grid" + " WHERE " + "providerResourceName" + " = " + "\"" + providerResourceName + "\"";
 
         try (Connection conn = this.connect();
@@ -150,10 +178,15 @@ public class ServiceDBHelper {
 
             // loop through the result set
             while (rs.next()) {
-                return rs.getString("genericResourceName");
+                return new MapEntryBundle<>(
+                        rs.getString("genericResourceName"),
+                        rs.getString("providerName")
+                );
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        } finally {
+
         }
         return null;
     }

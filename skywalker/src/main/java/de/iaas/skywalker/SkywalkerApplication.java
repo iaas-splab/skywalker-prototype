@@ -1,8 +1,10 @@
 package de.iaas.skywalker;
 
 import de.iaas.skywalker.models.MappingModule;
+import de.iaas.skywalker.models.ServiceMapping;
 import de.iaas.skywalker.models.Template;
 import de.iaas.skywalker.repository.MappingModuleRepository;
+import de.iaas.skywalker.repository.ServiceMappingRepository;
 import de.iaas.skywalker.repository.TemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.io.IOException;
 import java.io.*;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 @SpringBootApplication
 public class SkywalkerApplication {
@@ -26,6 +29,9 @@ public class SkywalkerApplication {
 
 	@Autowired
 	MappingModuleRepository mappingModuleRepository;
+
+	@Autowired
+	ServiceMappingRepository serviceMappingRepository;
 
 	private static final String MACOS_MAPPINGS = "/src/main/resources/mapping.configurations/rule_serverless_v2.yaml";
 	private static final String MACOS_TEMPLATES = "/src/main/resources/templates/serverless.yml";
@@ -61,6 +67,7 @@ public class SkywalkerApplication {
 	}
 
 	private void initRepos() throws IOException {
+
 		Template template = new Template();
 		template.setName("serverless.yml");
 		template.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + MACOS_TEMPLATES));
@@ -70,6 +77,39 @@ public class SkywalkerApplication {
 		mappingModule.setName("rule_serverless_v2.yaml");
 		mappingModule.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + MACOS_MAPPINGS));
 		mappingModuleRepository.save(mappingModule);
+
+		serviceMappingRepository.save(
+				new ServiceMapping(
+						"http",
+						"aws",
+						"http",
+						Arrays.asList("path", "authorizer", "method")
+				)
+		);
+		serviceMappingRepository.save(
+				new ServiceMapping(
+						"http",
+						"azure",
+						"http",
+						Arrays.asList("route", "authLevel", "methods")
+				)
+		);
+		serviceMappingRepository.save(
+				new ServiceMapping(
+						"storage",
+						"aws",
+						"s3",
+						Arrays.asList("bucket", "event", "rules")
+				)
+		);
+		serviceMappingRepository.save(
+				new ServiceMapping(
+						"storage",
+						"azure",
+						"blob",
+						Arrays.asList("path")
+				)
+		);
 	}
 
 	private String readFileToString(String filePath) throws IOException {
@@ -81,7 +121,6 @@ public class SkywalkerApplication {
 
 		while(line != null){ sb.append(line).append("\n"); line = buf.readLine(); }
 		return sb.toString();
-
 	}
 
 }

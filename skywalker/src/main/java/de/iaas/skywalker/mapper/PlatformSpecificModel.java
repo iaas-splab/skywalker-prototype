@@ -1,5 +1,6 @@
 package de.iaas.skywalker.mapper;
 
+import de.iaas.skywalker.models.MapEntryBundle;
 import de.iaas.skywalker.sqlite.ServiceDBHelper;
 
 import java.util.*;
@@ -67,7 +68,7 @@ public class PlatformSpecificModel {
             Map.Entry event = (Map.Entry) it.next();
             String eventName = (String) event.getKey();
             ServiceDBHelper dbHelper = new ServiceDBHelper();
-            String grid = dbHelper.gridSelectForPRN(eventName);
+            String grid = (dbHelper.gridSelectForPRN(eventName) != null) ? dbHelper.gridSelectForPRN(eventName).getKey() : null;
             if (grid != null) this.pam.put(grid, (List<String>) event.getValue());
         }
     }

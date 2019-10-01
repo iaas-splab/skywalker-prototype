@@ -1,0 +1,3 @@
+{"schemaVersion":"1.0"}
+{"id":"1edb110c-68a2-4ece-9797-65281df9790c","genericResourceId":"storage","provider":"aws","providerResourceId":"s3","serviceProperties":null,"privateKey":null}
+{"id":"96754767-66f8-48d8-a64d-a811c85cec48","genericResourceId":"storage","provider":"azure","providerResourceId":"blob","serviceProperties":null,"privateKey":null}
