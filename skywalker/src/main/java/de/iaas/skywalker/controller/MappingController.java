@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Service;
 import java.io.FileWriter;
 import java.nio.file.Paths;
 import java.util.*;
@@ -28,7 +27,8 @@ public class MappingController {
             MappingModuleRepository mappingModuleRepository,
             DeploymentModelRepository deploymentModelRepository,
             ServiceMappingRepository serviceMappingRepository,
-            ServicePropertyMappingRepository servicePropertyMappingRepository) {
+            ServicePropertyMappingRepository servicePropertyMappingRepository
+            ) {
         this.mappingModuleRepository = mappingModuleRepository;
         this.deploymentModelRepository = deploymentModelRepository;
         this.serviceMappingRepository = serviceMappingRepository;
@@ -77,7 +77,7 @@ public class MappingController {
 
         List<ServiceMapping> azureServices = this.serviceMappingRepository.findByProvider("azure");
 
-        List<GenericServiceProperty> serviceProperties = this.servicePropertyMappingRepository.findById("storage");
+        List<GenericServiceProperty> serviceProperties = this.servicePropertyMappingRepository.findAll();
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
