@@ -6,6 +6,7 @@ import de.iaas.skywalker.models.*;
 import de.iaas.skywalker.repository.MappingModuleRepository;
 import de.iaas.skywalker.repository.ServiceMappingRepository;
 import de.iaas.skywalker.repository.DeploymentModelRepository;
+import de.iaas.skywalker.repository.ServicePropertyMappingRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +22,17 @@ public class MappingController {
     private MappingModuleRepository mappingModuleRepository;
     private DeploymentModelRepository deploymentModelRepository;
     private ServiceMappingRepository serviceMappingRepository;
+    private ServicePropertyMappingRepository servicePropertyMappingRepository;
 
     public MappingController(
             MappingModuleRepository mappingModuleRepository,
             DeploymentModelRepository deploymentModelRepository,
-            ServiceMappingRepository serviceMappingRepository) {
+            ServiceMappingRepository serviceMappingRepository,
+            ServicePropertyMappingRepository servicePropertyMappingRepository) {
         this.mappingModuleRepository = mappingModuleRepository;
         this.deploymentModelRepository = deploymentModelRepository;
         this.serviceMappingRepository = serviceMappingRepository;
+        this.servicePropertyMappingRepository = servicePropertyMappingRepository;
     }
 
     @GetMapping(path = "/")
@@ -72,6 +76,8 @@ public class MappingController {
 //        GAM.setInvokedServices(utils.makeGrid(GAM.getInvokedServices().entrySet().iterator(), this.serviceMappingRepository));
 
         List<ServiceMapping> azureServices = this.serviceMappingRepository.findByProvider("azure");
+
+        List<GenericServiceProperty> serviceProperties = this.servicePropertyMappingRepository.findById("storage");
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
