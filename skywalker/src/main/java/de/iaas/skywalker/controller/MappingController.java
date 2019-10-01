@@ -7,7 +7,7 @@ import de.iaas.skywalker.models.MappingConfiguration;
 import de.iaas.skywalker.models.MappingModule;
 import de.iaas.skywalker.repository.MappingModuleRepository;
 import de.iaas.skywalker.repository.ServiceMappingRepository;
-import de.iaas.skywalker.repository.TemplateRepository;
+import de.iaas.skywalker.repository.DeploymentModelRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ import java.util.*;
 @RequestMapping("/mapping")
 public class MappingController {
     private MappingModuleRepository mappingModuleRepository;
-    private TemplateRepository templateRepository;
+    private DeploymentModelRepository deploymentModelRepository;
     private ServiceMappingRepository serviceMappingRepository;
 
     private final List<String> genericPropertyTypes = new ArrayList<String>() {{
@@ -30,10 +30,10 @@ public class MappingController {
 
     public MappingController(
             MappingModuleRepository mappingModuleRepository,
-            TemplateRepository templateRepository,
+            DeploymentModelRepository deploymentModelRepository,
             ServiceMappingRepository serviceMappingRepository) {
         this.mappingModuleRepository = mappingModuleRepository;
-        this.templateRepository = templateRepository;
+        this.deploymentModelRepository = deploymentModelRepository;
         this.serviceMappingRepository = serviceMappingRepository;
     }
 
@@ -58,7 +58,7 @@ public class MappingController {
     @PostMapping(path = "/generate")
     public ResponseEntity<Object> generateGenericApplicationModelMapping(@RequestBody MappingConfiguration mappingConfiguration) {
 
-        List<DeploymentModel> findingsByDeploymentModelName = this.templateRepository.findByName(mappingConfiguration.getTemplate());
+        List<DeploymentModel> findingsByDeploymentModelName = this.deploymentModelRepository.findByName(mappingConfiguration.getDeploymentModel());
         DeploymentModel deploymentModel = ((!(findingsByDeploymentModelName.size() > 1)) ? findingsByDeploymentModelName.get(0) : new DeploymentModel());
         List<MappingModule> findingsByMappingName =  this.mappingModuleRepository.findByName(mappingConfiguration.getMappingModule());
         MappingModule mappingModule = ((!(findingsByMappingName.size() > 1)) ? findingsByMappingName.get(0) : new MappingModule());

@@ -3,10 +3,9 @@ package de.iaas.skywalker;
 import de.iaas.skywalker.models.DeploymentModel;
 import de.iaas.skywalker.models.MappingModule;
 import de.iaas.skywalker.models.ServiceMapping;
-import de.iaas.skywalker.models.Template;
 import de.iaas.skywalker.repository.MappingModuleRepository;
 import de.iaas.skywalker.repository.ServiceMappingRepository;
-import de.iaas.skywalker.repository.TemplateRepository;
+import de.iaas.skywalker.repository.DeploymentModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,7 +25,7 @@ import java.util.Arrays;
 public class SkywalkerApplication {
 
 	@Autowired
-	TemplateRepository templateRepository;
+	DeploymentModelRepository deploymentModelRepository;
 
 	@Autowired
 	MappingModuleRepository mappingModuleRepository;
@@ -72,7 +71,7 @@ public class SkywalkerApplication {
 		DeploymentModel dm = new DeploymentModel();
 		dm.setName("serverless.yml");
 		dm.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + MACOS_TEMPLATES));
-		templateRepository.save(dm);
+		deploymentModelRepository.save(dm);
 
 		MappingModule mappingModule = new MappingModule();
 		mappingModule.setName("rule_serverless_v2.yaml");

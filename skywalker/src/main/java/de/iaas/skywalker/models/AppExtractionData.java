@@ -3,7 +3,7 @@ package de.iaas.skywalker.models;
 //@Entity
 //@Data
 //@NoArgsConstructor
-public class PlatformDeployment {
+public class AppExtractionData {
     private String arn;
     private String provider;
 

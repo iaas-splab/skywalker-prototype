@@ -11,7 +11,7 @@ import java.util.List;
 
 @RepositoryRestResource
 @CrossOrigin(origins = "http://localhost:4200")
-public interface TemplateRepository extends JpaRepository<DeploymentModel, Long> {
+public interface DeploymentModelRepository extends JpaRepository<DeploymentModel, Long> {
 
     List<DeploymentModel> findByName(String name);
 

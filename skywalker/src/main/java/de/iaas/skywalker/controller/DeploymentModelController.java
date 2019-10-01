@@ -1,8 +1,8 @@
 package de.iaas.skywalker.controller;
 
-import de.iaas.skywalker.models.PlatformDeployment;
+import de.iaas.skywalker.models.AppExtractionData;
 import de.iaas.skywalker.models.DeploymentModel;
-import de.iaas.skywalker.repository.TemplateRepository;
+import de.iaas.skywalker.repository.DeploymentModelRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,23 +13,23 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/templates")
-public class TemplateController {
-    private TemplateRepository repository;
+public class DeploymentModelController {
+    private DeploymentModelRepository repository;
 
-    public TemplateController(TemplateRepository templateRepository) {
-        this.repository = templateRepository;
+    public DeploymentModelController(DeploymentModelRepository deploymentModelRepository) {
+        this.repository = deploymentModelRepository;
     }
 
     @GetMapping(path = "/")
-    public Collection<DeploymentModel> getTemplates() { return this.repository.findAll(); }
+    public Collection<DeploymentModel> getDeploymentModels() { return this.repository.findAll(); }
 
     @PostMapping(path = "/crawl")
-    public ResponseEntity<Object> extractFromPlatform(@RequestBody PlatformDeployment platformDeployment) {
-        System.out.println("ARN: " + platformDeployment.getArn() + "\n" + "Provider: " + platformDeployment.getProvider());
+    public ResponseEntity<Object> extractFromPlatform(@RequestBody AppExtractionData appExtractionData) {
+        System.out.println("ARN: " + appExtractionData.getArn() + "\n" + "Provider: " + appExtractionData.getProvider());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @PostMapping(path = "/upload")
-    public ResponseEntity<Object> putTemplateFile(@RequestBody DeploymentModel deploymentModel) {
+    public ResponseEntity<Object> putDeploymentModel(@RequestBody DeploymentModel deploymentModel) {
         this.repository.deleteByName(deploymentModel.getName());
         if(this.repository.findByName(deploymentModel.getName()) != null) this.repository.save(deploymentModel);
         String currentPath = Paths.get("").toAbsolutePath().toString() + "\\src\\main\\resources";

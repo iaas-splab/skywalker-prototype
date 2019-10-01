@@ -17,7 +17,7 @@ public class MappingConfiguration {
     private Long id;
 
     private @NonNull
-    String template;
+    String deploymentModel;
 
     private @NonNull
     String mappingModule;
@@ -30,12 +30,12 @@ public class MappingConfiguration {
         this.id = id;
     }
 
-    public String getTemplate() {
-        return template;
+    public String getDeploymentModel() {
+        return deploymentModel;
     }
 
-    public void setTemplate(String template) {
-        this.template = template;
+    public void setDeploymentModel(String deploymentModel) {
+        this.deploymentModel = deploymentModel;
     }
 
     public String getMappingModule() {
