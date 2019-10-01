@@ -1,5 +1,6 @@
 package de.iaas.skywalker.mapper;
 
+import de.iaas.skywalker.models.DeploymentModel;
 import de.iaas.skywalker.models.Template;
 import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
@@ -8,7 +9,7 @@ import java.util.*;
 
 public class ModelMapper {
 
-    private Map<String, Object> template;
+    private Map<String, Object> deploymentModel;
     private String ruleFilePath;
 
     private static final String SELECT = "select";
@@ -18,8 +19,8 @@ public class ModelMapper {
     private static final String WHERE = "where";
     private static final String ARRAY_LIST = "ArrayList";
 
-    public ModelMapper(Template template, String ruleFilePath) {
-        this.template = this.parseYAMLInHashMap(template.getName());
+    public ModelMapper(DeploymentModel deploymentModel, String ruleFilePath) {
+        this.deploymentModel = this.parseYAMLInHashMap(deploymentModel.getName());
         this.ruleFilePath = ruleFilePath;
     }
 
@@ -58,7 +59,7 @@ public class ModelMapper {
         String statement_value = ((String) statement_config.get(VALUE) != null) ? (String) statement_config.get(VALUE) : "";
 
         // first get all resources from the SELECT ROOT
-        Map<String, Object> root = this.template;
+        Map<String, Object> root = this.deploymentModel;
         for (String node : mapping_config_root) {
             try {
                 root = (Map<String, Object>) root.get(node);

@@ -1,5 +1,6 @@
 package de.iaas.skywalker;
 
+import de.iaas.skywalker.models.DeploymentModel;
 import de.iaas.skywalker.models.MappingModule;
 import de.iaas.skywalker.models.ServiceMapping;
 import de.iaas.skywalker.models.Template;
@@ -68,10 +69,10 @@ public class SkywalkerApplication {
 
 	private void initRepos() throws IOException {
 
-		Template template = new Template();
-		template.setName("serverless.yml");
-		template.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + MACOS_TEMPLATES));
-		templateRepository.save(template);
+		DeploymentModel dm = new DeploymentModel();
+		dm.setName("serverless.yml");
+		dm.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + MACOS_TEMPLATES));
+		templateRepository.save(dm);
 
 		MappingModule mappingModule = new MappingModule();
 		mappingModule.setName("rule_serverless_v2.yaml");

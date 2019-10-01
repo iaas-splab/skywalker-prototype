@@ -2,13 +2,12 @@ package de.iaas.skywalker.controller;
 
 import de.iaas.skywalker.mapper.ModelMapper;
 import de.iaas.skywalker.mapper.PlatformSpecificModel;
+import de.iaas.skywalker.models.DeploymentModel;
 import de.iaas.skywalker.models.MappingConfiguration;
 import de.iaas.skywalker.models.MappingModule;
-import de.iaas.skywalker.models.Template;
 import de.iaas.skywalker.repository.MappingModuleRepository;
 import de.iaas.skywalker.repository.ServiceMappingRepository;
 import de.iaas.skywalker.repository.TemplateRepository;
-import de.iaas.skywalker.sqlite.ServiceDBHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,23 +58,19 @@ public class MappingController {
     @PostMapping(path = "/generate")
     public ResponseEntity<Object> generateGenericApplicationModelMapping(@RequestBody MappingConfiguration mappingConfiguration) {
 
-        List<Template> findingsByTemplateName = this.templateRepository.findByName(mappingConfiguration.getTemplate());
-        Template template = ((!(findingsByTemplateName.size() > 1)) ? findingsByTemplateName.get(0) : new Template());
+        List<DeploymentModel> findingsByDeploymentModelName = this.templateRepository.findByName(mappingConfiguration.getTemplate());
+        DeploymentModel deploymentModel = ((!(findingsByDeploymentModelName.size() > 1)) ? findingsByDeploymentModelName.get(0) : new DeploymentModel());
         List<MappingModule> findingsByMappingName =  this.mappingModuleRepository.findByName(mappingConfiguration.getMappingModule());
         MappingModule mappingModule = ((!(findingsByMappingName.size() > 1)) ? findingsByMappingName.get(0) : new MappingModule());
 
-        ModelMapper mapper = new ModelMapper(template, "mapping.configurations/" + mappingModule.getName());
+        ModelMapper mapper = new ModelMapper(deploymentModel, "mapping.configurations/" + mappingModule.getName());
         Map<String, Map<String, Object>> mappedTemplate = mapper.translateIntoGenericModel(genericPropertyTypes);
 
-        PlatformSpecificModel psm = new PlatformSpecificModel(mappedTemplate);
+        PlatformSpecificModel psm = new PlatformSpecificModel(mappedTemplate, this.serviceMappingRepository);
         psm.mapEntryToStringList("EventSources");
         psm.mapEntryToStringList("Function");
 
         psm.makePAM();
-
-        // PS_x tryout
-        ServiceDBHelper serviceDBHelper = new ServiceDBHelper();
-        Map<String, String> ps_azure = serviceDBHelper.gridSelectForProvider("azure");
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

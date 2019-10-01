@@ -1,7 +1,7 @@
 package de.iaas.skywalker.mapper;
 
-import de.iaas.skywalker.models.MapEntryBundle;
-import de.iaas.skywalker.sqlite.ServiceDBHelper;
+import de.iaas.skywalker.models.ServiceMapping;
+import de.iaas.skywalker.repository.ServiceMappingRepository;
 
 import java.util.*;
 
@@ -9,36 +9,11 @@ public class PlatformSpecificModel {
     private Map<String, Map<String, Object>> templateMap;
     private Map<String, Map<String, List<String>>> mapOfApplicationPropsSimplified = new HashMap<>();
     Map<String, List<String>> pam = new HashMap<>();
-    private  Map<String, List<String>> GRID_LIST = new HashMap<String, List<String>>() {{
-        put("objectstorage", new ArrayList<String>() {{
-            add("s3");
-            add("blob");
-            add("storage");
-        }});put("endpoint", new ArrayList<String>() {{
-            add("http");
-            add("http");
-            add("http");
-        }});put("pubsub", new ArrayList<String>() {{
-            add("sns");
-            add("sns");
-            add("sns");
-        }});put("messagequeueing", new ArrayList<String>() {{
-            add("sqs");
-            add("sqs");
-            add("sqs");
-        }});put("eventstreaming", new ArrayList<String>() {{
-            add("stream");
-            add("stream");
-            add("stream");
-        }});put("schedule", new ArrayList<String>() {{
-            add("schedule");
-            add("timer");
-            add("schedule");
-        }});
-    }};
+    private ServiceMappingRepository serviceMappingRepository;
 
-    public PlatformSpecificModel(Map<String, Map<String, Object>> templateMap) {
+    public PlatformSpecificModel(Map<String, Map<String, Object>> templateMap, ServiceMappingRepository serviceMappingRepository) {
         this.templateMap = templateMap;
+        this.serviceMappingRepository = serviceMappingRepository;
     }
 
     public void mapEntryToStringList(String entry) {
@@ -67,9 +42,10 @@ public class PlatformSpecificModel {
         while(it.hasNext()) {
             Map.Entry event = (Map.Entry) it.next();
             String eventName = (String) event.getKey();
-            ServiceDBHelper dbHelper = new ServiceDBHelper();
-            String grid = (dbHelper.gridSelectForPRN(eventName) != null) ? dbHelper.gridSelectForPRN(eventName).getKey() : null;
-            if (grid != null) this.pam.put(grid, (List<String>) event.getValue());
+            if(!this.serviceMappingRepository.findByProviderResourceId(eventName).isEmpty()) {
+                String grid = this.serviceMappingRepository.findByProviderResourceId(eventName).get(0).getGenericResourceId();
+                if (grid != null) this.pam.put(grid, (List<String>) event.getValue());
+            }
         }
     }
 }
