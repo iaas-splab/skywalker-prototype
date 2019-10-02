@@ -1,7 +1,6 @@
 package de.iaas.skywalker.controller;
 
 import de.iaas.skywalker.mapper.DeploymentModelMapper;
-import de.iaas.skywalker.evaluation.EvaluationHelper;
 import de.iaas.skywalker.mapper.ModelMappingUtils;
 import de.iaas.skywalker.models.*;
 import de.iaas.skywalker.repository.*;
@@ -56,42 +55,28 @@ public class MappingController {
 
     @PostMapping(path = "/generate")
     public ResponseEntity<Object> generateGenericApplicationModelMapping(@RequestBody MappingConfiguration mappingConfiguration) {
+        // get deployment model and mapping model from repository
         List<DeploymentModel> deploymentModels = this.deploymentModelRepository.findByName(mappingConfiguration.getDeploymentModel());
         DeploymentModel deploymentModel = ((!(deploymentModels.size() > 1)) ? deploymentModels.get(0) : new DeploymentModel());
-
         List<MappingModule> mappingModules =  this.mappingModuleRepository.findByName(mappingConfiguration.getMappingModule());
         MappingModule mappingModule = ((!(mappingModules.size() > 1)) ? mappingModules.get(0) : new MappingModule());
 
-        DeploymentModelMapper mapper = new DeploymentModelMapper(deploymentModel, "mapping.configurations/" + mappingModule.getName());
 
-        ApplicationProperties appProps = new ApplicationProperties();
-        appProps.setEventSources(mapper.extractApplicationProperties("EventSources"));
-        appProps.setInvokedServices(mapper.extractApplicationProperties("InvokedServices"));
-        appProps.setFunctions(mapper.extractApplicationProperties("Function"));
+        DeploymentModelMapper mapper = new DeploymentModelMapper(deploymentModel, "mapping.configurations/" + mappingModule.getName());
+        ApplicationProperties appProps = new ApplicationProperties(
+                mapper.extractApplicationProperties("EventSources"),
+                mapper.extractApplicationProperties("Function"),
+                mapper.extractApplicationProperties("InvokedServices")
+        );
+
 
         ModelMappingUtils utils = new ModelMappingUtils();
-
         GenericApplicationModel GAM = new GenericApplicationModel(mappingConfiguration.getId(), utils.getAppAtPropertiesLevel(appProps));
-        GAM.setEventSources(utils.makeGrid(GAM.getEventSources().entrySet().iterator(), this.serviceMappingRepository));
-//        GAM.setFunctions(utils.makeGrid(GAM.getFunctions().entrySet().iterator(), this.serviceMappingRepository));
-//        GAM.setInvokedServices(utils.makeGrid(GAM.getInvokedServices().entrySet().iterator(), this.serviceMappingRepository));
-
-        List<ServiceMapping> azureServices = this.serviceMappingRepository.findByProvider("azure");
-        Map<String, List<String>> azureEventSources = new HashMap<String, List<String>>() {{
-            for(ServiceMapping sm : azureServices) {
-                put(sm.getGenericResourceId(), sm.getServiceProperties());
-            }
-        }};
-        azureEventSources = utils.genericPropertiesForGAM(azureEventSources, this.servicePropertyMappingRepository);
-
-        List<GenericServiceProperty> serviceProperties = this.servicePropertyMappingRepository.findAll();
-
-        GAM.setEventSources(utils.genericPropertiesForGAM(GAM.getEventSources(), this.servicePropertyMappingRepository));
-
+        GAM.setEventSources(utils.generifyEventSourceNames(GAM.getEventSources().entrySet().iterator(), this.serviceMappingRepository));
+        GAM.setEventSources(utils.generifyEventSourceProperties(GAM.getEventSources(), this.servicePropertyMappingRepository));
+//        GAM.setFunctions(utils.generifyEventSourceNames(GAM.getFunctions().entrySet().iterator(), this.serviceMappingRepository));
+//        GAM.setInvokedServices(utils.generifyEventSourceNames(GAM.getInvokedServices().entrySet().iterator(), this.serviceMappingRepository));
         this.genericApplicationModelRepository.save(GAM);
-
-        EvaluationHelper eHelper = new EvaluationHelper(GAM.getEventSources());
-        double coverage = eHelper.compareWithSelectedPlatformCandidate(azureEventSources);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

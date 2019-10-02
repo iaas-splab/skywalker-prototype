@@ -38,7 +38,7 @@ public class DeploymentModelController {
             fw.write(deploymentModel.getBody());
             fw.close();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         } finally {}
         return ResponseEntity.status(HttpStatus.OK).build();
     }

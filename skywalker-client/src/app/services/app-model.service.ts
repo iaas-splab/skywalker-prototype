@@ -3,6 +3,7 @@ import {MappingModule} from "../models/MappingModule";
 import {Observable} from "rxjs/index";
 import {MappingConfiguration} from "../models/MappingConfiguration";
 import {HttpClient} from "@angular/common/http";
+import {AppModel} from "../models/AppModel";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,10 @@ export class AppModelService {
 
   upload(module: MappingModule): Observable<any> {
     return this.http.post(this.mappingApi + '/' +  'upload/', module);
+  }
+
+  evalPortability(appModel: AppModel): Observable<any> {
+    return this.http.post(this.mappingApi + '/', appModel);
   }
 
   passMappingConfiguration(mappingConfig: MappingConfiguration): Observable<any> {

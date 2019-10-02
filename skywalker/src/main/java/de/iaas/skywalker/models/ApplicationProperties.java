@@ -11,6 +11,12 @@ public class ApplicationProperties {
         add("InvokedServices");
     }};
 
+    public ApplicationProperties(Map<String, Object> eventSources, Map<String, Object> functions, Map<String, Object> invokedServices) {
+        this.eventSources = eventSources;
+        this.functions = functions;
+        this.invokedServices = invokedServices;
+    }
+
     private Map<String, Object> eventSources;
     private Map<String, Object> functions;
     private Map<String, Object> invokedServices;

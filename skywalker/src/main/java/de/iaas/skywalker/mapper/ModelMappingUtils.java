@@ -1,7 +1,6 @@
 package de.iaas.skywalker.mapper;
 
 import de.iaas.skywalker.models.ApplicationProperties;
-import de.iaas.skywalker.models.GenericApplicationModel;
 import de.iaas.skywalker.models.GenericServiceProperty;
 import de.iaas.skywalker.repository.ServiceMappingRepository;
 import de.iaas.skywalker.repository.ServicePropertyMappingRepository;
@@ -52,8 +51,7 @@ public class ModelMappingUtils {
         return appPropConfig;
     }
 
-    public Map<String, List<String>> makeGrid(Iterator it, ServiceMappingRepository repository) {
-        // Atm only for event sources
+    public Map<String, List<String>> generifyEventSourceNames(Iterator it, ServiceMappingRepository repository) {
         Map<String, List<String>> genericEventSources = new HashMap<>();
         while(it.hasNext()) {
             Map.Entry eventSource = (Map.Entry) it.next();
@@ -66,7 +64,7 @@ public class ModelMappingUtils {
         return genericEventSources;
     }
 
-    public Map<String, List<String>> genericPropertiesForGAM(Map<String, List<String>> eventSources, ServicePropertyMappingRepository repository) {
+    public Map<String, List<String>> generifyEventSourceProperties(Map<String, List<String>> eventSources, ServicePropertyMappingRepository repository) {
         Iterator it = eventSources.entrySet().iterator();
         Map<String, List<String>> updatedEventSources = eventSources;
         while(it.hasNext()) {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AppModelService} from "../services/app-model.service";
 import {AppModel} from "../models/AppModel";
 import {MatSnackBar} from "@angular/material";
+import {CoverageModel} from "../models/CoverageModel";
 
 @Component({
   selector: 'app-app-model-list',
@@ -14,6 +15,7 @@ export class AppModelListComponent implements OnInit {
   appEventSources: {[key: string]: any} = {};
   appInvokedServices: {[key: string]: any} = {};
   appFunctions: {[key: string]: any} = {};
+  appCoverageModel: CoverageModel;
 
   constructor(
     private appModelService: AppModelService,
@@ -53,6 +55,22 @@ export class AppModelListComponent implements OnInit {
       this.openSnackBar("Deleted all application models. Please refresh the page.",
         'close',
         1000);
+    });
+  }
+
+  evaluateWithPlatformCandidate(appModel: AppModel) {
+    this.appModelService.evalPortability(appModel).subscribe(data => {
+      this.appCoverageModel = data;
+
+      for (let eventSource in this.appCoverageModel.eventSourceCoverage) {
+        console.log(eventSource);
+        for (let propList of this.appCoverageModel.eventSourceCoverage[eventSource]) {
+          for (let prop in propList) {
+            console.log("-" + prop);
+            console.log("--" + propList[prop]);
+          }
+        }
+      }
     });
   }
 
