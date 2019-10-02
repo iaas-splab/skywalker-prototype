@@ -4,10 +4,7 @@ import de.iaas.skywalker.models.DeploymentModel;
 import de.iaas.skywalker.models.GenericServiceProperty;
 import de.iaas.skywalker.models.MappingModule;
 import de.iaas.skywalker.models.ServiceMapping;
-import de.iaas.skywalker.repository.MappingModuleRepository;
-import de.iaas.skywalker.repository.ServiceMappingRepository;
-import de.iaas.skywalker.repository.DeploymentModelRepository;
-import de.iaas.skywalker.repository.ServicePropertyMappingRepository;
+import de.iaas.skywalker.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -38,6 +35,9 @@ public class SkywalkerApplication {
 
 	@Autowired
 	ServicePropertyMappingRepository servicePropertyMappingRepository;
+
+	@Autowired
+	GenericApplicationModelRepository genericApplicationModelRepository;
 
 	private static final String MACOS_MAPPINGS = "/src/main/resources/mapping.configurations/rule_serverless_v2.yaml";
 	private static final String MACOS_TEMPLATES = "/src/main/resources/templates/serverless.yml";

@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class MappingConfiguration {
     @Id
     @GeneratedValue
-    private Long id;
+    private String appName;
 
     private @NonNull
     String deploymentModel;
@@ -22,12 +22,12 @@ public class MappingConfiguration {
     private @NonNull
     String mappingModule;
 
-    public Long getId() {
-        return id;
+    public String getAppName() {
+        return appName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
     public String getDeploymentModel() {

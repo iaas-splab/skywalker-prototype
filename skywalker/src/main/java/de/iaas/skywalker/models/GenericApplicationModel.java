@@ -1,18 +1,27 @@
 package de.iaas.skywalker.models;
 
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 import java.util.Map;
 
+@Document
+@NoArgsConstructor
 public class GenericApplicationModel {
 
+    @Id
+    private String id;
     private Map<String, List<String>> eventSources;
     private Map<String, List<String>> functions;
     private Map<String, List<String>> invokedServices;
 
-    public GenericApplicationModel(Map<String, Map<String, List<String>>> appProperties) {
+    public GenericApplicationModel(String appName, Map<String, Map<String, List<String>>> appProperties) {
         this.eventSources = appProperties.get("EventSources");
         this.functions = appProperties.get("Function");
         this.invokedServices = appProperties.get("InvokedSources");
+        this.id = appName;
     }
 
     public Map<String, List<String>> getEventSources() {
@@ -37,5 +46,13 @@ public class GenericApplicationModel {
 
     public void setInvokedServices(Map<String, List<String>> invokedServices) {
         this.invokedServices = invokedServices;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

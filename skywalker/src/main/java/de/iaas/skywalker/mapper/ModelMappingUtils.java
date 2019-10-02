@@ -80,7 +80,6 @@ public class ModelMappingUtils {
                     Map.Entry genericPropMap = (Map.Entry) gpit.next();
                     String genericProperty = (String) genericPropMap.getKey();
                     if(((List<String>)genericPropMap.getValue()).stream().anyMatch(prop -> prop.trim().equals(property))) {
-                        System.out.println(eventName + ": " + property);
                         serviceProperties.set(serviceProperties.indexOf(property), genericProperty);
                     }
                 }

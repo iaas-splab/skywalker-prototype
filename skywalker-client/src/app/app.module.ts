@@ -29,6 +29,7 @@ import { TemplateListComponent } from './template-list/template-list.component';
 import { MappingListComponent } from './mapping-list/mapping-list.component';
 import { AddMappingComponent } from './add-mapping/add-mapping.component';
 import { ModelMappingComponent } from './model-mapping/model-mapping.component';
+import { AppModelListComponent } from './app-model-list/app-model-list.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ModelMappingComponent } from './model-mapping/model-mapping.component';
     TemplateListComponent,
     MappingListComponent,
     AddMappingComponent,
-    ModelMappingComponent
+    ModelMappingComponent,
+    AppModelListComponent
   ],
   imports: [
     BrowserModule,

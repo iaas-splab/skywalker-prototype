@@ -4,10 +4,7 @@ import de.iaas.skywalker.mapper.DeploymentModelMapper;
 import de.iaas.skywalker.evaluation.EvaluationHelper;
 import de.iaas.skywalker.mapper.ModelMappingUtils;
 import de.iaas.skywalker.models.*;
-import de.iaas.skywalker.repository.MappingModuleRepository;
-import de.iaas.skywalker.repository.ServiceMappingRepository;
-import de.iaas.skywalker.repository.DeploymentModelRepository;
-import de.iaas.skywalker.repository.ServicePropertyMappingRepository;
+import de.iaas.skywalker.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,17 +20,20 @@ public class MappingController {
     private DeploymentModelRepository deploymentModelRepository;
     private ServiceMappingRepository serviceMappingRepository;
     private ServicePropertyMappingRepository servicePropertyMappingRepository;
+    private GenericApplicationModelRepository genericApplicationModelRepository;
 
     public MappingController(
             MappingModuleRepository mappingModuleRepository,
             DeploymentModelRepository deploymentModelRepository,
             ServiceMappingRepository serviceMappingRepository,
-            ServicePropertyMappingRepository servicePropertyMappingRepository
+            ServicePropertyMappingRepository servicePropertyMappingRepository,
+            GenericApplicationModelRepository genericApplicationModelRepository
             ) {
         this.mappingModuleRepository = mappingModuleRepository;
         this.deploymentModelRepository = deploymentModelRepository;
         this.serviceMappingRepository = serviceMappingRepository;
         this.servicePropertyMappingRepository = servicePropertyMappingRepository;
+        this.genericApplicationModelRepository = genericApplicationModelRepository;
     }
 
     @GetMapping(path = "/")
@@ -71,7 +71,7 @@ public class MappingController {
 
         ModelMappingUtils utils = new ModelMappingUtils();
 
-        GenericApplicationModel GAM = new GenericApplicationModel(utils.getAppAtPropertiesLevel(appProps));
+        GenericApplicationModel GAM = new GenericApplicationModel(mappingConfiguration.getAppName(), utils.getAppAtPropertiesLevel(appProps));
         GAM.setEventSources(utils.makeGrid(GAM.getEventSources().entrySet().iterator(), this.serviceMappingRepository));
 //        GAM.setFunctions(utils.makeGrid(GAM.getFunctions().entrySet().iterator(), this.serviceMappingRepository));
 //        GAM.setInvokedServices(utils.makeGrid(GAM.getInvokedServices().entrySet().iterator(), this.serviceMappingRepository));
@@ -87,6 +87,8 @@ public class MappingController {
         List<GenericServiceProperty> serviceProperties = this.servicePropertyMappingRepository.findAll();
 
         GAM.setEventSources(utils.genericPropertiesForGAM(GAM.getEventSources(), this.servicePropertyMappingRepository));
+
+        this.genericApplicationModelRepository.save(GAM);
 
         EvaluationHelper eHelper = new EvaluationHelper(GAM.getEventSources());
         double coverage = eHelper.compareWithSelectedPlatformCandidate(azureEventSources);

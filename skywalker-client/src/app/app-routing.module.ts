@@ -6,6 +6,7 @@ import {TemplateListComponent} from "./template-list/template-list.component";
 import {MappingListComponent} from "./mapping-list/mapping-list.component";
 import {AddMappingComponent} from "./add-mapping/add-mapping.component";
 import {ModelMappingComponent} from "./model-mapping/model-mapping.component";
+import {AppModelListComponent} from "./app-model-list/app-model-list.component";
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'mapping-add',
     component: AddMappingComponent
+  },
+  {
+    path: 'app-model-list',
+    component: AppModelListComponent
   }
 ];
 
