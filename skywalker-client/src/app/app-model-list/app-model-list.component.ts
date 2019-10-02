@@ -11,7 +11,8 @@ import {AppModel} from "../models/AppModel";
 export class AppModelListComponent implements OnInit {
   appModels: Array<AppModel>;
   eventSources: Array<EventSource> = new Array<EventSource>();
-
+  sizeOfProp: any = 3;
+  tiles = [1, 2,3,4,5];
 
   constructor(private appModelService: AppModelService) { }
 

@@ -9,16 +9,21 @@
     <mat-expansion-panel-header>
       <mat-panel-title class="small-text">{{appModel.id}}</mat-panel-title>
     </mat-expansion-panel-header>
-    <mat-card>
-      <div *ngFor="let event of eventSources">
-        <mat-card-title>{{event.eventName}}</mat-card-title>
-        <div *ngFor="let prop of event.eventProperties">
-          <p>{{prop}}</p>
-        </div>
-      </div>
-      <!--<div class="example-button-row">-->
-        <!--<button mat-stroked-button color="primary" [routerLink]="['/template-edit', template]" >Edit</button>-->
-      <!--</div>-->
-    </mat-card>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>Event sources</mat-expansion-panel-header>
+        <mat-grid-list cols="{{eventSources.length}}" rowHeight="1:2.5">
+          <mat-grid-tile
+            *ngFor="let event of eventSources">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>{{event.eventName}}</mat-expansion-panel-header>
+              <div *ngFor="let prop of event.eventProperties">
+                <p>{{prop}}</p>
+              </div>
+            </mat-expansion-panel>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-expansion-panel>
+    </mat-accordion>
   </mat-expansion-panel>
 </mat-accordion>
