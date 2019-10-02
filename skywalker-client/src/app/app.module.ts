@@ -21,7 +21,8 @@ import {
   MatSnackBarModule,
   MatListModule,
   MatToolbarModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatProgressBarModule
 } from "@angular/material";
 import { FormsModule } from '@angular/forms';
 import { FileInputComponent } from './file-input/file-input.component';
@@ -59,8 +60,8 @@ import { AppModelListComponent } from './app-model-list/app-model-list.component
     MatSnackBarModule,
     MatListModule,
     MatToolbarModule,
-    MatTooltipModule
-
+    MatTooltipModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
