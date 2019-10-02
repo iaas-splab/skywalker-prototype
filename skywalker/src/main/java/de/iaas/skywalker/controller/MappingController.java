@@ -71,7 +71,7 @@ public class MappingController {
 
         ModelMappingUtils utils = new ModelMappingUtils();
 
-        GenericApplicationModel GAM = new GenericApplicationModel(mappingConfiguration.getAppName(), utils.getAppAtPropertiesLevel(appProps));
+        GenericApplicationModel GAM = new GenericApplicationModel(mappingConfiguration.getId(), utils.getAppAtPropertiesLevel(appProps));
         GAM.setEventSources(utils.makeGrid(GAM.getEventSources().entrySet().iterator(), this.serviceMappingRepository));
 //        GAM.setFunctions(utils.makeGrid(GAM.getFunctions().entrySet().iterator(), this.serviceMappingRepository));
 //        GAM.setInvokedServices(utils.makeGrid(GAM.getInvokedServices().entrySet().iterator(), this.serviceMappingRepository));

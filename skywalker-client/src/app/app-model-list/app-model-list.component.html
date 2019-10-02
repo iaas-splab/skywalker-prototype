@@ -12,9 +12,9 @@
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>Event sources</mat-expansion-panel-header>
-        <mat-grid-list cols="{{eventSources.length}}" rowHeight="1:2.5">
+        <mat-grid-list cols="{{appEventSources[appModel.id].length}}" rowHeight="1:2.5">
           <mat-grid-tile
-            *ngFor="let event of eventSources">
+            *ngFor="let event of appEventSources[appModel.id]">
             <mat-expansion-panel>
               <mat-expansion-panel-header>{{event.name}}</mat-expansion-panel-header>
               <div *ngFor="let prop of event.properties">
@@ -24,20 +24,6 @@
           </mat-grid-tile>
         </mat-grid-list>
       </mat-expansion-panel>
-      <!--<mat-expansion-panel>-->
-        <!--<mat-expansion-panel-header>Invoked services</mat-expansion-panel-header>-->
-        <!--<mat-grid-list cols="{{invokedServices.length}}" rowHeight="1:2">-->
-          <!--<mat-grid-tile-->
-            <!--*ngFor="let service of invokedServices">-->
-            <!--<mat-expansion-panel>-->
-              <!--<mat-expansion-panel-header>{{service.instanceName}}</mat-expansion-panel-header>-->
-              <!--<div *ngFor="let prop of service.invocationProperties">-->
-                <!--<p>{{prop}}</p>-->
-              <!--</div>-->
-            <!--</mat-expansion-panel>-->
-          <!--</mat-grid-tile>-->
-        <!--</mat-grid-list>-->
-      <!--</mat-expansion-panel>-->
       <mat-expansion-panel>
         <mat-expansion-panel-header>Invoked services</mat-expansion-panel-header>
         <div>
@@ -67,3 +53,6 @@
     </mat-accordion>
   </mat-expansion-panel>
 </mat-accordion>
+<button mat-button mat-stroked-button (click)="resetAll()" matTooltip="Reset all added application models">
+  Reset all
+</button>

@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
@@ -13,8 +12,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class MappingConfiguration {
     @Id
-    @GeneratedValue
-    private String appName;
+    private String id;
 
     private @NonNull
     String deploymentModel;
@@ -22,12 +20,12 @@ public class MappingConfiguration {
     private @NonNull
     String mappingModule;
 
-    public String getAppName() {
-        return appName;
+    public String getId() {
+        return id;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDeploymentModel() {

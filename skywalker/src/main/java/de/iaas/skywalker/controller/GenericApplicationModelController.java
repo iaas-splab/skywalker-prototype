@@ -29,5 +29,8 @@ public class GenericApplicationModelController {
     public int put() { return 0; }
 
     @DeleteMapping(path = "/")
-    public int delete() { return 0; }
+    public ResponseEntity<Object> delete() {
+        this.repository.deleteAll();
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

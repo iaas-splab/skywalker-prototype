@@ -18,6 +18,10 @@ export class AppModelService {
     return this.http.get(this.mappingApi + '/');
   }
 
+  resetAll(): Observable<any> {
+    return this.http.delete(this.mappingApi + '/');
+  }
+
   upload(module: MappingModule): Observable<any> {
     return this.http.post(this.mappingApi + '/' +  'upload/', module);
   }

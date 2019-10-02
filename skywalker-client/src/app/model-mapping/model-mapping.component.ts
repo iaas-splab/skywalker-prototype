@@ -16,6 +16,7 @@ export class ModelMappingComponent implements OnInit {
   selectedModule: MappingModule;
   selectedTemplate: Template;
   mappingConfig: MappingConfiguration;
+  applicationName: string;
 
   constructor(
     private templateService: TemplateService,
@@ -33,7 +34,7 @@ export class ModelMappingComponent implements OnInit {
   }
 
   onStart() {
-    this.mappingConfig = new MappingConfiguration(this.selectedTemplate.name, this.selectedModule.name);
+    this.mappingConfig = new MappingConfiguration(this.selectedTemplate.name, this.selectedModule.name, this.applicationName);
     this.mappingService.passMappingConfiguration(this.mappingConfig).subscribe(data => {
       console.log(data);
     });
