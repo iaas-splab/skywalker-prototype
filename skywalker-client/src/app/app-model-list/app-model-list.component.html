@@ -16,13 +16,53 @@
           <mat-grid-tile
             *ngFor="let event of eventSources">
             <mat-expansion-panel>
-              <mat-expansion-panel-header>{{event.eventName}}</mat-expansion-panel-header>
-              <div *ngFor="let prop of event.eventProperties">
-                <p>{{prop}}</p>
+              <mat-expansion-panel-header>{{event.name}}</mat-expansion-panel-header>
+              <div *ngFor="let prop of event.properties">
+                <p class="property-view">{{prop}}</p>
               </div>
             </mat-expansion-panel>
           </mat-grid-tile>
         </mat-grid-list>
+      </mat-expansion-panel>
+      <!--<mat-expansion-panel>-->
+        <!--<mat-expansion-panel-header>Invoked services</mat-expansion-panel-header>-->
+        <!--<mat-grid-list cols="{{invokedServices.length}}" rowHeight="1:2">-->
+          <!--<mat-grid-tile-->
+            <!--*ngFor="let service of invokedServices">-->
+            <!--<mat-expansion-panel>-->
+              <!--<mat-expansion-panel-header>{{service.instanceName}}</mat-expansion-panel-header>-->
+              <!--<div *ngFor="let prop of service.invocationProperties">-->
+                <!--<p>{{prop}}</p>-->
+              <!--</div>-->
+            <!--</mat-expansion-panel>-->
+          <!--</mat-grid-tile>-->
+        <!--</mat-grid-list>-->
+      <!--</mat-expansion-panel>-->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>Invoked services</mat-expansion-panel-header>
+        <div>
+          <mat-accordion *ngFor="let service of invokedServices">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>{{service.name}}</mat-expansion-panel-header>
+              <div *ngFor="let prop of service.properties">
+                <p class="property-view">{{prop}}</p>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>Functions</mat-expansion-panel-header>
+        <div>
+          <mat-accordion *ngFor="let function of functions">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>{{function.name}}</mat-expansion-panel-header>
+              <div *ngFor="let config of function.config">
+                <p class="property-view">{{config}}</p>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
   </mat-expansion-panel>

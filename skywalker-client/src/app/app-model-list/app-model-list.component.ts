@@ -11,8 +11,8 @@ import {AppModel} from "../models/AppModel";
 export class AppModelListComponent implements OnInit {
   appModels: Array<AppModel>;
   eventSources: Array<EventSource> = new Array<EventSource>();
-  sizeOfProp: any = 3;
-  tiles = [1, 2,3,4,5];
+  invokedServices: Array<InvokedService> = new Array<InvokedService>();
+  functions: Array<HostedFunction> = new Array<HostedFunction>();
 
   constructor(private appModelService: AppModelService) { }
 
@@ -23,6 +23,14 @@ export class AppModelListComponent implements OnInit {
         for (event in app.eventSources) {
           this.eventSources.push(new EventSource(event, app.eventSources[event]));
         }
+        let service;
+        for (service in app.invokedServices) {
+          this.invokedServices.push(new InvokedService(service, app.invokedServices[service]));
+        }
+        let hostedFunction;
+        for (hostedFunction in app.functions) {
+          this.functions.push(new HostedFunction(hostedFunction, app.functions[hostedFunction]));
+        }
       }
     });
   }
@@ -30,7 +38,21 @@ export class AppModelListComponent implements OnInit {
 
 class EventSource {
   constructor(
-    public eventName: any,
-    public eventProperties: Array<string>
+    public name: any,
+    public properties: Array<string>
+  ){}
+}
+
+class InvokedService {
+  constructor(
+    public name: any,
+    public properties: Array<string>
+  ){}
+}
+
+class HostedFunction {
+  constructor(
+    public name: any,
+    public config: Array<string>
   ){}
 }
