@@ -7,6 +7,7 @@ import {MappingListComponent} from "./mapping-list/mapping-list.component";
 import {AddMappingComponent} from "./add-mapping/add-mapping.component";
 import {ModelMappingComponent} from "./model-mapping/model-mapping.component";
 import {AppModelListComponent} from "./app-model-list/app-model-list.component";
+import {ComparisonViewComponent} from "./comparison-view/comparison-view.component";
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: 'app-model-list',
     component: AppModelListComponent
+  },
+  {
+    path: 'app-comparison-view',
+    component: ComparisonViewComponent
   }
 ];
 

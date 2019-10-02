@@ -3,6 +3,8 @@ import {AppModelService} from "../services/app-model.service";
 import {AppModel} from "../models/AppModel";
 import {MatSnackBar} from "@angular/material";
 import {CoverageModel} from "../models/CoverageModel";
+import {Router} from "@angular/router";
+import {DataService} from "../services/data.service";
 
 @Component({
   selector: 'app-app-model-list',
@@ -19,7 +21,9 @@ export class AppModelListComponent implements OnInit {
 
   constructor(
     private appModelService: AppModelService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private data: DataService,
+    public router: Router
   ) { }
 
   ngOnInit() {
@@ -61,16 +65,8 @@ export class AppModelListComponent implements OnInit {
   evaluateWithPlatformCandidate(appModel: AppModel) {
     this.appModelService.evalPortability(appModel).subscribe(data => {
       this.appCoverageModel = data;
-
-      for (let eventSource in this.appCoverageModel.eventSourceCoverage) {
-        console.log(eventSource);
-        for (let propList of this.appCoverageModel.eventSourceCoverage[eventSource]) {
-          for (let prop in propList) {
-            console.log("-" + prop);
-            console.log("--" + propList[prop]);
-          }
-        }
-      }
+      this.data.changeCoverageModel(this.appCoverageModel);
+      this.router.navigate(['app-comparison-view']);
     });
   }
 
