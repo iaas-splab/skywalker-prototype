@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AppModelService} from "../services/app-model.service";
 import {AppModel} from "../models/AppModel";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-app-model-list',
@@ -11,43 +12,55 @@ import {AppModel} from "../models/AppModel";
 export class AppModelListComponent implements OnInit {
   appModels: Array<AppModel>;
   appEventSources: {[key: string]: any} = {};
-  eventSources: Array<EventSource>;
   appInvokedServices: {[key: string]: any} = {};
-  invokedServices: Array<InvokedService> = new Array<InvokedService>();
   appFunctions: {[key: string]: any} = {};
-  functions: Array<HostedFunction> = new Array<HostedFunction>();
 
-  constructor(private appModelService: AppModelService) { }
+  constructor(
+    private appModelService: AppModelService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit() {
     this.appModelService.getAll().subscribe(data => {
-      this.appModels = data;
-      for (let app of this.appModels) {
-        this.eventSources = new Array<EventSource>();
-        this.invokedServices = new Array<InvokedService>();
-        this.functions = new Array<HostedFunction>();
-        for (event in app.eventSources) {
-          this.eventSources.push(new EventSource(event, app.eventSources[event]));
-        }
-        this.appEventSources[app.id] = this.eventSources;
-        let service;
-        for (service in app.invokedServices) {
-          this.invokedServices.push(new InvokedService(service, app.invokedServices[service]));
-        }
-        this.appInvokedServices[app.id] = this.invokedServices;
-        let hostedFunction;
-        for (hostedFunction in app.functions) {
-          this.functions.push(new HostedFunction(hostedFunction, app.functions[hostedFunction]));
-        }
-        this.appFunctions[app.id] = this.functions;
-
-      }
+      this.parseDataBodyForPrettyNg(data);
     });
+  }
+
+  parseDataBodyForPrettyNg(data: any) {
+    this.appModels = data;
+    for (let app of this.appModels) {
+      let eventSources = new Array<EventSource>();
+      let invokedServices = new Array<InvokedService>();
+      let functions = new Array<HostedFunction>();
+
+      let event;
+      for (event in app.eventSources) {eventSources.push(new EventSource(event, app.eventSources[event]));}
+      this.appEventSources[app.id] = eventSources;
+
+      let service;
+      for (service in app.invokedServices) {invokedServices.push(new InvokedService(service, app.invokedServices[service]));}
+      this.appInvokedServices[app.id] = invokedServices;
+
+      let hostedFunction;
+      for (hostedFunction in app.functions) {functions.push(new HostedFunction(hostedFunction, app.functions[hostedFunction]));}
+      this.appFunctions[app.id] = functions;
+    }
   }
 
   resetAll() {
     this.appModelService.resetAll().subscribe(data => {
       console.log(data);
+      this.openSnackBar("Deleted all application models. Please refresh the page.",
+        'close',
+        1000);
+    });
+  }
+
+  openSnackBar(message: string, action: string, duration: number) {
+    this.snackBar.open(message, action, {
+      duration: duration,
+    }).afterDismissed().subscribe(() => {
+      this.mode = "";
     });
   }
 }

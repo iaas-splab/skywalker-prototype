@@ -1,3 +1,7 @@
 .property-view {
   font-family: monospace;
 }
+
+.spacer {
+  flex: 30%;
+}

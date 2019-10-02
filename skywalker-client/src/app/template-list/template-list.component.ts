@@ -28,5 +28,4 @@ export class TemplateListComponent implements OnInit {
       duration: duration,
     });
   }
-
 }

@@ -56,5 +56,4 @@ export class ModelMappingComponent implements OnInit {
       this.mode = "";
     });
   }
-
 }

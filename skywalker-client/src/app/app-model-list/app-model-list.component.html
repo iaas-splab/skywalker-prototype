@@ -1,8 +1,10 @@
 <mat-card>
   <mat-card-title><h3>Generic Application Models</h3></mat-card-title>
-  <!--<div class="right-flex">-->
-    <!--<button mat-flat-button color="primary" [routerLink]="['/template-edit']">Add template</button>-->
-  <!--</div>-->
+  <mat-card-actions>
+    <button mat-button mat-stroked-button (click)="resetAll()" matTooltip="Reset all added application models">
+      Reset all
+    </button>
+  </mat-card-actions>
 </mat-card>
 <mat-accordion *ngFor="let appModel of appModels">
   <mat-expansion-panel>
@@ -27,7 +29,7 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>Invoked services</mat-expansion-panel-header>
         <div>
-          <mat-accordion *ngFor="let service of invokedServices">
+          <mat-accordion *ngFor="let service of appInvokedServices[appModel.id]">
             <mat-expansion-panel>
               <mat-expansion-panel-header>{{service.name}}</mat-expansion-panel-header>
               <div *ngFor="let prop of service.properties">
@@ -40,7 +42,7 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>Functions</mat-expansion-panel-header>
         <div>
-          <mat-accordion *ngFor="let function of functions">
+          <mat-accordion *ngFor="let function of appFunctions[appModel.id]">
             <mat-expansion-panel>
               <mat-expansion-panel-header>{{function.name}}</mat-expansion-panel-header>
               <div *ngFor="let config of function.config">
@@ -53,6 +55,3 @@
     </mat-accordion>
   </mat-expansion-panel>
 </mat-accordion>
-<button mat-button mat-stroked-button (click)="resetAll()" matTooltip="Reset all added application models">
-  Reset all
-</button>
