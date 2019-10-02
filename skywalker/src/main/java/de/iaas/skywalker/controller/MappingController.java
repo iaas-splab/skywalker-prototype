@@ -1,6 +1,7 @@
 package de.iaas.skywalker.controller;
 
 import de.iaas.skywalker.mapper.DeploymentModelMapper;
+import de.iaas.skywalker.evaluation.EvaluationHelper;
 import de.iaas.skywalker.mapper.ModelMappingUtils;
 import de.iaas.skywalker.models.*;
 import de.iaas.skywalker.repository.MappingModuleRepository;
@@ -87,7 +88,8 @@ public class MappingController {
 
         GAM.setEventSources(utils.genericPropertiesForGAM(GAM.getEventSources(), this.servicePropertyMappingRepository));
 
-
+        EvaluationHelper eHelper = new EvaluationHelper(GAM.getEventSources());
+        double coverage = eHelper.compareWithSelectedPlatformCandidate(azureEventSources);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

@@ -65,6 +65,7 @@ public class SkywalkerApplication {
 	ApplicationRunner init(){
 		return args -> {
 			try {
+				//mongod --dbpath=.
 				this.initRepos();
 			} catch ( IOException e ) {
 				e.printStackTrace();
