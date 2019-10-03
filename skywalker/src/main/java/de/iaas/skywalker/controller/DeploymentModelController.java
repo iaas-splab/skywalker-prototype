@@ -47,5 +47,8 @@ public class DeploymentModelController {
     public int putExtraction() { return 0; }
 
     @DeleteMapping(path = "/")
-    public int deleteExtraction() { return 0; }
+    public ResponseEntity<Object> deleteAll() {
+        this.repository.deleteAll();
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

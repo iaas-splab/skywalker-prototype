@@ -25,4 +25,8 @@ export class TemplateService {
   upload(template: Template): Observable<any> {
     return this.http.post(this.templateApi + '/' +  'upload/', template);
   }
+
+  resetAll(): Observable<any> {
+    return this.http.delete(this.templateApi + '/');
+  }
 }

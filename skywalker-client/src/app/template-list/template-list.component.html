@@ -2,6 +2,7 @@
   <mat-card-title><h3>Templates</h3></mat-card-title>
   <div class="right-flex">
     <button mat-flat-button color="primary" [routerLink]="['/template-edit']">Add template</button>
+    <button mat-stroked-button color="primary" (click)="resetAll()">Reset all</button>
   </div>
 </mat-card>
 <mat-accordion *ngFor="let template of templates">

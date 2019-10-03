@@ -14,7 +14,6 @@ import {MatSnackBar} from "@angular/material";
 
 export class RetrievalComponent implements OnInit {
 
-
   constructor(
     private extractionService: TemplateService,
     private snackBar: MatSnackBar,

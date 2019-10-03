@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {TemplateService} from "../services/template.service";
 import {Template} from "../models/Template";
 import {MatSnackBar} from "@angular/material";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-template-list',
@@ -13,12 +14,30 @@ export class TemplateListComponent implements OnInit {
 
   constructor(
     private templateService: TemplateService,
-    private snackBar: MatSnackBar
+    private extractionService: TemplateService,
+    private snackBar: MatSnackBar,
+    public router: Router
   ) { }
 
   ngOnInit() {
     this.templateService.getAll().subscribe(data => {
       this.templates = data;
+    });
+  }
+
+  resetAll() {
+    this.extractionService.resetAll().subscribe(data => {
+      console.log(data);
+      this.openSnackBar("Reset all deployment model templates.",
+        'close',
+        1000);
+      this.router.navigate(['/template-list']);
+    });
+  }
+
+  openSnackBar(message: string, action: string, duration: number) {
+    this.snackBar.open(message, action, {
+      duration: duration,
     });
   }
 }

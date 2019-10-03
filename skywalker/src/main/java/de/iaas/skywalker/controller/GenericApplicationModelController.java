@@ -64,7 +64,7 @@ public class GenericApplicationModelController {
     public int put() { return 0; }
 
     @DeleteMapping(path = "/")
-    public ResponseEntity<Object> delete() {
+    public ResponseEntity<Object> deleteAll() {
         this.genericApplicationModelRepository.deleteAll();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
