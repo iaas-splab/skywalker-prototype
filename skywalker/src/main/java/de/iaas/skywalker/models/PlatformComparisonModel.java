@@ -12,11 +12,36 @@ public class PlatformComparisonModel {
     private String id;
     private Map<String, List<Map<String, String>>> eventSourceCoverage;
     private String targetPlatform;
+    private double platformCoverageScore;
+    private Map<String, Double> propertyCoverageScores;
 
-    public PlatformComparisonModel(String id, String targetPlatform, Map<String, List<Map<String, String>>> eventSourceCoverage) {
+    public PlatformComparisonModel(
+            String id,
+            String targetPlatform,
+            Map<String, List<Map<String, String>>> eventSourceCoverage,
+            double platformCoverageScore,
+            Map<String, Double> propertyCoverageScores) {
         this.id = id;
         this.targetPlatform = targetPlatform;
         this.eventSourceCoverage = eventSourceCoverage;
+        this.platformCoverageScore = platformCoverageScore;
+        this.propertyCoverageScores = propertyCoverageScores;
+    }
+
+    public double getPlatformCoverageScore() {
+        return platformCoverageScore;
+    }
+
+    public void setPlatformCoverageScore(double platformCoverageScore) {
+        this.platformCoverageScore = platformCoverageScore;
+    }
+
+    public Map<String, Double> getPropertyCoverageScores() {
+        return propertyCoverageScores;
+    }
+
+    public void setPropertyCoverageScores(Map<String, Double> propertyCoverageScores) {
+        this.propertyCoverageScores = propertyCoverageScores;
     }
 
     public String getTargetPlatform() {

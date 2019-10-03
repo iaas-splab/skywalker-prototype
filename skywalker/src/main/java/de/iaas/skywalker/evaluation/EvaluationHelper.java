@@ -1,11 +1,13 @@
 package de.iaas.skywalker.evaluation;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class EvaluationHelper {
 
     private Map<String, List<String>> sourceApplicationEventSources;
+    private DecimalFormat format = new DecimalFormat("00.##");
 
     public EvaluationHelper(Map<String, List<String>> sourceApplicationEventSources) {
         this.sourceApplicationEventSources = sourceApplicationEventSources;
@@ -26,6 +28,12 @@ public class EvaluationHelper {
             if(targetProperties.stream().anyMatch(tProp -> tProp.equals(sProp))) coverage += propertyWeight;
         }
         return coverage;
+    }
+
+    private Double makeDoubleWithTwoDigitsButveryHacky(double number) {
+        String doubleString = String.valueOf(number);
+        return Double.valueOf(((doubleString.length() >= 4) ? doubleString.substring(0,4) : doubleString)
+                .replace(",", "."));
     }
 
     private List<Map<String, String>> getServicePropertyCoverage(List<String> sourceProperties, List<String> targetProperties) {
@@ -54,16 +62,31 @@ public class EvaluationHelper {
         return platformCoverage;
     }
 
+    public Map<String, Double> evaluatePropertyCoverageScores(Map<String, List<String>> candidatePlatformEventSources) {
+        Map<String, Double> serviceCoverageScores = new HashMap<>();
+        double serviceWeight = 1.0 / this.sourceApplicationEventSources.size();
+
+        Iterator sourceServices = this.sourceApplicationEventSources.entrySet().iterator();
+        while (sourceServices.hasNext()) {
+            Map.Entry sService = (Map.Entry) sourceServices.next();
+            String sGRID = (String) sService.getKey();
+            List<String> sProperties = (List<String>) sService.getValue();
+            if (candidatePlatformEventSources.containsKey(sGRID)) {
+                double serviceSimilarty = this.evaluateServiceSimilarity(sProperties, candidatePlatformEventSources.get(sGRID));
+                serviceSimilarty = this.makeDoubleWithTwoDigitsButveryHacky(serviceSimilarty);
+                serviceCoverageScores.put(sGRID, serviceSimilarty);
+            }
+        }
+        return serviceCoverageScores;
+    }
+
     public Map<String, List<Map<String, String>>> getPlatformCandidateEventCoverageModel(Map<String, List<String>> candidatePlatformEventSources) {
         Map<String, List<Map<String, String>>> cutSetServices = new HashMap<>();
 
-        double serviceWeight = 1.0 / this.sourceApplicationEventSources.size();
-        double platformCoverage = 0.0;
-
         Iterator sourceServices = this.sourceApplicationEventSources.entrySet().iterator();
         while(sourceServices.hasNext()) {
-            Map.Entry sService = (Map.Entry) sourceServices.next();
             List<Map<String, String>> propCoverageList = new ArrayList<>();
+            Map.Entry sService = (Map.Entry) sourceServices.next();
             String sGRID = (String) sService.getKey();
             List<String> sProperties = (List<String>) sService.getValue();
             if(candidatePlatformEventSources.containsKey(sGRID)) {
@@ -71,7 +94,6 @@ public class EvaluationHelper {
                         sGRID,
                         getServicePropertyCoverage(sProperties, candidatePlatformEventSources.get(sGRID))
                 );
-                platformCoverage += serviceWeight * this.evaluateServiceSimilarity(sProperties, candidatePlatformEventSources.get(sGRID));
             } else {
                 cutSetServices.put(
                         sGRID,

@@ -51,10 +51,13 @@ public class GenericApplicationModelController {
         candidatePlatformEventSources = utils.generifyEventSourceProperties(candidatePlatformEventSources, this.servicePropertyMappingRepository);
 
         EvaluationHelper evaluationHelper = new EvaluationHelper(bundle.getGam().getEventSources());
-        double coverage = evaluationHelper.evaluatePlatformCandidateCoverageScore(candidatePlatformEventSources);
-
-        Map<String, List<Map<String, String>>> compareModel = evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources);
-        return new PlatformComparisonModel(bundle.getGam().getId(), bundle.getTargetPlatformId(), compareModel);
+        return new PlatformComparisonModel(
+                bundle.getGam().getId(),
+                bundle.getTargetPlatformId(),
+                evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources),
+                evaluationHelper.evaluatePlatformCandidateCoverageScore(candidatePlatformEventSources),
+                evaluationHelper.evaluatePropertyCoverageScores(candidatePlatformEventSources)
+        );
     }
 
     @PutMapping(path = "/")
