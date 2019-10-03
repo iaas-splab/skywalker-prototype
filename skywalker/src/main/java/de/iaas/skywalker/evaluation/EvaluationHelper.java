@@ -5,9 +5,6 @@ import java.util.stream.Collectors;
 
 public class EvaluationHelper {
 
-    private final String AVAIL = "Y";
-    private final String UNAVAIL = "N";
-
     private Map<String, List<String>> sourceApplicationEventSources;
 
     public EvaluationHelper(Map<String, List<String>> sourceApplicationEventSources) {
@@ -35,8 +32,8 @@ public class EvaluationHelper {
         List<Map<String, String>> propertyCoverageList = new ArrayList<>();
         for (String sProp : sourceProperties) {
             propertyCoverageList.add(new HashMap<String, String>(){{
-                if(targetProperties.stream().anyMatch(tProp -> tProp.equals(sProp))) put(sProp, AVAIL);
-                else put(sProp, UNAVAIL);
+                if(targetProperties.stream().anyMatch(tProp -> tProp.equals(sProp))) put(sProp, sProp);
+                else put(sProp, "-");
             }});
         }
         return propertyCoverageList;
@@ -78,7 +75,7 @@ public class EvaluationHelper {
             } else {
                 cutSetServices.put(
                         sGRID,
-                        sProperties.stream().map(x -> new HashMap<String, String>(){{put(x, UNAVAIL);}}).collect(Collectors.toList())
+                        sProperties.stream().map(x -> new HashMap<String, String>(){{put(x, "-");}}).collect(Collectors.toList())
                 );
             }
         }

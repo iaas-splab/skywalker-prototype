@@ -1,0 +1,30 @@
+.grid-tile-style {
+  position: absolute;
+  left: 5px;;
+}
+
+.unavailable-property {
+  color: darkgrey;
+  font-family: monospace;
+}
+
+.available-property {
+  color: green;
+  font-family: monospace;
+}
+
+#container > div {
+  display: inline-block;
+  text-align: left;
+  width: 50%;
+}
+#container {
+  text-align: left;
+  margin: 0px auto;
+  width: 100%;
+}
+.appModelHeader {
+  font-style: normal;
+  display: flex;
+  justify-content: center;
+}
