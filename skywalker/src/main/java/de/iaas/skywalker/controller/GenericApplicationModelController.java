@@ -2,9 +2,10 @@ package de.iaas.skywalker.controller;
 
 import de.iaas.skywalker.evaluation.EvaluationHelper;
 import de.iaas.skywalker.mapper.ModelMappingUtils;
+import de.iaas.skywalker.models.CoverageEvaluationBundle;
 import de.iaas.skywalker.models.GenericApplicationModel;
 import de.iaas.skywalker.models.PlatformComparisonModel;
-import de.iaas.skywalker.models.ServiceMapping;
+import de.iaas.skywalker.models.EventSourceMapping;
 import de.iaas.skywalker.repository.GenericApplicationModelRepository;
 import de.iaas.skywalker.repository.ServiceMappingRepository;
 import de.iaas.skywalker.repository.ServicePropertyMappingRepository;
@@ -38,22 +39,22 @@ public class GenericApplicationModelController {
     public Collection<GenericApplicationModel> get() { return this.genericApplicationModelRepository.findAll(); }
 
     @PostMapping(path = "/")
-    public PlatformComparisonModel getCoverageWithPlatformCandidate(@RequestBody GenericApplicationModel gam) {
+    public PlatformComparisonModel getCoverageWithPlatformCandidate(@RequestBody CoverageEvaluationBundle bundle) {
         ModelMappingUtils utils = new ModelMappingUtils();
 
-        List<ServiceMapping> azureServices = this.serviceMappingRepository.findByProvider("azure");
-        Map<String, List<String>> azureEventSources = new HashMap<String, List<String>>() {{
-            for(ServiceMapping sm : azureServices) {
+        List<EventSourceMapping> candidatePlatformServices = this.serviceMappingRepository.findByProvider(bundle.getTargetPlatformId());
+        Map<String, List<String>> candidatePlatformEventSources = new HashMap<String, List<String>>() {{
+            for(EventSourceMapping sm : candidatePlatformServices) {
                 put(sm.getGenericResourceId(), sm.getServiceProperties());
             }
         }};
-        azureEventSources = utils.generifyEventSourceProperties(azureEventSources, this.servicePropertyMappingRepository);
+        candidatePlatformEventSources = utils.generifyEventSourceProperties(candidatePlatformEventSources, this.servicePropertyMappingRepository);
 
-        EvaluationHelper eHelper = new EvaluationHelper(gam.getEventSources());
-        double coverage = eHelper.evaluatePlatformCandidateCoverageScore(azureEventSources);
+        EvaluationHelper evaluationHelper = new EvaluationHelper(bundle.getGam().getEventSources());
+        double coverage = evaluationHelper.evaluatePlatformCandidateCoverageScore(candidatePlatformEventSources);
 
-        Map<String, List<Map<String, String>>> compareModel = eHelper.getPlatformCandidateEventCoverageModel(azureEventSources);
-        return new PlatformComparisonModel(gam.getId(), compareModel);
+        Map<String, List<Map<String, String>>> compareModel = evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources);
+        return new PlatformComparisonModel(bundle.getGam().getId(), bundle.getTargetPlatformId(), compareModel);
     }
 
     @PutMapping(path = "/")

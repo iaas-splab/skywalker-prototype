@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AppModelService} from "../services/app-model.service";
 import {AppModel} from "../models/AppModel";
-import {MatSnackBar} from "@angular/material";
+import {MatDialog, MatSnackBar} from "@angular/material";
 import {CoverageModel} from "../models/CoverageModel";
 import {Router} from "@angular/router";
 import {DataService} from "../services/data.service";
+import {CoverageEvaluationBundle} from "../models/CoverageEvaluationBundle";
 
 @Component({
   selector: 'app-app-model-list',
@@ -18,11 +19,13 @@ export class AppModelListComponent implements OnInit {
   appInvokedServices: {[key: string]: any} = {};
   appFunctions: {[key: string]: any} = {};
   appCoverageModel: CoverageModel;
+  selectedPlatform: String;
 
   constructor(
     private appModelService: AppModelService,
     private snackBar: MatSnackBar,
     private data: DataService,
+    public dialog: MatDialog,
     public router: Router
   ) { }
 
@@ -62,8 +65,9 @@ export class AppModelListComponent implements OnInit {
     });
   }
 
-  evaluateWithPlatformCandidate(appModel: AppModel) {
-    this.appModelService.evalPortability(appModel).subscribe(data => {
+  evaluateWithPlatformCandidate(appModel: AppModel, targetPlatform: any) {
+    let bundle = new CoverageEvaluationBundle(appModel, targetPlatform);
+    this.appModelService.evalPortability(bundle).subscribe(data => {
       this.appCoverageModel = data;
       this.data.changeCoverageModel(this.appCoverageModel);
       this.router.navigate(['app-comparison-view']);
@@ -77,6 +81,19 @@ export class AppModelListComponent implements OnInit {
       this.mode = "";
     });
   }
+
+  // openDialog() {
+  //   const dialogRef = this.dialog.open(PlatformDialogComponent, {
+  //     width: '250px',
+  //     data: this.selectedPlatform
+  //   });
+  //
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     console.log('The dialog was closed');
+  //     this.selectedPlatform = result;
+  //     console.log(result);
+  //   });
+  // }
 }
 
 class EventSource {

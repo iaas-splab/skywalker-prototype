@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Document
-public class ServiceMapping {
+public class EventSourceMapping {
     @Id
     private String id;
     private String genericResourceId;
@@ -13,7 +13,7 @@ public class ServiceMapping {
     private String providerResourceId;
     private List<String> serviceProperties;
 
-    public ServiceMapping(String genericResourceId, String provider, String providerResourceId, List<String> serviceProperties) {
+    public EventSourceMapping(String genericResourceId, String provider, String providerResourceId, List<String> serviceProperties) {
         this.genericResourceId = genericResourceId;
         this.provider = provider;
         this.providerResourceId = providerResourceId;

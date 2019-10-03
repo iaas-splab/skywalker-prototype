@@ -34,7 +34,7 @@
       </div>
       <div>
         <mat-card>
-          <mat-card-header class="appModelHeader">Azure</mat-card-header>
+          <mat-card-header class="appModelHeader">{{appCoverageModel.targetPlatform}}</mat-card-header>
           <mat-list>
             <div *ngFor="let prop of eventSource.value | keyvalue">
               <mat-list-item *ngFor="let p of prop.value | keyvalue">

@@ -3,7 +3,7 @@ package de.iaas.skywalker;
 import de.iaas.skywalker.models.DeploymentModel;
 import de.iaas.skywalker.models.GenericServiceProperty;
 import de.iaas.skywalker.models.MappingModule;
-import de.iaas.skywalker.models.ServiceMapping;
+import de.iaas.skywalker.models.EventSourceMapping;
 import de.iaas.skywalker.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -86,7 +86,7 @@ public class SkywalkerApplication {
 		mappingModuleRepository.save(mappingModule);
 
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"http",
 						"aws",
 						"http",
@@ -94,7 +94,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"http",
 						"azure",
 						"http",
@@ -102,7 +102,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"storage",
 						"aws",
 						"s3",
@@ -110,7 +110,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"storage",
 						"azure",
 						"blob",
@@ -118,7 +118,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"schedule",
 						"aws",
 						"schedule",
@@ -126,7 +126,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"schedule",
 						"azure",
 						"timer",
@@ -134,7 +134,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"stream",
 						"aws",
 						"stream",
@@ -142,7 +142,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"stream",
 						"azure",
 						"eventHub",
@@ -150,7 +150,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"point2point",
 						"aws",
 						"sqs",
@@ -158,7 +158,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"point2point",
 						"azure",
 						"queue",
@@ -166,7 +166,7 @@ public class SkywalkerApplication {
 				)
 		);
 		serviceMappingRepository.save(
-				new ServiceMapping(
+				new EventSourceMapping(
 						"point2point",
 						"azure",
 						"serviceBus",

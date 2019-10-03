@@ -22,7 +22,8 @@ import {
   MatListModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatDialogModule
 } from "@angular/material";
 import { FormsModule } from '@angular/forms';
 import { FileInputComponent } from './file-input/file-input.component';
@@ -63,7 +64,8 @@ import { ComparisonViewComponent } from './comparison-view/comparison-view.compo
     MatListModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
