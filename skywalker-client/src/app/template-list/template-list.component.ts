@@ -20,12 +20,5 @@ export class TemplateListComponent implements OnInit {
     this.templateService.getAll().subscribe(data => {
       this.templates = data;
     });
-    this.openSnackBar('Please reload the page to refresh the list if the most recent changes are not contained, yet.', 'close', 2000);
-  }
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
-    });
   }
 }
