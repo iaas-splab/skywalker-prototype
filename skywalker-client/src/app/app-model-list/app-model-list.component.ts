@@ -59,6 +59,7 @@ export class AppModelListComponent implements OnInit {
   resetAll() {
     this.appModelService.resetAll().subscribe(data => {
       console.log(data);
+      this.router.navigate(['']);
       this.openSnackBar("Deleted all application models. Please refresh the page.",
         'close',
         1000);
