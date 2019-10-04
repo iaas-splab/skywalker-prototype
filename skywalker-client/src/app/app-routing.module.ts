@@ -8,6 +8,8 @@ import {AddMappingComponent} from "./add-mapping/add-mapping.component";
 import {ModelMappingComponent} from "./model-mapping/model-mapping.component";
 import {AppModelListComponent} from "./app-model-list/app-model-list.component";
 import {ComparisonViewComponent} from "./comparison-view/comparison-view.component";
+import {ServiceRepoTableComponent} from "./service-repo-table/service-repo-table.component";
+import {AddServiceMappingComponent} from "./add-service-mapping/add-service-mapping.component";
 
 const routes: Routes = [
   {
@@ -37,6 +39,14 @@ const routes: Routes = [
   {
     path: 'app-comparison-view',
     component: ComparisonViewComponent
+  },
+  {
+    path: 'app-service-repo-table',
+    component: ServiceRepoTableComponent
+  },
+  {
+    path: 'app-add-service-mapping',
+    component: AddServiceMappingComponent
   }
 ];
 

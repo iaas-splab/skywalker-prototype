@@ -1,0 +1,28 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Add new Service Mapping</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form #serviceMappingForm="ngForm" (ngSubmit)="add(serviceMappingForm.value)">
+      <!--Content-->
+      <div class="example-container">
+        <mat-form-field>
+          <input required matInput placeholder="Generic Resource ID" id="genericResourceId" name="genericResourceId" ngModel>
+        </mat-form-field>
+        <mat-form-field>
+          <input required matInput placeholder="Provider" id="provider" name="provider" ngModel>
+        </mat-form-field>
+        <mat-form-field>
+          <input required matInput placeholder="Provider Resource ID" id="providerResourceId" name="providerResourceId" ngModel>
+        </mat-form-field>
+        <mat-form-field>
+          <input required matInput placeholder="List of properties" id="serviceProperties" name="serviceProperties" ngModel matTooltip="Use commas as delimiter like this: Property1,Property2,...">
+        </mat-form-field>
+      </div>
+      <!--Actions-->
+      <mat-action-row>
+        <button mat-button type="submit" [disabled]="serviceMappingForm.invalid">Submit</button>
+      </mat-action-row>
+    </form>
+  </mat-card-content>
+</mat-card>

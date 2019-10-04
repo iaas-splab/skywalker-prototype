@@ -1,0 +1,38 @@
+<mat-card>
+  <mat-card-title><h4>Service Mapping Repository</h4></mat-card-title>
+  <div class="right-flex">
+    <button mat-flat-button color="primary" [routerLink]="['/app-add-service-mapping']">Add</button>
+    <button mat-button mat-stroked-button (click)="resetAll()" matTooltip="Reset to default table">
+      Reset to default
+    </button>
+  </div>
+</mat-card>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> ID </th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="genericResourceId">
+    <th mat-header-cell *matHeaderCellDef> Generic Resource ID </th>
+    <td mat-cell *matCellDef="let element"> {{element.genericResourceId}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="provider">
+    <th mat-header-cell *matHeaderCellDef> Provider </th>
+    <td mat-cell *matCellDef="let element"> {{element.provider}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="providerResourceId">
+    <th mat-header-cell *matHeaderCellDef> Provider Resource ID </th>
+    <td mat-cell *matCellDef="let element"> {{element.providerResourceId}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="serviceProperties">
+    <th mat-header-cell *matHeaderCellDef> Properties </th>
+    <td mat-cell *matCellDef="let element"> {{element.serviceProperties.toString()}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

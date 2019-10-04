@@ -100,20 +100,20 @@ export class AppModelListComponent implements OnInit {
 class EventSource {
   constructor(
     public name: any,
-    public properties: Array<string>
+    public properties: Array<any>
   ){}
 }
 
 class InvokedService {
   constructor(
     public name: any,
-    public properties: Array<string>
+    public properties: Array<any>
   ){}
 }
 
 class HostedFunction {
   constructor(
     public name: any,
-    public config: Array<string>
+    public config: Array<any>
   ){}
 }
