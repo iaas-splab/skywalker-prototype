@@ -25,4 +25,8 @@ export class MappingService {
   passMappingConfiguration(mappingConfig: MappingConfiguration): Observable<any> {
     return this.http.post(this.mappingApi + '/' + 'generate/', mappingConfig);
   }
+
+  resetAll(): Observable<any> {
+    return this.http.delete(this.mappingApi + '/');
+  }
 }
