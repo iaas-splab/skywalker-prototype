@@ -39,8 +39,8 @@ public class MappingController {
     public Collection<MappingModule> getMappingModules() { return this.mappingModuleRepository.findAll(); }
 
     @PostMapping(path = "/upload")
-    public ResponseEntity<Object> putMappingModuleFile(@RequestBody MappingModule module) {
-        this.mappingModuleRepository.deleteByName(module.getName());
+    public ResponseEntity<Object> putMappingModuleFile(@RequestBody MappingModule module) { // Todo: Sometimes still adds duplicate mapping modules per request
+        this.mappingModuleRepository.deleteByName(module.getName()); // TOdo: crashes when already existing mapping module is tried to be added again
         if(this.mappingModuleRepository.findByName(module.getName()) != null) this.mappingModuleRepository.save(module);
         String currentPath = Paths.get("").toAbsolutePath().toString() + "\\src\\main\\resources";
         try {

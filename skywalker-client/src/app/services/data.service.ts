@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
-import {CoverageModel} from "../models/CoverageModel";
+import {CoverageModel} from "../app-model/CoverageModel";
 
 @Injectable({
   providedIn: 'root'

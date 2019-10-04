@@ -6,7 +6,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { RetrievalComponent } from './retrieval/retrieval.component';
+import { RetrievalComponent } from './deployment-model-templates/retrieval/retrieval.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -28,18 +28,17 @@ import {
   MatStepperModule
 } from "@angular/material";
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
-import { FileInputComponent } from './file-input/file-input.component';
-import { TemplateListComponent } from './template-list/template-list.component';
-import { MappingListComponent } from './mapping-list/mapping-list.component';
-import { AddMappingComponent } from './add-mapping/add-mapping.component';
-import { ModelMappingComponent } from './model-mapping/model-mapping.component';
-import { AppModelListComponent } from './app-model-list/app-model-list.component';
-import { ComparisonViewComponent } from './comparison-view/comparison-view.component';
-import { ServiceRepoTableComponent } from './service-repo-table/service-repo-table.component';
-import { AddServiceMappingComponent } from './add-service-mapping/add-service-mapping.component';
-import { PropertyRepoTableComponent } from './property-repo-table/property-repo-table.component';
-import { AddPropertyMappingComponent } from './add-property-mapping/add-property-mapping.component';
-import { AddAppModelComponent } from './add-app-model/add-app-model.component';
+import { FileInputComponent } from './deployment-model-templates/file-input/file-input.component';
+import { TemplateListComponent } from './deployment-model-templates/template-list/template-list.component';
+import { MappingListComponent } from './mapping-modules/mapping-list/mapping-list.component';
+import { AddMappingComponent } from './mapping-modules/add-mapping/add-mapping.component';
+import { AppModelListComponent } from './app-model/app-model-list/app-model-list.component';
+import { ComparisonViewComponent } from './app-model/comparison-view/comparison-view.component';
+import { ServiceRepoTableComponent } from './repositories/service-repo-table/service-repo-table.component';
+import { AddServiceMappingComponent } from './repositories/add-service-mapping/add-service-mapping.component';
+import { PropertyRepoTableComponent } from './repositories/property-repo-table/property-repo-table.component';
+import { AddPropertyMappingComponent } from './repositories/add-property-mapping/add-property-mapping.component';
+import { AddAppModelComponent } from './app-model/add-app-model/add-app-model.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +49,6 @@ import { AddAppModelComponent } from './add-app-model/add-app-model.component';
     TemplateListComponent,
     MappingListComponent,
     AddMappingComponent,
-    ModelMappingComponent,
     AppModelListComponent,
     ComparisonViewComponent,
     ServiceRepoTableComponent,
