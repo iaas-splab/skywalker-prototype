@@ -1,10 +1,14 @@
 package de.iaas.skywalker;
 
-import de.iaas.skywalker.models.DeploymentModel;
-import de.iaas.skywalker.models.GenericServiceProperty;
-import de.iaas.skywalker.models.MappingModule;
-import de.iaas.skywalker.models.EventSourceMapping;
-import de.iaas.skywalker.repository.*;
+import de.iaas.skywalker.ApplicationModels.repository.GenericApplicationModelRepository;
+import de.iaas.skywalker.DeploymentModels.repository.DeploymentModelRepository;
+import de.iaas.skywalker.MappingModules.repository.MappingModuleRepository;
+import de.iaas.skywalker.MappingModules.model.DeploymentModel;
+import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
+import de.iaas.skywalker.TransformationRepositories.repository.ServicePropertyMappingRepository;
+import de.iaas.skywalker.TransformationRepositories.model.GenericServiceProperty;
+import de.iaas.skywalker.MappingModules.model.MappingModule;
+import de.iaas.skywalker.TransformationRepositories.model.EventSourceMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,19 +29,19 @@ import java.util.List;
 public class SkywalkerApplication {
 
 	@Autowired
-	DeploymentModelRepository deploymentModelRepository;
+    DeploymentModelRepository deploymentModelRepository;
 
 	@Autowired
-	MappingModuleRepository mappingModuleRepository;
+    MappingModuleRepository mappingModuleRepository;
 
 	@Autowired
-	ServiceMappingRepository serviceMappingRepository;
+    ServiceMappingRepository serviceMappingRepository;
 
 	@Autowired
-	ServicePropertyMappingRepository servicePropertyMappingRepository;
+    ServicePropertyMappingRepository servicePropertyMappingRepository;
 
 	@Autowired
-	GenericApplicationModelRepository genericApplicationModelRepository;
+    GenericApplicationModelRepository genericApplicationModelRepository;
 
 	private static final String MACOS_MAPPINGS = "/src/main/resources/mapping.configurations/rule_serverless_v2.yaml";
 	private static final String MACOS_TEMPLATES = "/src/main/resources/templates/serverless.yml";
