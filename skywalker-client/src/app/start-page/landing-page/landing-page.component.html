@@ -1,0 +1,48 @@
+<!--<h3 class="navbar navbar-expand-lg navbar-dark bg-dark">Welcome to skywalker!</h3>-->
+<mat-card class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <mat-card-header>
+    <mat-card-title class="text-warning">What you may do first:</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-card class="light-dark">
+      <mat-card-content>
+        <h6><b>Adding Templates and Mapping Modules</b></h6>
+        <p>
+          For generating Application Models, you need at least one <a [routerLink]="['/template-list']">Template</a> and a suitable
+          <a [routerLink]="['/mapping-list']">Mapping Module</a>.
+        </p>
+      </mat-card-content>
+    </mat-card>
+    <div class="spacer"></div>
+    <mat-card class="light-dark">
+      <mat-card-content>
+        <h6><b>Analyze Application Models</b></h6>
+        <p>
+          Subsequently, you can find the existing Application Models at <a [routerLink]="['/app-model-list']">Applications</a> view.
+        </p>
+      </mat-card-content>
+    </mat-card>
+    <div class="spacer"></div>
+    <mat-card class="light-dark">
+      <mat-card-content>
+        <h6><b>Evaluate portability</b></h6>
+        <p>
+          Open the desired Application to analyze the incorporated services which are displayed with generic descriptive names.
+          In addition, click <b>Evaluate</b> at the bottom of the detail view to evaluate the portability to a chosen provider
+          platform, e.g., Azure.
+        </p>
+      </mat-card-content>
+    </mat-card>
+    <div class="spacer"></div>
+    <mat-card class="light-dark">
+      <mat-card-content>
+        <h6><b>Maintain Mapping Repositories</b></h6>
+        <p>
+          In <a [routerLink]="['/app-model-list']">Applications</a>, there are generic Service and Property names for provider-specific
+          resources. In <a [routerLink]="['/app-service-repo-table']">Service Repo</a> and <a [routerLink]="['/app-property-repo-table']">Property Repo</a>
+          you can look up how the mapping is done and update the mapping tables, if necessary.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </mat-card-content>
+</mat-card>

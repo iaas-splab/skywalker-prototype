@@ -5,7 +5,7 @@ import { HttpClientModule } from "@angular/common/http";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavigationComponent } from './navigation/navigation.component';
+import { NavigationComponent } from './start-page/navigation/navigation.component';
 import { RetrievalComponent } from './deployment-model-templates/retrieval/retrieval.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,6 +39,7 @@ import { AddServiceMappingComponent } from './repositories/add-service-mapping/a
 import { PropertyRepoTableComponent } from './repositories/property-repo-table/property-repo-table.component';
 import { AddPropertyMappingComponent } from './repositories/add-property-mapping/add-property-mapping.component';
 import { AddAppModelComponent } from './app-model/add-app-model/add-app-model.component';
+import { LandingPageComponent } from './start-page/landing-page/landing-page.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { AddAppModelComponent } from './app-model/add-app-model/add-app-model.co
     AddServiceMappingComponent,
     PropertyRepoTableComponent,
     AddPropertyMappingComponent,
-    AddAppModelComponent
+    AddAppModelComponent,
+    LandingPageComponent
   ],
   imports: [
     BrowserModule,

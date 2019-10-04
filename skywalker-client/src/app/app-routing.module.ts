@@ -11,11 +11,12 @@ import {AddServiceMappingComponent} from "./repositories/add-service-mapping/add
 import {PropertyRepoTableComponent} from "./repositories/property-repo-table/property-repo-table.component";
 import {AddPropertyMappingComponent} from "./repositories/add-property-mapping/add-property-mapping.component";
 import {AddAppModelComponent} from "./app-model/add-app-model/add-app-model.component";
+import {LandingPageComponent} from "./start-page/landing-page/landing-page.component";
 
 const routes: Routes = [
   {
     path: '',
-    component: AddAppModelComponent
+    component: LandingPageComponent
   },
   {
     path: 'template-list',
