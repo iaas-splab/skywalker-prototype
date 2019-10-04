@@ -14,8 +14,12 @@ export class ComparisonViewComponent implements OnInit {
   constructor(private data: DataService) { }
 
   ngOnInit() {
-    this.data.currentCoverageModel.subscribe(coverageModel => this.appCoverageModel = coverageModel);
+    this.data.currentCoverageModel.subscribe(coverageModel => {
+      this.appCoverageModel = coverageModel;
+      console.log(this.appCoverageModel);
+    });
     // this.discoverDataStructureSinceTypescriptIsntAnyBetterThanJavascript();
+
   }
 
   discoverDataStructureSinceTypescriptIsntAnyBetterThanJavascript() {

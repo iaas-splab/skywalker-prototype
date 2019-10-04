@@ -59,15 +59,17 @@ public class EvaluationHelper {
     public Map<String, Double> evaluatePropertyCoverageScores(Map<String, List<String>> candidatePlatformEventSources) {
         Map<String, Double> serviceCoverageScores = new HashMap<>();
         double serviceWeight = 1.0 / this.sourceApplicationEventSources.size();
-
+        
         Iterator sourceServices = this.sourceApplicationEventSources.entrySet().iterator();
         while (sourceServices.hasNext()) {
             Map.Entry sService = (Map.Entry) sourceServices.next();
-            String sGRID = (String) sService.getKey();
+            String sName = (String) sService.getKey();
             List<String> sProperties = (List<String>) sService.getValue();
-            if (candidatePlatformEventSources.containsKey(sGRID)) {
-                double serviceSimilarty = this.evaluateServiceSimilarity(sProperties, candidatePlatformEventSources.get(sGRID));
-                serviceCoverageScores.put(sGRID, serviceSimilarty);
+            if (candidatePlatformEventSources.containsKey(sName)) {
+                double serviceSimilarty = this.evaluateServiceSimilarity(sProperties, candidatePlatformEventSources.get(sName));
+                serviceCoverageScores.put(sName, serviceSimilarty);
+            } else {
+                serviceCoverageScores.put(sName, 0.0);
             }
         }
         return serviceCoverageScores;
