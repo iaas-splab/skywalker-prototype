@@ -24,9 +24,10 @@ import {
   MatTooltipModule,
   MatProgressBarModule,
   MatDialogModule,
-  MatTableModule
+  MatTableModule,
+  MatStepperModule
 } from "@angular/material";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { FileInputComponent } from './file-input/file-input.component';
 import { TemplateListComponent } from './template-list/template-list.component';
 import { MappingListComponent } from './mapping-list/mapping-list.component';
@@ -36,6 +37,8 @@ import { AppModelListComponent } from './app-model-list/app-model-list.component
 import { ComparisonViewComponent } from './comparison-view/comparison-view.component';
 import { ServiceRepoTableComponent } from './service-repo-table/service-repo-table.component';
 import { AddServiceMappingComponent } from './add-service-mapping/add-service-mapping.component';
+import { PropertyRepoTableComponent } from './property-repo-table/property-repo-table.component';
+import { AddPropertyMappingComponent } from './add-property-mapping/add-property-mapping.component';
 
 @NgModule({
   declarations: [
@@ -50,13 +53,16 @@ import { AddServiceMappingComponent } from './add-service-mapping/add-service-ma
     AppModelListComponent,
     ComparisonViewComponent,
     ServiceRepoTableComponent,
-    AddServiceMappingComponent
+    AddServiceMappingComponent,
+    PropertyRepoTableComponent,
+    AddPropertyMappingComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     MatCardModule,
     FormsModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatInputModule,
     MatExpansionModule,
@@ -71,7 +77,8 @@ import { AddServiceMappingComponent } from './add-service-mapping/add-service-ma
     MatTooltipModule,
     MatProgressBarModule,
     MatDialogModule,
-    MatTableModule
+    MatTableModule,
+    MatStepperModule
   ],
   providers: [],
   bootstrap: [AppComponent]

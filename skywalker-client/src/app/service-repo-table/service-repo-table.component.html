@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-title><h4>Service Mapping Repository</h4></mat-card-title>
   <div class="right-flex">
-    <button mat-flat-button color="primary" [routerLink]="['/app-add-service-mapping']">Add</button>
+    <button mat-flat-button color="primary" [routerLink]="['/app-add-property-mapping']">Add</button>
     <button mat-button mat-stroked-button (click)="resetAll()" matTooltip="Reset to default table">
       Reset to default
     </button>
@@ -30,7 +30,7 @@
 
   <ng-container matColumnDef="serviceProperties">
     <th mat-header-cell *matHeaderCellDef> Properties </th>
-    <td mat-cell *matCellDef="let element"> {{element.serviceProperties.toString()}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.serviceProperties}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

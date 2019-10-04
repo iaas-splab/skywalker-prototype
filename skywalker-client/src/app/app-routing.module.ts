@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {RetrievalComponent} from "./retrieval/retrieval.component";
-import {FileInputComponent} from "./file-input/file-input.component";
 import {TemplateListComponent} from "./template-list/template-list.component";
 import {MappingListComponent} from "./mapping-list/mapping-list.component";
 import {AddMappingComponent} from "./add-mapping/add-mapping.component";
@@ -10,6 +9,8 @@ import {AppModelListComponent} from "./app-model-list/app-model-list.component";
 import {ComparisonViewComponent} from "./comparison-view/comparison-view.component";
 import {ServiceRepoTableComponent} from "./service-repo-table/service-repo-table.component";
 import {AddServiceMappingComponent} from "./add-service-mapping/add-service-mapping.component";
+import {PropertyRepoTableComponent} from "./property-repo-table/property-repo-table.component";
+import {AddPropertyMappingComponent} from "./add-property-mapping/add-property-mapping.component";
 
 const routes: Routes = [
   {
@@ -47,6 +48,14 @@ const routes: Routes = [
   {
     path: 'app-add-service-mapping',
     component: AddServiceMappingComponent
+  },
+  {
+    path: 'app-property-repo-table',
+    component: PropertyRepoTableComponent
+  },
+  {
+    path: 'app-add-property-mapping',
+    component: AddPropertyMappingComponent
   }
 ];
 

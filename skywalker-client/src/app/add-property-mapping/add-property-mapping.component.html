@@ -1,0 +1,45 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Add new Property Mapping</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form #propertyMappingForm="ngForm" (ngSubmit)="add(propertyMappingForm.value, formGroup.value)">
+      <!--Content-->
+      <div class="example-container">
+        <mat-form-field>
+          <input required matInput placeholder="Generic Resource ID" id="genericResourceId" name="genericResourceId" ngModel>
+        </mat-form-field>
+
+        <button mat-raised-button (click)="addItem()">
+          Add Generic Property with mapping
+        </button>
+        <form [formGroup]="formGroup">
+          <mat-vertical-stepper  formArrayName="form">
+            <mat-step [formGroupName]="i" *ngFor="let customerGroup of formGroup.controls.form.controls; let i = index">
+              <!--<ng-template matStepLabel>Step {{i + 1}}</ng-template>-->
+              <div class="example-container">
+                <mat-form-field>
+                  <input matInput placeholder="List of provider-specific properties which will be mapped to this Generic Service Property Name"
+                         name="genericServicePropertyMap"
+                         formControlName="cont"
+                         matTooltip="Define the mapping like this: <Generic Property Name>:<Prop1>,<Prop2>,<Prop3>"
+                         required>
+                </mat-form-field>
+                <!--<mat-form-field>-->
+                  <!--<input matInput placeholder="Generic Service Property Name"-->
+                         <!--name="genericServiceProperty"-->
+                         <!--formControlName="cont"-->
+                         <!--required>-->
+                <!--</mat-form-field>-->
+              </div>
+            </mat-step>
+          </mat-vertical-stepper>
+        </form>
+      </div>
+      <!--Actions-->
+      <mat-action-row>
+        <button mat-button type="submit" [disabled]="propertyMappingForm.invalid && formGroup.invalid">Submit</button>
+      </mat-action-row>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -18,15 +18,23 @@ export class MappingRepoService {
   }
 
   getAllPropertyMappings(): Observable<any> {
-    return this.http.get(this.tableApi + '/services');
+    return this.http.get(this.tableApi + '/properties');
   }
 
   addServiceMapping(serviceMapping: any): Observable<any> {
     return this.http.post(this.tableApi + '/' +  'services', serviceMapping);
   }
 
+  addPropertyMapping(propertyMapping: any): Observable<any> {
+    return this.http.post(this.tableApi + '/' +  'properties', propertyMapping);
+  }
+
   resetAllServiceMappings(): Observable<any> {
     return this.http.delete(this.tableApi + '/' +  'services');
+  }
+
+  resetAllPropertyMappings(): Observable<any> {
+    return this.http.delete(this.tableApi + '/' +  'properties');
   }
 
   passMappingConfiguration(mappingConfig: MappingConfiguration): Observable<any> {
