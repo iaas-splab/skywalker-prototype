@@ -11,6 +11,7 @@ import {ServiceRepoTableComponent} from "./service-repo-table/service-repo-table
 import {AddServiceMappingComponent} from "./add-service-mapping/add-service-mapping.component";
 import {PropertyRepoTableComponent} from "./property-repo-table/property-repo-table.component";
 import {AddPropertyMappingComponent} from "./add-property-mapping/add-property-mapping.component";
+import {AddAppModelComponent} from "./add-app-model/add-app-model.component";
 
 const routes: Routes = [
   {
@@ -56,6 +57,10 @@ const routes: Routes = [
   {
     path: 'app-add-property-mapping',
     component: AddPropertyMappingComponent
+  },
+  {
+    path: 'app-add-app-model-mapping',
+    component: AddAppModelComponent
   }
 ];
 

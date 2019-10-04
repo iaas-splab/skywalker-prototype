@@ -1,0 +1,52 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Add Application Model via Mapping</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-toolbar>
+      <mat-toolbar-row></mat-toolbar-row>
+      <form #mappingForm="ngForm" (ngSubmit)="onStart(mappingForm.value)">
+        <mat-toolbar-row class="small-text">
+          <span>
+            <mat-form-field>
+              <mat-label>Template</mat-label>
+              <mat-select [(ngModel)]="selectedTemplate" name="template" id="template" ngModel>
+                <mat-option *ngFor="let template of templates" [value]="template">
+                  {{template.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </span>
+        </mat-toolbar-row>
+        <mat-toolbar-row class="small-text">
+        <span>
+          <mat-form-field>
+            <mat-label>Mapping Module</mat-label>
+            <mat-select [(ngModel)]="selectedModule" name="module" id="module" ngModel>
+              <mat-option *ngFor="let module of mappingModules" [value]="module">
+                {{module.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </span>
+          <span class="spacer"></span>
+          <span>
+          <button mat-button mat-fab (click)="onStart(mappingForm.value)" matTooltip="Map to generic application model">
+            <span><i class="fa fa-bolt"></i></span>
+          </button>
+        </span>
+        </mat-toolbar-row>
+        <mat-toolbar-row class="small-text">
+          <span>
+            <mat-form-field>
+              <mat-label>Application Name</mat-label>
+                <input matInput [(ngModel)]="applicationName" name="appName" id="appName" ngModel>
+            </mat-form-field>
+          </span>
+        </mat-toolbar-row>
+      </form>
+      <mat-progress-bar [mode]="mode"></mat-progress-bar>
+    </mat-toolbar>
+  </mat-card-content>
+</mat-card>
+

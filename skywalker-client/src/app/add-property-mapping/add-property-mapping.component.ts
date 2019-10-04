@@ -8,7 +8,6 @@ import {MappingRepoService} from "../services/mapping-repo.service";
   styleUrls: ['./add-property-mapping.component.css']
 })
 export class AddPropertyMappingComponent implements OnInit {
-  isLinear = false;
   formGroup : FormGroup;
   form: FormArray;
 
@@ -36,20 +35,15 @@ export class AddPropertyMappingComponent implements OnInit {
   }
 
   add(form: Form, formArray: any) {
-    console.log("bin drin");
     let dict: {[key: string]: Array<string>} = {};
     for (let buffer in formArray) {
       for (let mapping in formArray[buffer]) {
-        // console.log(formArray[buffer][mapping]["cont"].toString().trimLeft().split(":")[0]);
-        // console.log(formArray[buffer][mapping]["cont"].toString().trimLeft().split(":")[1].trimLeft().split(","));
         dict[formArray[buffer][mapping]["cont"].toString().trimLeft().split(":")[0]]
           = formArray[buffer][mapping]["cont"].toString().trimLeft().split(":")[1].trimLeft().split(",");
       }
     }
-    console.log(dict);
     let prop: GenericServiceProperty = new GenericServiceProperty(form["genericResourceId"].toString(), dict);
     this.mappingRepoService.addPropertyMapping(prop).subscribe(data => {
-      // console.log(data);
     });
   }
 }

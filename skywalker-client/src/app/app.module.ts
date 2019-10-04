@@ -39,6 +39,7 @@ import { ServiceRepoTableComponent } from './service-repo-table/service-repo-tab
 import { AddServiceMappingComponent } from './add-service-mapping/add-service-mapping.component';
 import { PropertyRepoTableComponent } from './property-repo-table/property-repo-table.component';
 import { AddPropertyMappingComponent } from './add-property-mapping/add-property-mapping.component';
+import { AddAppModelComponent } from './add-app-model/add-app-model.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { AddPropertyMappingComponent } from './add-property-mapping/add-property
     ServiceRepoTableComponent,
     AddServiceMappingComponent,
     PropertyRepoTableComponent,
-    AddPropertyMappingComponent
+    AddPropertyMappingComponent,
+    AddAppModelComponent
   ],
   imports: [
     BrowserModule,

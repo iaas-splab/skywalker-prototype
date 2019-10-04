@@ -1,9 +1,11 @@
 <mat-card>
   <mat-card-title><h3>Generic Application Models</h3></mat-card-title>
   <mat-card-actions>
+    <button mat-flat-button color="primary" [routerLink]="['/app-add-app-model-mapping']">Add</button>
     <button mat-button mat-stroked-button (click)="resetAll()" matTooltip="Reset all added application models">
       Reset all
     </button>
+
   </mat-card-actions>
 </mat-card>
 <mat-accordion *ngFor="let appModel of appModels">
