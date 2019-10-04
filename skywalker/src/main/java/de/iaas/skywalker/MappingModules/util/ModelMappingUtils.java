@@ -56,9 +56,12 @@ public class ModelMappingUtils {
         while(it.hasNext()) {
             Map.Entry eventSource = (Map.Entry) it.next();
             String eventName = (String) eventSource.getKey();
+            List<String> properties = (List<String>) eventSource.getValue();
             if(!repository.findByProviderResourceId(eventName).isEmpty()) {
                 String grid = repository.findByProviderResourceId(eventName).get(0).getGenericResourceId();
-                if (grid != null) genericEventSources.put(grid, (List<String>) eventSource.getValue());
+                if (grid != null) genericEventSources.put(grid, properties);
+            } else {
+                genericEventSources.put(eventName, properties);
             }
         }
         return genericEventSources;
@@ -70,19 +73,21 @@ public class ModelMappingUtils {
         while(it.hasNext()) {
             Map.Entry eventSource = (Map.Entry) it.next();
             String eventName = (String) eventSource.getKey();
-            List<String> serviceProperties = (List<String>) eventSource.getValue();
-            for(String property : serviceProperties) {
-                GenericServiceProperty propertyMap = repository.findByGenericResourceId(eventName).get(0);
-                Iterator gpit = propertyMap.getGenericServicePropertyMap().entrySet().iterator();
-                while(gpit.hasNext()) {
-                    Map.Entry genericPropMap = (Map.Entry) gpit.next();
-                    String genericProperty = (String) genericPropMap.getKey();
-                    if(((List<String>)genericPropMap.getValue()).stream().anyMatch(prop -> prop.trim().equals(property))) {
-                        serviceProperties.set(serviceProperties.indexOf(property), genericProperty);
+            List<String> properties = (List<String>) eventSource.getValue();
+            for(String property : properties) {
+                if(!repository.findByGenericResourceId(eventName).isEmpty()) {
+                    GenericServiceProperty propertyMap = repository.findByGenericResourceId(eventName).get(0);
+                    Iterator gpit = propertyMap.getGenericServicePropertyMap().entrySet().iterator();
+                    while(gpit.hasNext()) {
+                        Map.Entry genericPropMap = (Map.Entry) gpit.next();
+                        String genericProperty = (String) genericPropMap.getKey();
+                        if(((List<String>)genericPropMap.getValue()).stream().anyMatch(prop -> prop.trim().equals(property))) {
+                            properties.set(properties.indexOf(property), genericProperty);
+                        }
                     }
                 }
             }
-            updatedEventSources.put(eventName, serviceProperties);
+            updatedEventSources.put(eventName, properties);
         }
         return updatedEventSources;
     }

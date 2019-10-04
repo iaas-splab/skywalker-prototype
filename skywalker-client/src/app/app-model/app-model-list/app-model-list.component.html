@@ -15,17 +15,14 @@
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>Event sources</mat-expansion-panel-header>
-        <mat-grid-list cols="{{appEventSources[appModel.id].length}}" rowHeight="1:2.5">
-          <mat-grid-tile
-            *ngFor="let event of appEventSources[appModel.id]">
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>{{event.name}}</mat-expansion-panel-header>
-              <div *ngFor="let prop of event.properties">
-                <p class="property-view">{{prop}}</p>
-              </div>
-            </mat-expansion-panel>
-          </mat-grid-tile>
-        </mat-grid-list>
+        <mat-accordion *ngFor="let event of appEventSources[appModel.id]">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>{{event.name}}</mat-expansion-panel-header>
+            <div *ngFor="let prop of event.properties">
+              <p class="property-view">{{prop}}</p>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
       </mat-expansion-panel>
       <mat-expansion-panel>
         <mat-expansion-panel-header>Invoked services</mat-expansion-panel-header>
