@@ -5,11 +5,13 @@
 
 .unavailable-property {
   color: darkgrey;
+  font-size: medium;
   font-family: monospace;
 }
 
 .available-property {
   color: green;
+  font-size: medium;
   font-family: monospace;
 }
 

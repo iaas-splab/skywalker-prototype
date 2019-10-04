@@ -30,12 +30,6 @@ public class EvaluationHelper {
         return coverage;
     }
 
-    private Double makeDoubleWithTwoDigitsButveryHacky(double number) {
-        String doubleString = String.valueOf(number);
-        return Double.valueOf(((doubleString.length() >= 4) ? doubleString.substring(0,4) : doubleString)
-                .replace(",", "."));
-    }
-
     private List<Map<String, String>> getServicePropertyCoverage(List<String> sourceProperties, List<String> targetProperties) {
         List<Map<String, String>> propertyCoverageList = new ArrayList<>();
         for (String sProp : sourceProperties) {
@@ -73,7 +67,6 @@ public class EvaluationHelper {
             List<String> sProperties = (List<String>) sService.getValue();
             if (candidatePlatformEventSources.containsKey(sGRID)) {
                 double serviceSimilarty = this.evaluateServiceSimilarity(sProperties, candidatePlatformEventSources.get(sGRID));
-                serviceSimilarty = this.makeDoubleWithTwoDigitsButveryHacky(serviceSimilarty);
                 serviceCoverageScores.put(sGRID, serviceSimilarty);
             }
         }

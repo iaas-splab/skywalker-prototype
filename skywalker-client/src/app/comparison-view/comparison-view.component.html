@@ -1,5 +1,5 @@
 <mat-card>
-  <mat-card-title><h3>Portability to {{appCoverageModel.targetPlatform}}: {{appCoverageModel.platformCoverageScore*100}}%</h3></mat-card-title>
+  <mat-card-title><h3>Portability to {{appCoverageModel.targetPlatform}}: {{(appCoverageModel.platformCoverageScore*100).toString().slice(0,2)}}%</h3></mat-card-title>
   <!--<mat-card-actions>-->
     <!--<button mat-button mat-stroked-button (click)="someFunction()" matTooltip="Some hint">-->
       <!--Button label-->
@@ -11,7 +11,7 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title class="small-text">{{eventSource.key}}</mat-panel-title>
-      <mat-panel-description>{{appCoverageModel.propertyCoverageScores[eventSource.key] * 100}}%</mat-panel-description>
+      <mat-panel-description>{{(appCoverageModel.propertyCoverageScores[eventSource.key] * 100).toString().slice(0,2)}}%</mat-panel-description>
     </mat-expansion-panel-header>
     <div id="container">
       <div>
