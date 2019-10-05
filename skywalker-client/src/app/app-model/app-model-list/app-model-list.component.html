@@ -19,7 +19,7 @@
           <mat-expansion-panel>
             <mat-expansion-panel-header>{{event.name}}</mat-expansion-panel-header>
             <div *ngFor="let prop of event.properties">
-              <p class="property-view">{{prop}}</p>
+              <p class="property-view">> {{prop}}</p>
             </div>
           </mat-expansion-panel>
         </mat-accordion>
@@ -31,7 +31,7 @@
             <mat-expansion-panel>
               <mat-expansion-panel-header>{{service.name}}</mat-expansion-panel-header>
               <div *ngFor="let prop of service.properties">
-                <p class="property-view">{{prop}}</p>
+                <p class="property-view">> {{prop}}</p>
               </div>
             </mat-expansion-panel>
           </mat-accordion>
@@ -44,7 +44,7 @@
             <mat-expansion-panel>
               <mat-expansion-panel-header>{{function.name}}</mat-expansion-panel-header>
               <div *ngFor="let config of function.config">
-                <p class="property-view">{{config}}</p>
+                <p class="property-view">> {{config}}</p>
               </div>
             </mat-expansion-panel>
           </mat-accordion>
