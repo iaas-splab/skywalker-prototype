@@ -51,6 +51,13 @@ public class GenericApplicationModelController {
         candidatePlatformEventSources = utils.generifyEventSourceProperties(candidatePlatformEventSources, this.servicePropertyMappingRepository);
 
         EvaluationHelper evaluationHelper = new EvaluationHelper(bundle.getGam().getEventSources());
+
+//        Map<String, List<String>> modelTranslationObject = evaluationHelper.getTranslatedTargetModel(
+//                evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources),
+//                this.serviceMappingRepository,
+//                bundle.getTargetPlatformId()
+//        );
+
         return new PlatformComparisonModel(
                 bundle.getGam().getId(),
                 bundle.getTargetPlatformId(),

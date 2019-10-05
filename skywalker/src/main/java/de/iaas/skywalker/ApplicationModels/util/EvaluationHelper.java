@@ -1,5 +1,9 @@
 package de.iaas.skywalker.ApplicationModels.util;
 
+import de.iaas.skywalker.TransformationRepositories.model.EventSourceMapping;
+import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
+import org.hibernate.event.spi.EventSource;
+
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,7 +63,7 @@ public class EvaluationHelper {
     public Map<String, Double> evaluatePropertyCoverageScores(Map<String, List<String>> candidatePlatformEventSources) {
         Map<String, Double> serviceCoverageScores = new HashMap<>();
         double serviceWeight = 1.0 / this.sourceApplicationEventSources.size();
-        
+
         Iterator sourceServices = this.sourceApplicationEventSources.entrySet().iterator();
         while (sourceServices.hasNext()) {
             Map.Entry sService = (Map.Entry) sourceServices.next();
@@ -74,6 +78,31 @@ public class EvaluationHelper {
         }
         return serviceCoverageScores;
     }
+
+    public Map<String, List<String>> getTranslatedTargetModel(Map<String, List<Map<String, String>>> coverageModel, ServiceMappingRepository repository, String provider) {
+        Map<String, List<String>> targetEventSources = new HashMap<String, List<String>>();
+        Iterator coverageModelIt = coverageModel.entrySet().iterator();
+        while(coverageModelIt.hasNext()) {
+            Map.Entry coverageModelEntry = (Map.Entry) coverageModelIt.next();
+            List<Map<String, String>> value = (List<Map<String, String>>) coverageModelEntry.getValue();
+            for (Map<String, String> prop : value) {
+                Iterator iti = prop.entrySet().iterator();
+                while(iti.hasNext()) {
+                    Map.Entry pair = (Map.Entry) iti.next();
+                    if(!pair.getValue().equals("-")) {
+                        List<EventSourceMapping> esm = repository.findByGenericResourceId(coverageModelEntry.getKey().toString());
+                        for (EventSourceMapping e : esm) {
+                            if (e.getProvider().equals(provider)) {
+                                targetEventSources.put(e.getProviderResourceId(), e.getServiceProperties());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return targetEventSources;
+    }
+
 
     public Map<String, List<Map<String, String>>> getPlatformCandidateEventCoverageModel(Map<String, List<String>> candidatePlatformEventSources) {
         Map<String, List<Map<String, String>>> cutSetServices = new HashMap<>();
