@@ -11,7 +11,7 @@ import de.iaas.skywalker.MappingModules.model.DeploymentModel;
 import de.iaas.skywalker.MappingModules.model.MappingConfiguration;
 import de.iaas.skywalker.MappingModules.model.MappingModule;
 import de.iaas.skywalker.MappingModules.repository.MappingModuleRepository;
-import de.iaas.skywalker.MappingModules.util.DeploymentModelMapper;
+import de.iaas.skywalker.MappingModules.util.DeploymentModelDiscoverer;
 import de.iaas.skywalker.MappingModules.util.ModelMappingUtils;
 import de.iaas.skywalker.TransformationRepositories.model.EventSourceMapping;
 import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
@@ -89,11 +89,11 @@ public class GenericApplicationModelController {
         MappingModule mappingModule = ((!(mappingModules.size() > 1)) ? mappingModules.get(0) : new MappingModule());
 
 
-        DeploymentModelMapper mapper = new DeploymentModelMapper(deploymentModel, "mapping.configurations/" + mappingModule.getName());
+        DeploymentModelDiscoverer discoverer = new DeploymentModelDiscoverer(deploymentModel, "mapping.configurations/" + mappingModule.getName());
         ApplicationProperties appProps = new ApplicationProperties(
-                mapper.extractApplicationProperties("EventSources"),
-                mapper.extractApplicationProperties("Function"),
-                mapper.extractApplicationProperties("InvokedServices")
+                discoverer.extractApplicationProperties("EventSources"),
+                discoverer.extractApplicationProperties("Function"),
+                discoverer.extractApplicationProperties("InvokedServices")
         );
 
         ModelMappingUtils utils = new ModelMappingUtils();

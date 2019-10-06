@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.*;
 
 
-public class DeploymentModelMapper {
+public class DeploymentModelDiscoverer {
 
     private Map<String, Object> deploymentModel;
     private String ruleFilePath;
@@ -18,7 +18,7 @@ public class DeploymentModelMapper {
     private static final String WHERE = "where";
     private static final String ARRAY_LIST = "ArrayList";
 
-    public DeploymentModelMapper(DeploymentModel deploymentModel, String ruleFilePath) {
+    public DeploymentModelDiscoverer(DeploymentModel deploymentModel, String ruleFilePath) {
         this.deploymentModel = this.parseYAMLInHashMap(deploymentModel.getName());
         this.ruleFilePath = ruleFilePath;
     }
