@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import {MappingModule} from "../mapping-modules/MappingModule";
 import {Observable} from "rxjs/index";
 import {MappingConfiguration} from "./MappingConfiguration";
 import {HttpClient} from "@angular/common/http";
-import {AppModel} from "./AppModel";
 import {CoverageEvaluationBundle} from "./CoverageEvaluationBundle";
 
 @Injectable({
@@ -12,27 +10,23 @@ import {CoverageEvaluationBundle} from "./CoverageEvaluationBundle";
 export class AppModelService {
 
   private baseUrl: string = 'http://localhost:8080/';
-  private mappingApi: string = this.baseUrl + 'models';
+  private appApi: string = this.baseUrl + 'app';
 
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<any> {
-    return this.http.get(this.mappingApi + '/');
+    return this.http.get(this.appApi + '/');
   }
 
   resetAll(): Observable<any> {
-    return this.http.delete(this.mappingApi + '/');
+    return this.http.delete(this.appApi + '/');
   }
 
-  upload(module: MappingModule): Observable<any> {
-    return this.http.post(this.mappingApi + '/' +  'upload/', module);
+  generate(mappingConfig: MappingConfiguration): Observable<any> {
+    return this.http.put(this.appApi + '/', mappingConfig);
   }
 
-  evalPortability(coverageEvaluationBundle: CoverageEvaluationBundle): Observable<any> {
-    return this.http.post(this.mappingApi + '/', coverageEvaluationBundle);
-  }
-
-  passMappingConfiguration(mappingConfig: MappingConfiguration): Observable<any> {
-    return this.http.post(this.mappingApi + '/' + 'generate/', mappingConfig);
+  evaluatePortability(coverageEvaluationBundle: CoverageEvaluationBundle): Observable<any> {
+    return this.http.post(this.appApi + '/', coverageEvaluationBundle);
   }
 }

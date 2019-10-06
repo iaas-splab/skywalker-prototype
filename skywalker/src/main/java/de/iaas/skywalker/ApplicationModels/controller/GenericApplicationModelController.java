@@ -5,6 +5,13 @@ import de.iaas.skywalker.ApplicationModels.model.GenericApplicationModel;
 import de.iaas.skywalker.ApplicationModels.model.PlatformComparisonModel;
 import de.iaas.skywalker.ApplicationModels.repository.GenericApplicationModelRepository;
 import de.iaas.skywalker.ApplicationModels.util.EvaluationHelper;
+import de.iaas.skywalker.DeploymentModels.repository.DeploymentModelRepository;
+import de.iaas.skywalker.MappingModules.model.ApplicationProperties;
+import de.iaas.skywalker.MappingModules.model.DeploymentModel;
+import de.iaas.skywalker.MappingModules.model.MappingConfiguration;
+import de.iaas.skywalker.MappingModules.model.MappingModule;
+import de.iaas.skywalker.MappingModules.repository.MappingModuleRepository;
+import de.iaas.skywalker.MappingModules.util.DeploymentModelMapper;
 import de.iaas.skywalker.MappingModules.util.ModelMappingUtils;
 import de.iaas.skywalker.TransformationRepositories.model.EventSourceMapping;
 import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
@@ -19,8 +26,10 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/models")
+@RequestMapping("/app")
 public class GenericApplicationModelController {
+    private MappingModuleRepository mappingModuleRepository;
+    private DeploymentModelRepository deploymentModelRepository;
     private GenericApplicationModelRepository genericApplicationModelRepository;
     private ServicePropertyMappingRepository servicePropertyMappingRepository;
     private ServiceMappingRepository serviceMappingRepository;
@@ -28,18 +37,22 @@ public class GenericApplicationModelController {
     public GenericApplicationModelController(
             GenericApplicationModelRepository genericApplicationModelRepository,
             ServicePropertyMappingRepository servicePropertyMappingRepository,
-            ServiceMappingRepository serviceMappingRepository
+            ServiceMappingRepository serviceMappingRepository,
+            MappingModuleRepository mappingModuleRepository,
+            DeploymentModelRepository deploymentModelRepository
     ) {
         this.genericApplicationModelRepository = genericApplicationModelRepository;
         this.servicePropertyMappingRepository = servicePropertyMappingRepository;
         this.serviceMappingRepository = serviceMappingRepository;
+        this.mappingModuleRepository = mappingModuleRepository;
+        this.deploymentModelRepository =  deploymentModelRepository;
     }
 
     @GetMapping(path = "/")
     public Collection<GenericApplicationModel> get() { return this.genericApplicationModelRepository.findAll(); }
 
     @PostMapping(path = "/")
-    public PlatformComparisonModel getCoverageWithPlatformCandidate(@RequestBody CoverageEvaluationBundle bundle) {
+    public PlatformComparisonModel evaluatePortability(@RequestBody CoverageEvaluationBundle bundle) {
         ModelMappingUtils utils = new ModelMappingUtils();
 
         List<EventSourceMapping> candidatePlatformServices = this.serviceMappingRepository.findByProvider(bundle.getTargetPlatformId());
@@ -68,7 +81,31 @@ public class GenericApplicationModelController {
     }
 
     @PutMapping(path = "/")
-    public int put() { return 0; }
+    public ResponseEntity<Object> generateApplicationModel(@RequestBody MappingConfiguration mappingConfiguration) {
+        // get deployment model and mapping model from repository
+        List<DeploymentModel> deploymentModels = this.deploymentModelRepository.findByName(mappingConfiguration.getDeploymentModel());
+        DeploymentModel deploymentModel = ((!(deploymentModels.size() > 1)) ? deploymentModels.get(0) : new DeploymentModel());
+        List<MappingModule> mappingModules =  this.mappingModuleRepository.findByName(mappingConfiguration.getMappingModule());
+        MappingModule mappingModule = ((!(mappingModules.size() > 1)) ? mappingModules.get(0) : new MappingModule());
+
+
+        DeploymentModelMapper mapper = new DeploymentModelMapper(deploymentModel, "mapping.configurations/" + mappingModule.getName());
+        ApplicationProperties appProps = new ApplicationProperties(
+                mapper.extractApplicationProperties("EventSources"),
+                mapper.extractApplicationProperties("Function"),
+                mapper.extractApplicationProperties("InvokedServices")
+        );
+
+        ModelMappingUtils utils = new ModelMappingUtils();
+        GenericApplicationModel GAM = new GenericApplicationModel(mappingConfiguration.getId(), utils.getAppAtPropertiesLevel(appProps));
+        GAM.setEventSources(utils.generifyEventSourceNames(GAM.getEventSources().entrySet().iterator(), this.serviceMappingRepository));
+        GAM.setEventSources(utils.generifyEventSourceProperties(GAM.getEventSources(), this.servicePropertyMappingRepository));
+//        GAM.setFunctions(utils.generifyEventSourceNames(GAM.getFunctions().entrySet().iterator(), this.serviceMappingRepository));
+//        GAM.setInvokedServices(utils.generifyEventSourceNames(GAM.getInvokedServices().entrySet().iterator(), this.serviceMappingRepository));
+        this.genericApplicationModelRepository.save(GAM);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     @DeleteMapping(path = "/")
     public ResponseEntity<Object> deleteAll() {

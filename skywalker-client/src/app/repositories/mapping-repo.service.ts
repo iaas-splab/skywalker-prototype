@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import {MappingModule} from "../mapping-modules/MappingModule";
 import {Observable} from "rxjs/index";
-import {MappingConfiguration} from "../app-model/MappingConfiguration";
 import {HttpClient} from "@angular/common/http";
 
 @Injectable({
@@ -22,11 +20,11 @@ export class MappingRepoService {
   }
 
   addServiceMapping(serviceMapping: any): Observable<any> {
-    return this.http.post(this.tableApi + '/' +  'services', serviceMapping);
+    return this.http.put(this.tableApi + '/' +  'services', serviceMapping);
   }
 
   addPropertyMapping(propertyMapping: any): Observable<any> {
-    return this.http.post(this.tableApi + '/' +  'properties', propertyMapping);
+    return this.http.put(this.tableApi + '/' +  'properties', propertyMapping);
   }
 
   resetAllServiceMappings(): Observable<any> {
@@ -35,9 +33,5 @@ export class MappingRepoService {
 
   resetAllPropertyMappings(): Observable<any> {
     return this.http.delete(this.tableApi + '/' +  'properties');
-  }
-
-  passMappingConfiguration(mappingConfig: MappingConfiguration): Observable<any> {
-    return this.http.post(this.tableApi + '/' + 'generate/', mappingConfig);
   }
 }

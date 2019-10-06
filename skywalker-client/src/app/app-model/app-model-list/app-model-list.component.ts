@@ -67,7 +67,7 @@ export class AppModelListComponent implements OnInit {
 
   evaluateWithPlatformCandidate(appModel: AppModel, targetPlatform: any) {
     let bundle = new CoverageEvaluationBundle(appModel, targetPlatform);
-    this.appModelService.evalPortability(bundle).subscribe(data => {
+    this.appModelService.evaluatePortability(bundle).subscribe(data => {
       this.appCoverageModel = data;
       this.data.changeCoverageModel(this.appCoverageModel);
       this.router.navigate(['app-comparison-view']);
