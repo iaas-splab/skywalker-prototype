@@ -12,27 +12,27 @@ import {CoverageEvaluationBundle} from "./CoverageEvaluationBundle";
 export class AppModelService {
 
   private baseUrl: string = 'http://localhost:8080/';
-  private mappingApi: string = this.baseUrl + 'models';
+  private appApi: string = this.baseUrl + 'models';
 
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<any> {
-    return this.http.get(this.mappingApi + '/');
+    return this.http.get(this.appApi + '/');
   }
 
   resetAll(): Observable<any> {
-    return this.http.delete(this.mappingApi + '/');
+    return this.http.delete(this.appApi + '/');
   }
 
-  upload(module: MappingModule): Observable<any> {
-    return this.http.post(this.mappingApi + '/' +  'upload/', module);
+  generate(mappingConfig: MappingConfiguration): Observable<any> {
+    return this.http.put(this.appApi + '/' +  'generate/', mappingConfig);
   }
 
   evalPortability(coverageEvaluationBundle: CoverageEvaluationBundle): Observable<any> {
-    return this.http.post(this.mappingApi + '/', coverageEvaluationBundle);
+    return this.http.post(this.appApi + '/', coverageEvaluationBundle);
   }
 
   passMappingConfiguration(mappingConfig: MappingConfiguration): Observable<any> {
-    return this.http.post(this.mappingApi + '/' + 'generate/', mappingConfig);
+    return this.http.post(this.appApi + '/' + 'generate/', mappingConfig);
   }
 }
