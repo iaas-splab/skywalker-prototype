@@ -4,6 +4,7 @@ import de.iaas.skywalker.ApplicationModels.repository.GenericApplicationModelRep
 import de.iaas.skywalker.DeploymentModels.repository.DeploymentModelRepository;
 import de.iaas.skywalker.MappingModules.repository.MappingModuleRepository;
 import de.iaas.skywalker.MappingModules.model.DeploymentModel;
+import de.iaas.skywalker.Processes.Database.MongoHelper;
 import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
 import de.iaas.skywalker.TransformationRepositories.repository.ServicePropertyMappingRepository;
 import de.iaas.skywalker.TransformationRepositories.model.GenericServiceProperty;
@@ -69,6 +70,8 @@ public class SkywalkerApplication {
 	ApplicationRunner init(){
 		return args -> {
 			try {
+//				MongoHelper mh = new MongoHelper();
+//				mh.startMongoServer();
 				//mongod --dbpath=.
 				this.initRepos();
 			} catch ( IOException e ) {
@@ -76,6 +79,7 @@ public class SkywalkerApplication {
 			}
 		};
 	}
+
 
 	private void initRepos() throws IOException {
 
