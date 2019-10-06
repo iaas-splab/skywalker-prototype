@@ -31,7 +31,7 @@ public class MappingTableController {
     @GetMapping(path = "/properties")
     public Collection<GenericServiceProperty> getServicePropertyMappingTable() { return this.servicePropertyMappingRepository.findAll(); }
 
-    @PostMapping(path = "/services")
+    @PutMapping(path = "/services")
     public ResponseEntity<Object> putServiceMapping(@RequestBody LinkedHashMap map) {
         this.serviceMappingRepository.save(
                 new EventSourceMapping(
@@ -44,7 +44,7 @@ public class MappingTableController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping(path = "/properties")
+    @PutMapping(path = "/properties")
     public ResponseEntity<Object> putPropertyMapping(@RequestBody LinkedHashMap map) {
         this.servicePropertyMappingRepository.save(
                 new GenericServiceProperty(

@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import {MappingModule} from "../mapping-modules/MappingModule";
 import {Observable} from "rxjs/index";
 import {MappingConfiguration} from "./MappingConfiguration";
 import {HttpClient} from "@angular/common/http";
-import {AppModel} from "./AppModel";
 import {CoverageEvaluationBundle} from "./CoverageEvaluationBundle";
 
 @Injectable({
@@ -12,7 +10,7 @@ import {CoverageEvaluationBundle} from "./CoverageEvaluationBundle";
 export class AppModelService {
 
   private baseUrl: string = 'http://localhost:8080/';
-  private appApi: string = this.baseUrl + 'models';
+  private appApi: string = this.baseUrl + 'app';
 
   constructor(private http: HttpClient) { }
 
@@ -25,14 +23,10 @@ export class AppModelService {
   }
 
   generate(mappingConfig: MappingConfiguration): Observable<any> {
-    return this.http.put(this.appApi + '/' +  'generate/', mappingConfig);
+    return this.http.put(this.appApi + '/', mappingConfig);
   }
 
-  evalPortability(coverageEvaluationBundle: CoverageEvaluationBundle): Observable<any> {
+  evaluatePortability(coverageEvaluationBundle: CoverageEvaluationBundle): Observable<any> {
     return this.http.post(this.appApi + '/', coverageEvaluationBundle);
-  }
-
-  passMappingConfiguration(mappingConfig: MappingConfiguration): Observable<any> {
-    return this.http.post(this.appApi + '/' + 'generate/', mappingConfig);
   }
 }

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/index";
 import {MappingModule} from "./MappingModule";
-import {MappingConfiguration} from "../app-model/MappingConfiguration";
 
 @Injectable({
   providedIn: 'root'
@@ -19,11 +18,7 @@ export class MappingService {
   }
 
   upload(module: MappingModule): Observable<any> {
-    return this.http.post(this.mappingApi + '/' +  'upload/', module);
-  }
-
-  passMappingConfiguration(mappingConfig: MappingConfiguration): Observable<any> {
-    return this.http.post(this.mappingApi + '/' + 'generate/', mappingConfig);
+    return this.http.put(this.mappingApi + '/', module);
   }
 
   resetAll(): Observable<any> {

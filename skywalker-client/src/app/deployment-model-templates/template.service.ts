@@ -19,11 +19,11 @@ export class TemplateService {
   }
 
   crawlPlatform(platformDeployment: any): Observable<any> {
-    return this.http.post(this.templateApi + '/' + 'crawlPlatform/', platformDeployment);
+    return this.http.post(this.templateApi + '/' + 'crawl/', platformDeployment);
   }
 
   upload(template: Template): Observable<any> {
-    return this.http.post(this.templateApi + '/' +  'upload/', template);
+    return this.http.put(this.templateApi + '/', template);
   }
 
   resetAll(): Observable<any> {

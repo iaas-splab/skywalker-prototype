@@ -21,14 +21,15 @@ public class DeploymentModelController {
     }
 
     @GetMapping(path = "/")
-    public Collection<DeploymentModel> getDeploymentModels() { return this.repository.findAll(); }
+    public Collection<DeploymentModel> getAll() { return this.repository.findAll(); }
 
     @PostMapping(path = "/crawl")
-    public ResponseEntity<Object> extractFromPlatform(@RequestBody AppExtractionData appExtractionData) {
+    public ResponseEntity<Object> crawlFromPlatform(@RequestBody AppExtractionData appExtractionData) {
         System.out.println("ARN: " + appExtractionData.getArn() + "\n" + "Provider: " + appExtractionData.getProvider());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @PostMapping(path = "/upload")
+
+    @PutMapping(path = "/")
     public ResponseEntity<Object> putDeploymentModel(@RequestBody DeploymentModel deploymentModel) {
         this.repository.deleteByName(deploymentModel.getName());
         if(this.repository.findByName(deploymentModel.getName()) != null) this.repository.save(deploymentModel);
@@ -43,8 +44,6 @@ public class DeploymentModelController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping(path = "/")
-    public int putExtraction() { return 0; }
 
     @DeleteMapping(path = "/")
     public ResponseEntity<Object> deleteAll() {

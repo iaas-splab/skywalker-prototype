@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/models")
+@RequestMapping("/app")
 public class GenericApplicationModelController {
     private MappingModuleRepository mappingModuleRepository;
     private DeploymentModelRepository deploymentModelRepository;
@@ -52,7 +52,7 @@ public class GenericApplicationModelController {
     public Collection<GenericApplicationModel> get() { return this.genericApplicationModelRepository.findAll(); }
 
     @PostMapping(path = "/")
-    public PlatformComparisonModel getCoverageWithPlatformCandidate(@RequestBody CoverageEvaluationBundle bundle) {
+    public PlatformComparisonModel evaluatePortability(@RequestBody CoverageEvaluationBundle bundle) {
         ModelMappingUtils utils = new ModelMappingUtils();
 
         List<EventSourceMapping> candidatePlatformServices = this.serviceMappingRepository.findByProvider(bundle.getTargetPlatformId());
@@ -80,8 +80,8 @@ public class GenericApplicationModelController {
         );
     }
 
-    @PutMapping(path = "/generate")
-    public ResponseEntity<Object> put(@RequestBody MappingConfiguration mappingConfiguration) {
+    @PutMapping(path = "/")
+    public ResponseEntity<Object> generateApplicationModel(@RequestBody MappingConfiguration mappingConfiguration) {
         // get deployment model and mapping model from repository
         List<DeploymentModel> deploymentModels = this.deploymentModelRepository.findByName(mappingConfiguration.getDeploymentModel());
         DeploymentModel deploymentModel = ((!(deploymentModels.size() > 1)) ? deploymentModels.get(0) : new DeploymentModel());
