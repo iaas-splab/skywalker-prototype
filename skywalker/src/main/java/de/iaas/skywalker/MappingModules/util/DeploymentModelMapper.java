@@ -76,11 +76,25 @@ public class DeploymentModelMapper {
         while (it.hasNext()) {
             String template_value = "";
             Map.Entry nextRoot = (Map.Entry) it.next();
-            Map<String, Object> rootCopy;
+            Map<String, Object> rootCopy = new HashMap<>();
             try {
                 rootCopy = (Map<String, Object>) nextRoot.getValue();
             } catch (ClassCastException e) {
-                continue;
+                try {
+                    List<Map<String, Object>> rootCopyList = (List<Map<String, Object>>) nextRoot.getValue();
+                    for (Map<String, Object> map : rootCopyList) {
+                        results.put(map.keySet().iterator().next(), map.entrySet().iterator().next());
+                    }
+                } catch (ClassCastException c) {
+                    try {
+                        List<String> rootCopyList = (List<String>) nextRoot.getValue();
+                        for (String s : rootCopyList) {
+                            results.put(s, s);
+                        }
+                    } catch (ClassCastException cs) {
+                        results.put((String) nextRoot.getValue(), (String) nextRoot.getValue());
+                    }
+                }
             } catch (NullPointerException e) {
                 continue;
             }
@@ -92,7 +106,6 @@ public class DeploymentModelMapper {
                 }
             }
             if (template_value.equals(statement_value)) {
-//                if (mapping_config_path.isEmpty()) results.put(nextRoot.getKey().toString(), this.stringifyObject(nextRoot.getValue()));
                 if (mapping_config_path.isEmpty()) results.put(nextRoot.getKey().toString(), nextRoot.getValue());
                 else {
                     Map<String, Object> thisRootTree = (Map<String, Object>) nextRoot.getValue();
@@ -143,8 +156,18 @@ public class DeploymentModelMapper {
 
     private Map<String, Object> handleArrayListCastExceptions(Map<String, Object> root, String node) {
         Map<String, Object> tempTree = new HashMap<>();
-        for(Map<String, Object> property : (List<Map<String, Object>> ) root.get(node)) {
-            tempTree.putAll(property);
+        try {
+            for(Map<String, Object> property : (List<Map<String, Object>> ) root.get(node)) {
+                tempTree.putAll(property);
+            }
+        } catch (ClassCastException cMap) {
+            try {
+                for(String property : (List<String> ) root.get(node)) {
+                    tempTree.put(property, property);
+                }
+            } catch (ClassCastException cList) {
+                cList.printStackTrace();
+            }
         }
         return tempTree;
     }
