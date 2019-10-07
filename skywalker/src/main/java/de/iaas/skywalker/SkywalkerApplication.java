@@ -126,7 +126,7 @@ public class SkywalkerApplication {
 						"schedule",
 						"aws",
 						"schedule",
-						Arrays.asList("name", "description", "rate")
+						Arrays.asList("name", "description", "rate", "cron")
 				)
 		);
 		serviceMappingRepository.save(
@@ -177,6 +177,22 @@ public class SkywalkerApplication {
 						Arrays.asList("queueName", "accessRights", "connection")
 				)
 		);
+		serviceMappingRepository.save(
+				new EventSourceMapping(
+						"pubsub",
+						"azure",
+						"eventGrid",
+						Arrays.asList("topic")
+				)
+		);
+		serviceMappingRepository.save(
+				new EventSourceMapping(
+						"pubsub",
+						"aws",
+						"sns",
+						Arrays.asList("topic", "FilterPolicy", "SqsSubscription", "Region")
+				)
+		);
 
 		servicePropertyMappingRepository.save(
 				new GenericServiceProperty(
@@ -195,7 +211,7 @@ public class SkywalkerApplication {
 				new GenericServiceProperty(
 						"schedule",
 						new HashMap<String, List<String>>() {{
-							put("schedule", Arrays.asList("rate", "schedule"));
+							put("schedule", Arrays.asList("rate", "schedule", "cron"));
 							put("onBootUp", Arrays.asList("runOnStartup"));
 							put("monitoring", Arrays.asList("useMonitor"));
 						}}
@@ -228,6 +244,17 @@ public class SkywalkerApplication {
 							put("resourceId", Arrays.asList("bucket", "path"));
 							put("events", Arrays.asList("event"));
 							put("rules", Arrays.asList("rules"));
+						}}
+				)
+		);
+		servicePropertyMappingRepository.save(
+				new GenericServiceProperty(
+						"pubsub",
+						new HashMap<String, List<String>>() {{
+							put("resourceId", Arrays.asList("topic", "Topic"));
+							put("filter", Arrays.asList("FilterPolicy"));
+							put("queueSubscription", Arrays.asList("SqsSubscription"));
+							put("region", Arrays.asList("Region", "region"));
 						}}
 				)
 		);
