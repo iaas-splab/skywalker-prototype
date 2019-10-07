@@ -2,6 +2,8 @@ package de.iaas.skywalker.MappingModules.util;
 
 import de.iaas.skywalker.MappingModules.model.DeploymentModel;
 import org.yaml.snakeyaml.Yaml;
+
+import javax.validation.constraints.Null;
 import java.io.InputStream;
 import java.util.*;
 
@@ -78,6 +80,8 @@ public class DeploymentModelMapper {
             try {
                 rootCopy = (Map<String, Object>) nextRoot.getValue();
             } catch (ClassCastException e) {
+                continue;
+            } catch (NullPointerException e) {
                 continue;
             }
             for (String node : statement_path) {

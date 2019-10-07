@@ -16,12 +16,16 @@ public class ModelMappingUtils {
         while(it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
             List<String> resourceProperties = new ArrayList<>();
-            Iterator pit = ((Map<String, Object>) pair.getValue()).entrySet().iterator();
-            while(pit.hasNext()) {
-                Map.Entry resourceProperty = (Map.Entry) pit.next();
-                String resourcePropertyId = (String) resourceProperty.getKey();
-                String resourcePropertyConfiguration = (String) resourceProperty.getKey();
-                resourceProperties.add(resourcePropertyId);
+            if (pair.getValue() != null) {
+                try {
+                    Iterator pit = ((Map<String, Object>) pair.getValue()).entrySet().iterator();
+                    while(pit.hasNext()) {
+                        Map.Entry resourceProperty = (Map.Entry) pit.next();
+                        String resourcePropertyId = (String) resourceProperty.getKey();
+                        String resourcePropertyConfiguration = (String) resourceProperty.getKey();
+                        resourceProperties.add(resourcePropertyId);
+                    }
+                } catch (ClassCastException e) {}
             }
             appPropConfig.put((String) pair.getKey(), resourceProperties);
         }
