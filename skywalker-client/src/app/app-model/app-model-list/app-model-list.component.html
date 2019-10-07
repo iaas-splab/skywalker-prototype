@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="mat-card-lavender">
   <mat-card-title><h5>Generic Application Models</h5></mat-card-title>
   <div class="right-flex">
     <button mat-flat-button color="primary" [routerLink]="['/app-add-app-model-mapping']">Add</button>
@@ -8,15 +8,15 @@
   </div>
 </mat-card>
 <mat-accordion *ngFor="let appModel of appModels">
-  <mat-expansion-panel>
+  <mat-expansion-panel class="mat-card dracula-code-light">
     <mat-expansion-panel-header>
       <mat-panel-title class="small-text">{{appModel.id}}</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-accordion>
-      <mat-expansion-panel>
+      <mat-expansion-panel class="skywalker-yellow">
         <mat-expansion-panel-header>Event sources</mat-expansion-panel-header>
         <mat-accordion *ngFor="let event of appEventSources[appModel.id]">
-          <mat-expansion-panel>
+          <mat-expansion-panel class="dracula-code">
             <mat-expansion-panel-header>{{event.name}}</mat-expansion-panel-header>
             <div *ngFor="let prop of event.properties">
               <p class="property-view">> {{prop}}</p>
@@ -24,11 +24,11 @@
           </mat-expansion-panel>
         </mat-accordion>
       </mat-expansion-panel>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>Invoked services</mat-expansion-panel-header>
+      <mat-expansion-panel class="skywalker-yellow">
+        <mat-expansion-panel-header >Invoked services</mat-expansion-panel-header>
         <div>
           <mat-accordion *ngFor="let service of appInvokedServices[appModel.id]">
-            <mat-expansion-panel>
+            <mat-expansion-panel  class="dracula-code">
               <mat-expansion-panel-header>{{service.name}}</mat-expansion-panel-header>
               <div *ngFor="let prop of service.properties">
                 <p class="property-view">> {{prop}}</p>
@@ -37,11 +37,11 @@
           </mat-accordion>
         </div>
       </mat-expansion-panel>
-      <mat-expansion-panel>
+      <mat-expansion-panel class="skywalker-yellow">
         <mat-expansion-panel-header>Functions</mat-expansion-panel-header>
         <div>
           <mat-accordion *ngFor="let function of appFunctions[appModel.id]">
-            <mat-expansion-panel>
+            <mat-expansion-panel  class="dracula-code">
               <mat-expansion-panel-header>{{function.name}}</mat-expansion-panel-header>
               <div *ngFor="let config of function.config">
                 <p class="property-view">> {{config}}</p>
@@ -51,8 +51,8 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
-    <button mat-button mat-stroked-button (click)="evaluateWithPlatformCandidate(appModel, 'azure')" matTooltip="Evaluate portability to platform candidate">
-      Evaluate this
+    <button class="skywalker-white" mat-button mat-stroked-button (click)="evaluateWithPlatformCandidate(appModel, 'azure')" matTooltip="Evaluate portability to platform candidate">
+      Evaluate
     </button>
     <!--<button mat-button mat-stroked-button (click)="openDialog()" matTooltip="Evaluate portability to platform candidate">-->
       <!--Evaluate this-->
