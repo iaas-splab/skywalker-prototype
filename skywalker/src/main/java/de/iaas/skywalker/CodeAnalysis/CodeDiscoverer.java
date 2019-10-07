@@ -5,6 +5,7 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 
@@ -43,12 +44,11 @@ public class CodeDiscoverer {
      * - ...
      */
     public void discoverImports() {
-        Set<String> providerLibraries = new HashSet<>();
         NodeList<ImportDeclaration> imports = this.compiler.getImports();
         sdkLookup.forEach(term -> {
             for (ImportDeclaration importDeclaration : imports) {
                 if (importDeclaration.getName().getQualifier().toString().contains(term))
-                    providerLibraries.add(importDeclaration.getName().getIdentifier());
+                    this.criticalTerms.add(importDeclaration.getName().getIdentifier());
             }
         });
     }
@@ -64,16 +64,22 @@ public class CodeDiscoverer {
     }
 
     private void collectCriticalFieldDeclarations(ClassOrInterfaceDeclaration javaClass) {
-        List<FieldDeclaration> fieldDeclarations = (List<FieldDeclaration>)
-                javaClass.getMembers().stream().filter(member -> member instanceof FieldDeclaration);
+        List<FieldDeclaration> fieldDeclarations = new ArrayList<>();
+        for (BodyDeclaration member: javaClass.getMembers()) {
+            if (member instanceof FieldDeclaration) fieldDeclarations.add((FieldDeclaration) member);
+        }
+//        List<FieldDeclaration> fieldDeclarations = (List<FieldDeclaration>)
+//                javaClass.getMembers().stream().filter(member -> member instanceof FieldDeclaration);
 
         for (FieldDeclaration field : fieldDeclarations) {
+            Set<String> buffer = new HashSet<>();
             this.criticalTerms.forEach(type -> {
                 if (field.toString().contains(type)) {
                     this.criticalStmts.add(field.toString());
-                    this.criticalTerms.add(field.getVariable(0).getNameAsString());
+                    buffer.add(field.getVariable(0).getNameAsString());
                 }
             });
+            this.criticalTerms.addAll(buffer);
         }
     }
 
