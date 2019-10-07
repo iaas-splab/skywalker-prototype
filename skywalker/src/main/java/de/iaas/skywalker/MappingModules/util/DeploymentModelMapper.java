@@ -3,7 +3,6 @@ package de.iaas.skywalker.MappingModules.util;
 import de.iaas.skywalker.MappingModules.model.DeploymentModel;
 import org.yaml.snakeyaml.Yaml;
 
-import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -94,6 +93,7 @@ public class DeploymentModelMapper {
                 }
             }
             if (template_value.equals(statement_value)) {
+//                if (mapping_config_path.isEmpty()) results.put(nextRoot.getKey().toString(), this.stringifyObject(nextRoot.getValue()));
                 if (mapping_config_path.isEmpty()) results.put(nextRoot.getKey().toString(), nextRoot.getValue());
                 else {
                     Map<String, Object> thisRootTree = (Map<String, Object>) nextRoot.getValue();
@@ -110,6 +110,28 @@ public class DeploymentModelMapper {
             }
         }
         return results;
+    }
+
+    private String stringifyObject(Object object) {
+        String oString = "";
+        try {
+            Map<String, Object> oMap = (Map<String, Object>) object;
+            oString += oMap.keySet().iterator().next() + " { " + this.stringifyObject(oMap.entrySet().iterator().next().getValue());
+        } catch (ClassCastException c) {
+            try {
+                List<Object> oList = (List<Object>) object;
+                for (Object o : oList) {
+                    oString += this.stringifyObject(o);
+                }
+            } catch (ClassCastException cList) {
+                try {
+                    oString += (String) object;
+                } catch (ClassCastException cString) {
+                    cString.printStackTrace();
+                }
+            }
+        }
+        return oString;
     }
 
     private Map<String, Object> getMappingTemplate() {

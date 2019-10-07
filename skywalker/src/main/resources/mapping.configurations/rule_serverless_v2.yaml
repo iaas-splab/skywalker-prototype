@@ -9,7 +9,6 @@ InvokedServices:
     root:
       - provider
       - iamRoleStatements
-    path:
 Function:
   select:
     root:
