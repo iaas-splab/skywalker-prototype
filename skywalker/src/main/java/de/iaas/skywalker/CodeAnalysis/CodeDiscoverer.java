@@ -8,6 +8,11 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.VariableDeclarationExpr;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.Statement;
+import de.iaas.skywalker.CodeAnalysis.utils.DiscoveryHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,18 +26,21 @@ public class CodeDiscoverer {
 
     private CompilationUnit compiler;
     private List<String> listOfHandlers;
-    private List<String> criticalStmts = new ArrayList<>();
+    private Set<String> criticalStmts = new HashSet<>();
     private Set<String> criticalTerms = new HashSet<>();
-
-    private static List<String> sdkLookup = new ArrayList<String>() {{
-        add("amazonaws");
-        add("amazonaws.services");
-        add("lambda");
-    }};
+    private DiscoveryHelper helper = new DiscoveryHelper();
 
     public CodeDiscoverer(String filePath, List<String> listOfHandlers) throws FileNotFoundException {
         this.compiler = StaticJavaParser.parse(new File(filePath));
         this.listOfHandlers = listOfHandlers;
+    }
+
+    public Set<String> getCriticalTerms() {
+        return criticalTerms;
+    }
+
+    public void setCriticalTerms(Set<String> criticalTerms) {
+        this.criticalTerms = criticalTerms;
     }
 
     /**
@@ -45,12 +53,24 @@ public class CodeDiscoverer {
      */
     public void discoverImports() {
         NodeList<ImportDeclaration> imports = this.compiler.getImports();
-        sdkLookup.forEach(term -> {
+        helper.SDK_LOOKUP.forEach(term -> {
             for (ImportDeclaration importDeclaration : imports) {
                 if (importDeclaration.getName().getQualifier().toString().contains(term))
                     this.criticalTerms.add(importDeclaration.getName().getIdentifier());
             }
         });
+    }
+
+    public void discoverClassMethods() {
+        ClassOrInterfaceDeclaration javaClass =
+                (ClassOrInterfaceDeclaration) this.compiler.getChildNodes().stream()
+                        .filter(x -> x instanceof ClassOrInterfaceDeclaration).collect(Collectors.toList()).get(0);
+
+        if (!isLambdaHandler(javaClass)) {/*nothing yet*/}
+
+        collectCriticalFieldDeclarations(javaClass);
+        List<MethodDeclaration> classMethods = getClassMethods(javaClass);
+        classMethods.forEach(method -> discoverClassMethod(method));
     }
 
     private boolean isLambdaHandler(ClassOrInterfaceDeclaration javaClass) {
@@ -68,9 +88,6 @@ public class CodeDiscoverer {
         for (BodyDeclaration member: javaClass.getMembers()) {
             if (member instanceof FieldDeclaration) fieldDeclarations.add((FieldDeclaration) member);
         }
-//        List<FieldDeclaration> fieldDeclarations = (List<FieldDeclaration>)
-//                javaClass.getMembers().stream().filter(member -> member instanceof FieldDeclaration);
-
         for (FieldDeclaration field : fieldDeclarations) {
             Set<String> buffer = new HashSet<>();
             this.criticalTerms.forEach(type -> {
@@ -83,19 +100,53 @@ public class CodeDiscoverer {
         }
     }
 
-    public int discoverClassMethods() {
-        ClassOrInterfaceDeclaration javaClass =
-                (ClassOrInterfaceDeclaration) this.compiler.getChildNodes().stream()
-                        .filter(x -> x instanceof ClassOrInterfaceDeclaration).collect(Collectors.toList()).get(0);
+    private void collectCriticalClassMethodFieldDeclarations(MethodDeclaration method) {
+        NodeList<Statement> statements = method.getBody().get().getStatements();
+        Set<String> buffer = new HashSet<>();
+        for (Statement statement : statements) {
+            if (statement instanceof ExpressionStmt) {
+                this.criticalTerms.forEach(type -> {
+                    if (statement.toString().contains(type)) {
+                        this.criticalStmts.add(statement.toString());
+                        buffer.add(((VariableDeclarationExpr)
+                                ((ExpressionStmt) statement).getExpression()).getVariables().get(0).getNameAsString());
+                    }
+                });
+            }
+        }
+        this.criticalTerms.addAll(buffer);
+    }
 
-        if (!isLambdaHandler(javaClass)) return 0;
+    private void discoverClassMethodBody(MethodDeclaration method) {
+        NodeList<Statement> statements = method.getBody().get().getStatements();
+        for (Statement statement : statements) {
+            if (!(statement instanceof ExpressionStmt)) {
+                this.criticalTerms.forEach(type -> {
+                    if (statement.toString().contains(type)) {
+                        this.criticalStmts.add(statement.toString());
+                    }
+                });
+            }
+        }
+    }
 
-        collectCriticalFieldDeclarations(javaClass);
-        // find all methods and go through them
-        // // find all local fields in the method and add to criticalTerms + criticalStmts
-        // // // iterate all remaining stmts (ForEach, If, etc.) and add them to criticalStmts, if suitable
+    private List<MethodDeclaration> getClassMethods(ClassOrInterfaceDeclaration javaClass) {
+        List<MethodDeclaration> classMethods = new ArrayList<>();
+        for (BodyDeclaration member: javaClass.getMembers()) {
+            if (member instanceof MethodDeclaration) classMethods.add((MethodDeclaration) member);
+        }
+        return classMethods;
+    }
 
+    private boolean isImplementedMethod(MethodDeclaration method) {
+        if (method.getAnnotations().isEmpty()) return false;
+        else if (method.getAnnotations().contains("@Override")) return true;
+        else return false;
+    }
 
-        return 0;
+    private void discoverClassMethod(MethodDeclaration method) {
+        if (isImplementedMethod(method)){/*nothing yet*/}
+        collectCriticalClassMethodFieldDeclarations(method);
+        discoverClassMethodBody(method);
     }
 }
