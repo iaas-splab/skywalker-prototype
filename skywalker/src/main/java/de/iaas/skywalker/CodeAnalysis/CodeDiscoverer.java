@@ -27,6 +27,14 @@ public class CodeDiscoverer {
         this.compiler = StaticJavaParser.parse(new File(filePath));
     }
 
+    /**
+     * Returns import identifiers which implement provider specific api usage.
+     * These identifiers can be used to track down expressions with provider specific
+     * interface type usage, e.g.:
+     * - Context (signature of Lambda handlers)
+     * - S3Object (handler object for interaction with Amazon S3)
+     * - ...
+     */
     public void discoverImports() {
         Set<String> providerLibraries = new HashSet<>();
         NodeList<ImportDeclaration> imports = this.compiler.getImports();
