@@ -3,6 +3,7 @@ package de.iaas.skywalker.MappingModules.util;
 import de.iaas.skywalker.MappingModules.model.DeploymentModel;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -21,15 +22,13 @@ public class DeploymentModelMapper {
     private static final String ARRAY_LIST = "ArrayList";
 
     public DeploymentModelMapper(DeploymentModel deploymentModel, String ruleFilePath) throws IOException {
-        this.deploymentModel = this.parseYAMLInHashMap(deploymentModel.getName());
+        this.deploymentModel = this.loadHashMap(deploymentModel);
         this.ruleFilePath = ruleFilePath;
     }
 
-    private Map<String, Object> parseYAMLInHashMap(String templateName) throws IOException {
+    private Map<String, Object> loadHashMap(DeploymentModel deploymentModel) throws IOException {
         Yaml yaml = new Yaml();
-        InputStream inputStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream("templates/" + templateName);
+        InputStream inputStream = new ByteArrayInputStream(deploymentModel.getBody().getBytes());
         Map<String, Object> templateMap = yaml.load(inputStream);
         inputStream.close();
         return templateMap;
