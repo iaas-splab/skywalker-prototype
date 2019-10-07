@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +82,7 @@ public class GenericApplicationModelController {
     }
 
     @PutMapping(path = "/")
-    public ResponseEntity<Object> generateApplicationModel(@RequestBody MappingConfiguration mappingConfiguration) {
+    public ResponseEntity<Object> generateApplicationModel(@RequestBody MappingConfiguration mappingConfiguration) throws IOException {
         // get deployment model and mapping model from repository
         List<DeploymentModel> deploymentModels = this.deploymentModelRepository.findByName(mappingConfiguration.getDeploymentModel());
         DeploymentModel deploymentModel = ((!(deploymentModels.size() > 1)) ? deploymentModels.get(0) : new DeploymentModel());

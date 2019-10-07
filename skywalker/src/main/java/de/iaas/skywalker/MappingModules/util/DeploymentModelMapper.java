@@ -4,6 +4,7 @@ import de.iaas.skywalker.MappingModules.model.DeploymentModel;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.validation.constraints.Null;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -20,17 +21,18 @@ public class DeploymentModelMapper {
     private static final String WHERE = "where";
     private static final String ARRAY_LIST = "ArrayList";
 
-    public DeploymentModelMapper(DeploymentModel deploymentModel, String ruleFilePath) {
+    public DeploymentModelMapper(DeploymentModel deploymentModel, String ruleFilePath) throws IOException {
         this.deploymentModel = this.parseYAMLInHashMap(deploymentModel.getName());
         this.ruleFilePath = ruleFilePath;
     }
 
-    private Map<String, Object> parseYAMLInHashMap(String templateName) {
+    private Map<String, Object> parseYAMLInHashMap(String templateName) throws IOException {
         Yaml yaml = new Yaml();
         InputStream inputStream = this.getClass()
                 .getClassLoader()
                 .getResourceAsStream("templates/" + templateName);
         Map<String, Object> templateMap = yaml.load(inputStream);
+        inputStream.close();
         return templateMap;
     }
 
