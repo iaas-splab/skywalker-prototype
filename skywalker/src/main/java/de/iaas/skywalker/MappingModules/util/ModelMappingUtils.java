@@ -63,6 +63,7 @@ public class ModelMappingUtils {
             List<String> properties = (List<String>) eventSource.getValue();
             if(!repository.findByProviderResourceId(eventName).isEmpty()) {
                 String grid = repository.findByProviderResourceId(eventName).get(0).getGenericResourceId();
+                properties = (properties.isEmpty()) ? repository.findByProviderResourceId(eventName).get(0).getServiceProperties() : properties;
                 if (grid != null) genericEventSources.put(grid, properties);
             } else {
                 genericEventSources.put(eventName, properties);
