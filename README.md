@@ -43,6 +43,6 @@ Make sure that port `4200` is available, otherwise add the `--port PORT` flag to
 The landing page of the skywalker application can be opened on a web browser at  
   > http://localhost:4200/
 
-![skywalker](media/skywalker_landing_page.png "skywalker")
+![skywalker](https://github.com/kaplanan/skywalker-prototype/blob/master/media/skywalker_landing_page.PNG)
 
 
