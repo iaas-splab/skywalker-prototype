@@ -18,8 +18,10 @@ export class ComparisonViewComponent implements OnInit {
       this.appCoverageModel = coverageModel;
       console.log(this.appCoverageModel);
     });
-    // this.discoverDataStructureSinceTypescriptIsntAnyBetterThanJavascript();
+  }
 
+  formatCoverageScore(eventCoverage: any) {
+    return ((eventCoverage * 100).toString().slice(0,3) + "%").replace(/\.%/g,'%');
   }
 
   discoverDataStructureSinceTypescriptIsntAnyBetterThanJavascript() {

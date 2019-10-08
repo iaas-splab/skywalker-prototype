@@ -67,7 +67,7 @@ public class DeploymentModelMapper {
             } catch (ClassCastException e) {
                 if (root.get(node).getClass().getSimpleName().equals(ARRAY_LIST))
                     root = this.handleArrayListCastExceptions(root, node);
-            }
+            } finally { if (root==null) return new HashMap<>(); }
         }
 
         // check WHERE statement inside of the ROOT

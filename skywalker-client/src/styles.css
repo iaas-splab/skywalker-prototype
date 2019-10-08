@@ -4,3 +4,33 @@
 
 @import url(../node_modules/@angular/material/prebuilt-themes/indigo-pink.css);
 @import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+
+.dracula-code {
+  background-color: lightgrey;
+}
+
+.dracula-code-light {
+  background-color: #ececec;
+}
+
+.skywalker-white {
+  background-color: #343A40;
+  color: lightgrey;
+}
+/*goldenrod*/
+.skywalker-yellow {
+  background-color: #343A40;
+  color: goldenrod;
+}
+
+.mat-card-lavender {
+  background-color: lavender;
+}
+
+.right-aligned-header > .mat-content {
+  justify-content: space-between;
+}
+
+.mat-content > mat-panel-title, .mat-content > mat-panel-description {
+  flex: 0 0 auto;
+}

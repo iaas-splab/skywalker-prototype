@@ -1,21 +1,22 @@
-<mat-card>
-  <mat-card-title><h4>Portability to {{appCoverageModel.targetPlatform}}: {{(appCoverageModel.platformCoverageScore*100).toString().slice(0,3)}}%</h4></mat-card-title>
-  <!--<mat-card-actions>-->
-    <!--<button mat-button mat-stroked-button (click)="someFunction()" matTooltip="Some hint">-->
-      <!--Button label-->
-    <!--</button>-->
-  <!--</mat-card-actions>-->
+<mat-card class="mat-card-lavender">
+  <!--<mat-card-title><h4>Portability to {{appCoverageModel.targetPlatform}}: {{(appCoverageModel.platformCoverageScore*100).toString().slice(0,3)}}%</h4></mat-card-title>-->
+  <mat-card-title><h4>Portability to {{appCoverageModel.targetPlatform}}: {{formatCoverageScore(appCoverageModel.platformCoverageScore)}}</h4></mat-card-title>
 </mat-card>
 
 <mat-accordion *ngFor="let eventSource of appCoverageModel.eventSourceCoverage | keyvalue">
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
+  <mat-expansion-panel class="mat-card dracula-code">
+    <mat-expansion-panel-header class="right-aligned-header">
       <mat-panel-title class="small-text">{{eventSource.key}}</mat-panel-title>
-      <mat-panel-description>{{(appCoverageModel.propertyCoverageScores[eventSource.key] * 100).toString().slice(0,3)}}%</mat-panel-description>
+      <mat-panel-description>
+        <span class="-align-right">
+          {{formatCoverageScore(appCoverageModel.propertyCoverageScores[eventSource.key])}}
+          <!--{{(appCoverageModel.propertyCoverageScores[eventSource.key] * 100).toString().slice(0,3)}}%-->
+        </span>
+      </mat-panel-description>
     </mat-expansion-panel-header>
     <div id="container">
       <div>
-        <mat-card>
+        <mat-card class="mat-card-lavender">
           <mat-card-header class="appModelHeader">{{appCoverageModel.id}}</mat-card-header>
           <mat-card-content>
             <mat-list>
@@ -34,7 +35,7 @@
         </mat-card>
       </div>
       <div>
-        <mat-card>
+        <mat-card class="mat-card-lavender">
           <mat-card-header class="appModelHeader">{{appCoverageModel.targetPlatform}}</mat-card-header>
           <mat-list>
             <div *ngFor="let prop of eventSource.value | keyvalue">

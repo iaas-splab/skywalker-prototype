@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="mat-card-lavender">
   <mat-card-title><h5>Mapping Modules</h5></mat-card-title>
   <div class="right-flex">
     <button mat-flat-button color="primary" [routerLink]="['/mapping-add']">Add</button>
@@ -6,13 +6,17 @@
   </div>
 </mat-card>
 <mat-accordion *ngFor="let module of mappingModules">
-  <mat-expansion-panel>
+  <mat-expansion-panel class="mat-card dracula-code-light">
     <mat-expansion-panel-header>
       <mat-panel-title class="small-text">{{module.name}}</mat-panel-title>
     </mat-expansion-panel-header>
-    <mat-card>
+    <mat-card class="dracula-code">
       <mat-card-subtitle>Body</mat-card-subtitle>
-      <mat-card-content>{{module.body}}</mat-card-content>
+      <mat-card-content>
+        <div>
+          <pre><code>{{module.body}}</code></pre>
+        </div>
+      </mat-card-content>
       <div class="example-button-row">
         <button mat-stroked-button color="primary" [routerLink]="['/mapping-add', module]" >Edit</button>
       </div>

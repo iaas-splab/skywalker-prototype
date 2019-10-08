@@ -1,9 +1,9 @@
-<mat-card>
+<mat-card class="mat-card-lavender">
   <mat-card-header>
     <mat-card-title>Add Mapping Module</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <mat-card>
+    <mat-card class="mat-card dracula-code">
       <mat-card-title><h5>Write in browser</h5></mat-card-title>
       <form #mappingForm="ngForm" (ngSubmit)="onModuleFormSubmit(mappingForm.value)">
         <div>
@@ -27,7 +27,7 @@
         </mat-action-row>
       </form>
     </mat-card>
-    <mat-card margin-cards>
+    <mat-card class="mat-card dracula-code">
       <mat-card-title><h5>Upload existing file</h5></mat-card-title>
       <form #templateForm="ngForm" (ngSubmit)="onUpload()">
         <div>

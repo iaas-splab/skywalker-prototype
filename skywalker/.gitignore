@@ -35,3 +35,7 @@ build/
 
 ### DB stuff ###
 data/
+
+### static resources ###
+ src/main/resources/templates/*.yaml
+ src/main/resources/mapping.configurations/*.yaml

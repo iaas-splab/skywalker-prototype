@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="mat-card-lavender">
   <mat-card-title><h5>Property Mapping Repository</h5></mat-card-title>
   <div class="right-flex">
     <button mat-flat-button color="primary" [routerLink]="['/app-add-property-mapping']">Add</button>
@@ -7,7 +7,7 @@
     </button>
   </div>
 </mat-card>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8  dracula-code-light">
   <ng-container matColumnDef="genericResourceId">
     <th mat-header-cell *matHeaderCellDef> Generic Resource ID </th>
     <td mat-cell *matCellDef="let element"> {{element.genericResourceId}} </td>
