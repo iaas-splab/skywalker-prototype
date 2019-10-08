@@ -40,6 +40,8 @@ import { PropertyRepoTableComponent } from './repositories/property-repo-table/p
 import { AddPropertyMappingComponent } from './repositories/add-property-mapping/add-property-mapping.component';
 import { AddAppModelComponent } from './app-model/add-app-model/add-app-model.component';
 import { LandingPageComponent } from './start-page/landing-page/landing-page.component';
+import { DeploymentPackagesListComponent } from './deployment-packages/deployment-packages-list/deployment-packages-list.component';
+import { AddDeploymentPackageComponent } from './deployment-packages/add-deployment-package/add-deployment-package.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { LandingPageComponent } from './start-page/landing-page/landing-page.com
     PropertyRepoTableComponent,
     AddPropertyMappingComponent,
     AddAppModelComponent,
-    LandingPageComponent
+    LandingPageComponent,
+    DeploymentPackagesListComponent,
+    AddDeploymentPackageComponent
   ],
   imports: [
     BrowserModule,
