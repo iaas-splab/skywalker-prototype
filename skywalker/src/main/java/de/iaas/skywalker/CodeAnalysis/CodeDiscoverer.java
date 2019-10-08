@@ -144,8 +144,21 @@ public class CodeDiscoverer {
         else return false;
     }
 
+    private void checkClassMethodHeader(MethodDeclaration method) {
+        Set<String> buffer = new HashSet<>();
+        for (String term : this.getCriticalTerms()) {
+            method.getParameters().forEach(param -> {
+                if (param.getType().equals(term)) {
+                    buffer.add(param.getNameAsString());
+                }
+            });
+        }
+        this.criticalTerms.addAll(buffer);
+    }
+
     private void discoverClassMethod(MethodDeclaration method) {
         if (isImplementedMethod(method)){/*nothing yet*/}
+        checkClassMethodHeader(method);
         collectCriticalClassMethodFieldDeclarations(method);
         discoverClassMethodBody(method);
     }
