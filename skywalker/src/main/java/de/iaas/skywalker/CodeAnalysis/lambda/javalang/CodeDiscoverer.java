@@ -1,4 +1,4 @@
-package de.iaas.skywalker.CodeAnalysis;
+package de.iaas.skywalker.CodeAnalysis.lambda.javalang;
 
 
 import com.github.javaparser.StaticJavaParser;
@@ -12,7 +12,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.Statement;
-import de.iaas.skywalker.CodeAnalysis.utils.DiscoveryHelper;
+import de.iaas.skywalker.CodeAnalysis.lambda.javalang.utils.DiscoveryHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,7 +47,7 @@ public class CodeDiscoverer {
      * Returns import identifiers which implement provider specific api usage.
      * These identifiers can be used to track down expressions with provider specific
      * interface type usage, e.g.:
-     * - Context (signature of Lambda handlers)
+     * - Context (signature of lambda handlers)
      * - S3Object (handler object for interaction with Amazon S3)
      * - ...
      */

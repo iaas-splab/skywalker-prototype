@@ -1,4 +1,4 @@
-package de.iaas.skywalker.CodeAnalysis.utils;
+package de.iaas.skywalker.CodeAnalysis.lambda.javalang.utils;
 
 import java.io.*;
 import java.util.ArrayList;
