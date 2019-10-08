@@ -2,6 +2,7 @@ package de.iaas.skywalker;
 
 import de.iaas.skywalker.ApplicationModels.repository.GenericApplicationModelRepository;
 import de.iaas.skywalker.DeploymentModels.repository.DeploymentModelRepository;
+import de.iaas.skywalker.DeploymentPackages.repository.DeploymentPackageRepository;
 import de.iaas.skywalker.MappingModules.repository.MappingModuleRepository;
 import de.iaas.skywalker.MappingModules.model.DeploymentModel;
 import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
@@ -30,6 +31,9 @@ public class SkywalkerApplication {
 
 	@Autowired
     DeploymentModelRepository deploymentModelRepository;
+
+	@Autowired
+	DeploymentPackageRepository deploymentPackageRepository;
 
 	@Autowired
     MappingModuleRepository mappingModuleRepository;

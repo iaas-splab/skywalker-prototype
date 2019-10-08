@@ -12,6 +12,7 @@ import {PropertyRepoTableComponent} from "./repositories/property-repo-table/pro
 import {AddPropertyMappingComponent} from "./repositories/add-property-mapping/add-property-mapping.component";
 import {AddAppModelComponent} from "./app-model/add-app-model/add-app-model.component";
 import {LandingPageComponent} from "./start-page/landing-page/landing-page.component";
+import {DeploymentPackagesComponent} from "./deployment-packages/deployment-packages.component";
 
 const routes: Routes = [
   {
@@ -61,6 +62,10 @@ const routes: Routes = [
   {
     path: 'app-add-app-model-mapping',
     component: AddAppModelComponent
+  },
+  {
+    path: 'app-deployment-packages-list',
+    component: DeploymentPackagesComponent
   }
 ];
 
