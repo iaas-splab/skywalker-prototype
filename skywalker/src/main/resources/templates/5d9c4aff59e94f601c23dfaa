@@ -1,0 +1,42 @@
+service: thumbnail-generator
+
+custom:
+  image_bucket_name: cmueller-tgen-images
+  thumb_bucket_name: cmueller-tgen-thumbnails
+
+provider:
+  name: aws
+  runtime: java8
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: "*"
+  environment:
+    IMAGE_UPLOAD_BUCKET: ${self:custom.image_bucket_name}
+    THUMBNAIL_BUCKET: ${self:custom.thumb_bucket_name}
+
+package:
+  artifact: target/thumbnail-generator-dev.jar
+
+functions:
+  upload:
+    handler: xyz.cmueller.serverless.UploadHandler
+    events:
+     - http:
+         path: upload
+         method: post
+  thumbnail-generator:
+    handler: xyz.cmueller.serverless.ThumbnailGenerationHandler
+    events:
+    - s3:
+        bucket: ${self:custom.image_bucket_name}
+        event: s3:ObjectCreated:*
+resources:
+  Resources:
+    ThumbnailBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.thumb_bucket_name}

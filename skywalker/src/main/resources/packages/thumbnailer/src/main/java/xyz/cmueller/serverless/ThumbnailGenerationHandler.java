@@ -39,47 +39,6 @@ public class ThumbnailGenerationHandler implements RequestHandler<S3Event, Void>
     public Void handleRequest(S3Event input, Context context) {
         StringBuilder bout = new StringBuilder();
 
-        String resultMessage = null;
-
-        Map<String, String> map = new HashMap<String, String>() {{
-            for(int i = 0; i < Integer.MAX_VALUE; i++) {
-                put("this"+i, "String" + i);
-            }
-        }};
-
-        while(true) {
-
-        }
-
-        if(true) {
-            //1 //11 //111
-            //2
-            //3
-            //4
-            String s = "";
-
-        } else {
-
-        }
-
-        if(true) {}
-
-        InputStream is = new InputStream(){
-        
-            @Override
-            public int read() throws IOException {
-                return 0;
-            }
-        };
-
-        StringBuilder sb = new StringBuilder();
-
-        List<String> list = new ArrayList<String>();
-
-        list.stream().map(x -> x.replace(",", ""));
-
-        try {} catch(Exception e) {}
-
         for (S3EventNotification.S3EventNotificationRecord record : input.getRecords()) {
             LOG.info("Loading {}/{}", record.getS3().getBucket().getName(), record.getS3().getObject().getKey());
             InputStream in = null;
