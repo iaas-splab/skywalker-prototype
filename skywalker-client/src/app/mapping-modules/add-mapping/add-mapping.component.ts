@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MappingModule} from "../MappingModule";
 import {MappingService} from "../mapping.service";
 import {Router} from "@angular/router";
-import {MatSnackBar} from "@angular/material";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-add-mapping',
@@ -15,13 +15,11 @@ export class AddMappingComponent implements OnInit {
 
   constructor(
     private mappingService: MappingService,
-    private snackBar: MatSnackBar,
+    private snackBarService: SnackbarService,
     public router: Router
   ) { }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   onModuleFormSubmit(form: MappingModule) {
     this.mappingService.upload(form).subscribe(response => {
@@ -40,18 +38,10 @@ export class AddMappingComponent implements OnInit {
       const mappingModule: MappingModule = new MappingModule(this.selectedFile.name, this.moduleContent);
       this.mappingService.upload(mappingModule).subscribe(response => {
         console.log(response);
-        this.openSnackBar('Added mapping module', 'close', 2000);
+        this.snackBarService.openSnackBar('Added mapping module', 'close', 2000);
         this.router.navigate(['/mapping-list']);
       });
     };
     fileReader.readAsText(this.selectedFile);
   }
-
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
-    });
-  }
-
 }

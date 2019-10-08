@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Form, FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MappingRepoService} from "../mapping-repo.service";
 import {Router} from "@angular/router";
-import {MatSnackBar} from "@angular/material";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-add-property-mapping',
@@ -16,7 +16,7 @@ export class AddPropertyMappingComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private mappingRepoService: MappingRepoService,
-    private snackBar: MatSnackBar,
+    private snackBarService: SnackbarService,
     public router: Router
   ) { }
 
@@ -49,17 +49,10 @@ export class AddPropertyMappingComponent implements OnInit {
     let prop: GenericServiceProperty = new GenericServiceProperty(form["genericResourceId"].toString(), dict);
     this.mappingRepoService.addPropertyMapping(prop).subscribe(data => {
       console.log(data);
-      this.openSnackBar("Added new entry ", 'close', 2000);
+      this.snackBarService.openSnackBar("Added new entry ", 'close', 2000);
       this.router.navigate(['/app-property-repo-table']);
     });
 
-  }
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
-    }).afterDismissed().subscribe(() => {
-    });
   }
 }
 

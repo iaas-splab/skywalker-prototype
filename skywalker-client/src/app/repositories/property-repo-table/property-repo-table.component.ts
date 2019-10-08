@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {MappingRepoService} from "../mapping-repo.service";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-property-repo-table',
@@ -11,7 +12,10 @@ export class PropertyRepoTableComponent implements OnInit {
   private dataSource;
   displayedColumns: string[] = ['genericResourceId', 'genericServiceProperty', 'genericServicePropertyMap'];
 
-  constructor(private mappingRepoService: MappingRepoService) { }
+  constructor(
+    private mappingRepoService: MappingRepoService,
+    private snackBarService: SnackbarService
+  ) { }
 
   ngOnInit() {
     this.mappingRepoService.getAllPropertyMappings().subscribe(data => {
@@ -24,6 +28,8 @@ export class PropertyRepoTableComponent implements OnInit {
     this.mappingRepoService.resetAllPropertyMappings().subscribe(data => {
       console.log(data);
       this.ngOnInit();
+      this.snackBarService.openSnackBar("Reset table", 'close', 1000);
+
     })
   }
 

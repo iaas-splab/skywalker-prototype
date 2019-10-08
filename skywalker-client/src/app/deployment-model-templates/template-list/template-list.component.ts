@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {TemplateService} from "../template.service";
 import {Template} from "../Template";
-import {MatSnackBar} from "@angular/material";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-template-list',
@@ -14,7 +14,7 @@ export class TemplateListComponent implements OnInit {
   constructor(
     private templateService: TemplateService,
     private extractionService: TemplateService,
-    private snackBar: MatSnackBar,
+    private snackBarService: SnackbarService,
   ) { }
 
   ngOnInit() {
@@ -27,15 +27,9 @@ export class TemplateListComponent implements OnInit {
     this.extractionService.resetAll().subscribe(data => {
       console.log(data);
       this.ngOnInit();
-      this.openSnackBar("Reset all deployment model templates.",
+      this.snackBarService.openSnackBar("Reset all deployment model templates.",
         'close',
         1000);
-    });
-  }
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
     });
   }
 }

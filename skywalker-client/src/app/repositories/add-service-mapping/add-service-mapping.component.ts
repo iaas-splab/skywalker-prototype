@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MappingRepoService} from "../mapping-repo.service";
-import {MatSnackBar} from "@angular/material";
 import {Router} from "@angular/router";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-add-service-mapping',
@@ -12,7 +12,7 @@ export class AddServiceMappingComponent implements OnInit {
 
   constructor(
     private mappingRepoService: MappingRepoService,
-    private snackBar: MatSnackBar,
+    private snackBarService: SnackbarService,
     public router: Router
   ) { }
 
@@ -28,17 +28,10 @@ export class AddServiceMappingComponent implements OnInit {
     );
     this.mappingRepoService.addServiceMapping(eventSourceMapping).subscribe(response => {
       console.log(response);
-      this.openSnackBar('Added service mapping entry', 'close', 2000);
+      this.snackBarService.openSnackBar('Added service mapping entry', 'close', 2000);
       this.router.navigate(['/app-service-repo-table']);
     });
   }
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
-    });
-  }
-
 }
 
 class EventSourceMapping {

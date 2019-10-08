@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Template} from "../../deployment-model-templates/Template";
-import {MatSnackBar} from "@angular/material";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-add-deployment-package',
@@ -11,7 +11,7 @@ export class AddDeploymentPackageComponent implements OnInit {
   selectedFile: File = null;
   packageContent: string = null;
 
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private snackBarService: SnackbarService,) { }
 
   ngOnInit() {
   }
@@ -25,14 +25,7 @@ export class AddDeploymentPackageComponent implements OnInit {
       //   console.log(response);
       // });
     };
-    this.openSnackBar('Add feature not working, yet.', 'close', 2000);
+    this.snackBarService.openSnackBar('Add feature not working, yet.', 'close', 2000);
     fileReader.readAsText(this.selectedFile);
   }
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
-    });
-  }
-
 }

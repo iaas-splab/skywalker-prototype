@@ -4,9 +4,9 @@ import {Template} from "../../deployment-model-templates/Template";
 import {MappingModule} from "../../mapping-modules/MappingModule";
 import {MappingService} from "../../mapping-modules/mapping.service";
 import {MappingConfiguration} from "../MappingConfiguration";
-import {MatSnackBar} from "@angular/material";
 import {Router} from "@angular/router";
 import {AppModelService} from "../app-model.service";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-add-app-model',
@@ -26,7 +26,7 @@ export class AddAppModelComponent implements OnInit {
     private templateService: TemplateService,
     private mappingService: MappingService,
     private appModelService: AppModelService,
-    private snackBar: MatSnackBar,
+    private snackBarService: SnackbarService,
     public router: Router
   ) { }
 
@@ -44,20 +44,11 @@ export class AddAppModelComponent implements OnInit {
     this.mappingConfig = new MappingConfiguration(this.selectedTemplate.name, this.selectedModule.name, this.applicationName);
     this.mode = "indeterminate";
     setTimeout(() => {
-      this.openSnackBar("Generated Deployment Model for " + this.applicationName, 'close', 2000);
+      this.snackBarService.openSnackBar("Generated Deployment Model for " + this.applicationName, 'close', 2000);
       this.router.navigate(['/app-model-list']);
     }, 1000);
     this.appModelService.generate(this.mappingConfig).subscribe(data => {
       console.log(data);
     });
   }
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
-    }).afterDismissed().subscribe(() => {
-      this.mode = "";
-    });
-  }
-
 }

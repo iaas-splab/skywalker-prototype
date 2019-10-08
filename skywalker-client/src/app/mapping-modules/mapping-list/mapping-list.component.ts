@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {MappingModule} from "..//MappingModule";
 import {MappingService} from "..//mapping.service";
-import {MatSnackBar} from "@angular/material";
 import {Router} from "@angular/router";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-mapping-list',
@@ -14,7 +14,7 @@ export class MappingListComponent implements OnInit {
 
   constructor(
     private mappingService: MappingService,
-    private snackBar: MatSnackBar,
+    private snackBarService: SnackbarService,
     public router: Router
   ) { }
 
@@ -28,16 +28,9 @@ export class MappingListComponent implements OnInit {
     this.mappingService.resetAll().subscribe(data => {
       console.log(data);
       this.ngOnInit();
-      this.openSnackBar("Reset all deployment model templates.",
+      this.snackBarService.openSnackBar("Reset all deployment model templates.",
         'close',
         1000);
     });
   }
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
-    });
-  }
-
 }

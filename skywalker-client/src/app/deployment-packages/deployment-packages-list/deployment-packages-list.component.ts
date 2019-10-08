@@ -4,7 +4,7 @@ import {DeploymentPackage} from "../DeploymentPackage";
 import {Template} from "../../deployment-model-templates/Template";
 import {TemplateService} from "../../deployment-model-templates/template.service";
 import {Router} from "@angular/router";
-import {MatSnackBar} from "@angular/material";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-deployment-packages-list',
@@ -17,7 +17,7 @@ export class DeploymentPackagesListComponent implements OnInit {
   constructor(
     private deploymentPackageService: DeploymentPackageService,
     private extractionService: TemplateService,
-    private snackBar: MatSnackBar,
+    private snackBarService: SnackbarService,
     public router: Router
   ) { }
 
@@ -38,11 +38,11 @@ export class DeploymentPackagesListComponent implements OnInit {
       this.deploymentPackageService.analyzeFunctions(deploymentPackage).subscribe(data => {
         this.packages = data;
         console.log(data);
-        this.openSnackBar("Functions analyzed", 'close', 1000);
+        this.snackBarService.openSnackBar("Functions analyzed", 'close', 1000);
         this.ngOnInit();
       });
     } else {
-      this.openSnackBar("This package has already been analyzed", 'close', 2000);
+      this.snackBarService.openSnackBar("This package has already been analyzed", 'close', 2000);
     }
 
   }
@@ -51,7 +51,7 @@ export class DeploymentPackagesListComponent implements OnInit {
     let model = new Template(deploymentPackage.id, deploymentPackage.deploymentModel);
     this.extractionService.upload(model).subscribe(response => {
       console.log(response);
-      this.openSnackBar("Added to deployment models", 'close', 1000);
+      this.snackBarService.openSnackBar("Added to deployment models", 'close', 1000);
       this.router.navigate(['template-list']);
     });
   }
@@ -60,16 +60,9 @@ export class DeploymentPackagesListComponent implements OnInit {
     this.deploymentPackageService.resetAll().subscribe(data => {
       console.log(data);
       this.ngOnInit();
-      this.openSnackBar("Reset all deployment packages",
+      this.snackBarService.openSnackBar("Reset all deployment packages",
         'close',
         1000);
     });
   }
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
-    });
-  }
-
 }

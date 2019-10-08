@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AppModelService} from "../app-model.service";
 import {AppModel} from "../AppModel";
-import { MatSnackBar} from "@angular/material";
 import {CoverageModel} from "../CoverageModel";
 import {Router} from "@angular/router";
 import {DataService} from "../../services/data.service";
 import {CoverageEvaluationBundle} from "../CoverageEvaluationBundle";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-app-model-list',
@@ -22,7 +22,7 @@ export class AppModelListComponent implements OnInit {
 
   constructor(
     private appModelService: AppModelService,
-    private snackBar: MatSnackBar,
+    private snackBarService: SnackbarService,
     private data: DataService,
     public router: Router
   ) { }
@@ -58,7 +58,7 @@ export class AppModelListComponent implements OnInit {
     this.appModelService.resetAll().subscribe(data => {
       console.log(data);
       this.ngOnInit();
-      this.openSnackBar("Deleted all application models. Please refresh the page.",
+      this.snackBarService.openSnackBar("Deleted all application models. Please refresh the page.",
         'close',
         1000);
     });
@@ -70,13 +70,6 @@ export class AppModelListComponent implements OnInit {
       this.appCoverageModel = data;
       this.data.changeCoverageModel(this.appCoverageModel);
       this.router.navigate(['app-comparison-view']);
-    });
-  }
-
-  openSnackBar(message: string, action: string, duration: number) {
-    this.snackBar.open(message, action, {
-      duration: duration,
-    }).afterDismissed().subscribe(() => {
     });
   }
 }
