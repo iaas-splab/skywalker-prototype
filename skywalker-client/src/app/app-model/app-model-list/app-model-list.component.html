@@ -9,8 +9,13 @@
 </mat-card>
 <mat-accordion *ngFor="let appModel of appModels">
   <mat-expansion-panel class="mat-card dracula-code-light">
-    <mat-expansion-panel-header>
+    <mat-expansion-panel-header class="right-aligned-header">
       <mat-panel-title class="small-text">{{appModel.id}}</mat-panel-title>
+      <mat-panel-description>
+        <button class="dracula-code" mat-button mat-stroked-button (click)="evaluateWithPlatformCandidate(appModel, 'azure')" matTooltip="Evaluate portability to platform candidate">
+          Evaluate
+        </button>
+      </mat-panel-description>
     </mat-expansion-panel-header>
     <mat-accordion>
       <mat-expansion-panel class="skywalker-yellow">
@@ -51,11 +56,5 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
-    <button class="skywalker-white" mat-button mat-stroked-button (click)="evaluateWithPlatformCandidate(appModel, 'azure')" matTooltip="Evaluate portability to platform candidate">
-      Evaluate
-    </button>
-    <!--<button mat-button mat-stroked-button (click)="openDialog()" matTooltip="Evaluate portability to platform candidate">-->
-      <!--Evaluate this-->
-    <!--</button>-->
   </mat-expansion-panel>
 </mat-accordion>
