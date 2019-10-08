@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {TemplateService} from "../template.service";
 import {Template} from "../Template";
 import {MatSnackBar} from "@angular/material";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-template-list',
@@ -16,7 +15,6 @@ export class TemplateListComponent implements OnInit {
     private templateService: TemplateService,
     private extractionService: TemplateService,
     private snackBar: MatSnackBar,
-    public router: Router
   ) { }
 
   ngOnInit() {
@@ -28,10 +26,10 @@ export class TemplateListComponent implements OnInit {
   resetAll() {
     this.extractionService.resetAll().subscribe(data => {
       console.log(data);
+      this.ngOnInit();
       this.openSnackBar("Reset all deployment model templates.",
         'close',
         1000);
-      this.router.navigate(['/template-list']);
     });
   }
 

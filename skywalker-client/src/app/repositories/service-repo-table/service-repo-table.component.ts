@@ -15,20 +15,14 @@ export class ServiceRepoTableComponent implements OnInit {
 
   ngOnInit() {
     this.mappingRepoService.getAllServiceMappings().subscribe(data => {
-      // console.log(data);
       this.dataSource = data;
-      let entry;
-      for (entry of data) {
-        // console.log(entry);
-        console.log(entry["genericResourceId"]);
-      }
     });
   }
 
   resetAll() {
     this.mappingRepoService.resetAllServiceMappings().subscribe(data => {
       console.log(data);
-      // this.router.navigate(['/app-service-repo-table']);
+      this.ngOnInit();
     })
   }
 

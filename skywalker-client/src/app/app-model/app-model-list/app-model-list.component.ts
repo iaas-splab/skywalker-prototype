@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AppModelService} from "../app-model.service";
 import {AppModel} from "../AppModel";
-import {MatDialog, MatSnackBar} from "@angular/material";
+import { MatSnackBar} from "@angular/material";
 import {CoverageModel} from "../CoverageModel";
 import {Router} from "@angular/router";
 import {DataService} from "../../services/data.service";
@@ -24,7 +24,6 @@ export class AppModelListComponent implements OnInit {
     private appModelService: AppModelService,
     private snackBar: MatSnackBar,
     private data: DataService,
-    public dialog: MatDialog,
     public router: Router
   ) { }
 
@@ -58,7 +57,7 @@ export class AppModelListComponent implements OnInit {
   resetAll() {
     this.appModelService.resetAll().subscribe(data => {
       console.log(data);
-      this.router.navigate(['']);
+      this.ngOnInit();
       this.openSnackBar("Deleted all application models. Please refresh the page.",
         'close',
         1000);

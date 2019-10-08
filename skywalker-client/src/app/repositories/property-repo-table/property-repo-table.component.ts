@@ -23,7 +23,7 @@ export class PropertyRepoTableComponent implements OnInit {
   resetAll() {
     this.mappingRepoService.resetAllPropertyMappings().subscribe(data => {
       console.log(data);
-      // this.router.navigate(['/app-service-repo-table']);
+      this.ngOnInit();
     })
   }
 

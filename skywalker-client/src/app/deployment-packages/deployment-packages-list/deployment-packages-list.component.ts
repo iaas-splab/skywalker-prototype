@@ -59,10 +59,10 @@ export class DeploymentPackagesListComponent implements OnInit {
   resetAll() {
     this.deploymentPackageService.resetAll().subscribe(data => {
       console.log(data);
+      this.ngOnInit();
       this.openSnackBar("Reset all deployment packages",
         'close',
         1000);
-      this.ngOnInit();
     });
   }
 

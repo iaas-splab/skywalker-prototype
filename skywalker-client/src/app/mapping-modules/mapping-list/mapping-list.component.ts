@@ -27,10 +27,10 @@ export class MappingListComponent implements OnInit {
   resetAll() {
     this.mappingService.resetAll().subscribe(data => {
       console.log(data);
+      this.ngOnInit();
       this.openSnackBar("Reset all deployment model templates.",
         'close',
         1000);
-      this.router.navigate(['/mapping-list']);
     });
   }
 
