@@ -14,22 +14,24 @@
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
+        <a class="nav-link" routerLink="/app-deployment-packages-list">Packages</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" routerLink="/template-list">Templates</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/mapping-list">Mapping</a>
+        <a class="nav-link" routerLink="/mapping-list">Modules</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/app-model-list">Applications</a>
+        <a class="nav-link" routerLink="/app-model-list">Models</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <button class="nav-link mat-stroked-button" routerLink="/app-service-repo-table"><span class="text-warning">Service</span><span class="border-white">Repo</span></button>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/app-service-repo-table">Service Repo</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/app-property-repo-table">Property Repo</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/app-deployment-packages-list">Packages</a>
+        <button class="nav-link mat-stroked-button" routerLink="/app-property-repo-table"><span class="text-warning">Property</span><span class="border-white">Repo</span></button>
       </li>
     </ul>
   </div>

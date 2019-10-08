@@ -4,42 +4,55 @@
     <mat-card-title></mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <mat-card class="dracula-code-light">
+    <mat-card class="skywalker-white">
       <mat-card-content>
-        <h6><b>Adding Templates and Mapping Modules</b></h6>
+        <h6><b>Working with Deployment Packages</b></h6>
         <p>
-          For generating Application Models, you need at least one <a [routerLink]="['/template-list']">Template</a> and a suitable
-          <a [routerLink]="['/mapping-list']">Mapping Module</a>.
+          There are already some <a class="text-warning" [routerLink]="['/template-list']">Deployment Packages</a> included for which the portability evaluation can be performed.
+          Each deployment package consists of one deployment model and multiple functions. You can add the deployment model to the list of Deployment Model Templates by clicking the button
+          <span class="text-warning">Add to templates</span>. The functions can be analyzed for lines in which provider-specific SDK usage is located by clicking the button
+          <span class="text-warning">Analyze functions</span>. The deployment package will then be updated with annotated functions.
         </p>
       </mat-card-content>
     </mat-card>
     <div class="spacer"></div>
-    <mat-card class="dracula-code-light">
+    <mat-card class="skywalker-white">
+      <mat-card-content>
+        <h6><b>Adding Templates and Mapping Modules</b></h6>
+        <!--<h6><b><span>Adding </span><span class="text-warning">Templates</span><span> and </span><span class="text-warning">Mapping Modules</span></b></h6>-->
+        <p>
+          For generating Application Models, you need at least one <a class="text-warning" [routerLink]="['/template-list']">Template</a> and a suitable
+          <a class="text-warning" [routerLink]="['/mapping-list']">Mapping Module</a>.
+        </p>
+      </mat-card-content>
+    </mat-card>
+    <div class="spacer"></div>
+    <mat-card class="skywalker-white">
       <mat-card-content>
         <h6><b>Analyze Application Models</b></h6>
         <p>
-          Subsequently, you can find the existing Application Models at <a [routerLink]="['/app-model-list']">Applications</a> view.
+          Subsequently, you can find the existing Application Models at <a class="text-warning" [routerLink]="['/app-model-list']">Models</a> view.
         </p>
       </mat-card-content>
     </mat-card>
     <div class="spacer"></div>
-    <mat-card class="dracula-code-light">
+    <mat-card class="skywalker-white">
       <mat-card-content>
         <h6><b>Evaluate portability</b></h6>
         <p>
           Open the desired Application to analyze the incorporated services which are displayed with generic descriptive names.
-          In addition, click <b>Evaluate</b> at the bottom of the detail view to evaluate the portability to a chosen provider
+          In addition, click <span class="text-warning">Evaluate</span> inside the detail view of a model to evaluate the portability to a chosen provider
           platform, e.g., Azure.
         </p>
       </mat-card-content>
     </mat-card>
     <div class="spacer"></div>
-    <mat-card class="dracula-code-light">
+    <mat-card class="skywalker-white">
       <mat-card-content>
         <h6><b>Maintain Mapping Repositories</b></h6>
         <p>
-          In <a [routerLink]="['/app-model-list']">Applications</a>, there are generic Service and Property names for provider-specific
-          resources. In <a [routerLink]="['/app-service-repo-table']">Service Repo</a> and <a [routerLink]="['/app-property-repo-table']">Property Repo</a>
+          In <a class="text-warning" [routerLink]="['/app-model-list']">Models</a>, there are generic Service and Property names for provider-specific
+          resources. In <a class="text-warning" [routerLink]="['/app-service-repo-table']">Service Repo</a> and <a class="text-warning" [routerLink]="['/app-property-repo-table']">Property Repo</a>
           you can look up how the mapping is done and update the mapping tables, if necessary.
         </p>
       </mat-card-content>
