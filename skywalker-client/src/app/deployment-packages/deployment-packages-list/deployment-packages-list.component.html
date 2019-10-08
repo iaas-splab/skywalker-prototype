@@ -1,0 +1,57 @@
+<mat-card class="mat-card-lavender">
+  <mat-card-title><h5>Deployment Packages</h5></mat-card-title>
+  <div class="right-flex">
+    <button mat-flat-button color="primary" [routerLink]="['/app-deployment-packages-add']">Add</button>
+    <button mat-stroked-button color="primary" (click)="resetAll()">Reset all</button>
+  </div>
+</mat-card>
+<mat-accordion *ngFor="let package of packages">
+  <mat-expansion-panel class="mat-card dracula-code-light">
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{package.id}}</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-expansion-panel class="mat-card dracula-code-light">
+      <mat-expansion-panel-header class="right-aligned-header">
+        <mat-panel-title>Deployment Model</mat-panel-title>
+        <mat-panel-description>
+          <button class="dracula-code" mat-button mat-stroked-button (click)="addDeploymentModelToRepository(package)" matTooltip="Add deployment model to repository">
+            Add to templates
+          </button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-card class="dracula-code">
+        <mat-card-content>
+          <div>
+            <pre><code>{{package.deploymentModel}}</code></pre>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="mat-card dracula-code-light">
+      <mat-expansion-panel-header class="right-aligned-header">
+        <mat-panel-title>Functions</mat-panel-title>
+        <mat-panel-description>
+          <button class="dracula-code" mat-button mat-stroked-button (click)="analyzeFunctions(package)" matTooltip="Annotate lines of code with provider-specific SDK usage">
+            Analyze functions
+          </button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-accordion *ngFor="let fx of package.functions | keyvalue">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>{{fx.key}}</mat-expansion-panel-header>
+          <mat-card class="dracula-code">
+            <mat-card-content>
+              <div>
+                <pre><code>
+                  {{log(package.functions[fx.key])}}
+                </code></pre>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </mat-expansion-panel>
+
+  </mat-expansion-panel>
+</mat-accordion>

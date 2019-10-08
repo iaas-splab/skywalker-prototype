@@ -2,6 +2,7 @@ package de.iaas.skywalker;
 
 import de.iaas.skywalker.ApplicationModels.repository.GenericApplicationModelRepository;
 import de.iaas.skywalker.DeploymentModels.repository.DeploymentModelRepository;
+import de.iaas.skywalker.DeploymentPackages.model.DeploymentPackage;
 import de.iaas.skywalker.DeploymentPackages.repository.DeploymentPackageRepository;
 import de.iaas.skywalker.MappingModules.repository.MappingModuleRepository;
 import de.iaas.skywalker.MappingModules.model.DeploymentModel;
@@ -82,6 +83,15 @@ public class SkywalkerApplication {
 	}
 
 	private void initRepos() throws IOException {
+		DeploymentPackage deploymentPackage = new DeploymentPackage();
+		deploymentPackage.setId("ThumbnailGeneratorFunction");
+		deploymentPackage.setAnalyzed(false);
+		deploymentPackage.setDeploymentModel(readFileToString(Paths.get("").toAbsolutePath().toString() + "/src/main/resources/packages/thumbnailer/serverless.yml"));
+		deploymentPackage.setFunctions(new HashMap<String, String>(){{
+			put("UploadHandler", readFileToString(Paths.get("").toAbsolutePath().toString() + "/src/main/resources/packages/thumbnailer/src/main/java/xyz/cmueller/serverless/UploadHandler.java"));
+			put("ThumbnailGenerationHandler", readFileToString(Paths.get("").toAbsolutePath().toString() + "/src/main/resources/packages/thumbnailer/src/main/java/xyz/cmueller/serverless/ThumbnailGenerationHandler.java"));
+		}});
+		this.deploymentPackageRepository.save(deploymentPackage);
 
 		DeploymentModel dm = new DeploymentModel();
 		dm.setName("serverless.yml");

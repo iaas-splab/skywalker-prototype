@@ -27,8 +27,8 @@ public class DiscoveryHelper {
         return line+annotation+match;
     }
 
-    public void annotateHandler(String filePath, String fileName, Set<String> criticalLines) throws IOException {
-        BufferedReader buf = new BufferedReader(new FileReader(filePath + fileName));
+    public File annotateHandler(String filePath, String fileName, Set<String> criticalLines) throws IOException {
+        BufferedReader buf = new BufferedReader(new FileReader(filePath + fileName + ".java"));
         String line;
         StringBuilder sb = new StringBuilder();
         while((line = buf.readLine()) != null) {
@@ -37,9 +37,10 @@ public class DiscoveryHelper {
             }
             sb.append(line + LINE_BREAK);
         }
-
-        FileWriter fw = new FileWriter(new File(DESTINATION_PATH + fileName));
+        File analyzedFunction = new File(DESTINATION_PATH + fileName);
+        FileWriter fw = new FileWriter(analyzedFunction);
         fw.write(sb.toString());
         fw.close();
+        return analyzedFunction;
     }
 }

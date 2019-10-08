@@ -1,0 +1,18 @@
+<mat-expansion-panel class="dracula-code">
+  <mat-expansion-panel-header>
+    <mat-panel-title>Package</mat-panel-title>
+    <mat-panel-description>Input of available deployment package</mat-panel-description>
+  </mat-expansion-panel-header>
+  <form #packageForm="ngForm" (ngSubmit)="onUpload()">
+    <div>
+      <p>Upload an already existing package to the repository.</p>
+    </div>
+    <div>
+      <input required ngModel name="fileInput" type="file" (change)="onFileSelected($event)">
+    </div>
+    <mat-action-row>
+      <button [routerLink]="['/app-deployment-packages-list']" mat-button type="submit" [disabled]="packageForm.invalid" (click)="onUpload()">Submit</button>
+    </mat-action-row>
+  </form>
+
+</mat-expansion-panel>
