@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.amazonaws.services.lambda.runtime.Context; // <====================================================={Context}
-import com.amazonaws.services.lambda.runtime.RequestHandler; // <======================================={RequestHandler}
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent; // <======{APIGatewayProxyRequestEvent}
-import com.amazonaws.services.s3.AmazonS3Client; // <==================================================={AmazonS3Client}
-import com.amazonaws.services.s3.model.ObjectMetadata; // <============================================={ObjectMetadata}
-import com.amazonaws.services.s3.model.PutObjectResult; // <==========================================={PutObjectResult}
-import com.amazonaws.util.Base64; // <=========================================================================={Base64}
+import com.amazonaws.services.lambda.runtime.Context; // <========================================={Context}
+import com.amazonaws.services.lambda.runtime.RequestHandler; // <==========================={RequestHandler}
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent; // <====={APIGatewayProxyRequestEvent}
+import com.amazonaws.services.s3.AmazonS3Client; // <======================================={AmazonS3Client}
+import com.amazonaws.services.s3.model.ObjectMetadata; // <================================={ObjectMetadata}
+import com.amazonaws.services.s3.model.PutObjectResult; // <==============================={PutObjectResult}
+import com.amazonaws.util.Base64; // <=============================================================={Base64}
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
@@ -24,10 +24,10 @@ import static xyz.cmueller.serverless.Config.VALID_MIME_TYPES;
 @SuppressWarnings("unused")
 public class UploadHandler implements RequestHandler<APIGatewayProxyRequestEvent, ApiGatewayResponse> { // <====={RequestHandler} // <====={APIGatewayProxyRequestEvent}
     private static final Logger LOG = LogManager.getLogger(UploadHandler.class);
-    private AmazonS3Client client = new AmazonS3Client(); // <=========================================={AmazonS3Client} // <====={client}
+    private AmazonS3Client client = new AmazonS3Client(); // <=============================={AmazonS3Client} // <====={client}
 
     @Override
-    public ApiGatewayResponse handleRequest(APIGatewayProxyRequestEvent input, Context context) { // <========={Context} // <====={APIGatewayProxyRequestEvent}
+    public ApiGatewayResponse handleRequest(APIGatewayProxyRequestEvent input, Context context) { // <====={Context} // <====={APIGatewayProxyRequestEvent}
         String mimeType = input.getHeaders().getOrDefault("Content-Type", "unset");
         boolean hasFilename = false;
         String filename = "";
@@ -46,11 +46,11 @@ public class UploadHandler implements RequestHandler<APIGatewayProxyRequestEvent
         }
         byte[] body = null;
         try {
-            body = Base64.decode(input.getBody()); // <========================================================={Base64}
+            body = Base64.decode(input.getBody()); // <============================================={Base64}
         } catch (Exception e) {
             e.printStackTrace();
             LOG.error(e);
-            return respond(400, "Body must be Encoded in Base64"); // <========================================={Base64}
+            return respond(400, "Body must be Encoded in Base64"); // <============================={Base64}
         }
 
         if (!hasFilename) {
