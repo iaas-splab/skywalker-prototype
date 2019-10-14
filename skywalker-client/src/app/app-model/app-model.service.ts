@@ -3,6 +3,7 @@ import {Observable} from "rxjs/index";
 import {MappingConfiguration} from "./MappingConfiguration";
 import {HttpClient} from "@angular/common/http";
 import {CoverageEvaluationBundle} from "./CoverageEvaluationBundle";
+import {CoverageModel} from "./CoverageModel";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,10 @@ export class AppModelService {
 
   generate(mappingConfig: MappingConfiguration): Observable<any> {
     return this.http.put(this.appApi + '/', mappingConfig);
+  }
+
+  translate(coverageModel: CoverageModel): Observable<any> {
+    return this.http.post(this.appApi + '/' + 'translation', coverageModel);
   }
 
   evaluatePortability(coverageEvaluationBundle: CoverageEvaluationBundle): Observable<any> {

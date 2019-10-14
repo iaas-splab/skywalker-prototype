@@ -16,6 +16,8 @@ import de.iaas.skywalker.MappingModules.util.ModelMappingUtils;
 import de.iaas.skywalker.TransformationRepositories.model.EventSourceMapping;
 import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
 import de.iaas.skywalker.TransformationRepositories.repository.ServicePropertyMappingRepository;
+import de.iaas.skywalker.Translator.ServerlessFramework.Azure.AzureTemplateGenerator;
+import de.iaas.skywalker.Translator.ServerlessFramework.TemplateGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -77,8 +79,46 @@ public class GenericApplicationModelController {
                 bundle.getTargetPlatformId(),
                 evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources),
                 evaluationHelper.evaluatePlatformCandidateCoverageScore(candidatePlatformEventSources),
-                evaluationHelper.evaluatePropertyCoverageScores(candidatePlatformEventSources)
+                evaluationHelper.evaluatePropertyCoverageScores(candidatePlatformEventSources),
+                bundle.getGam().getOriginalDeploymentModelId()
         );
+    }
+
+    @PostMapping(path = "/translation")
+    public ResponseEntity<Object> translateToTargetPlatformModel(@RequestBody PlatformComparisonModel model) throws IOException {
+        String sourceDeploymentModel = model.getDeploymentModelId();
+        DeploymentModel deploymentModel = this.deploymentModelRepository.findByName(sourceDeploymentModel).get(0);
+
+        if (model.getTargetPlatform().equals("azure")) {
+            TemplateGenerator generator = new AzureTemplateGenerator(deploymentModel, this.serviceMappingRepository, this.servicePropertyMappingRepository);
+            ((AzureTemplateGenerator) generator).translateSourceDeploymentModelToTargetProviderTemplate();
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
+//        ModelMappingUtils utils = new ModelMappingUtils();
+//
+//        List<EventSourceMapping> candidatePlatformServices = this.serviceMappingRepository.findByProvider(bundle.getTargetPlatformId());
+//        Map<String, List<String>> candidatePlatformEventSources = new HashMap<String, List<String>>() {{
+//            for(EventSourceMapping sm : candidatePlatformServices) {
+//                put(sm.getGenericResourceId(), sm.getServiceProperties());
+//            }
+//        }};
+//        candidatePlatformEventSources = utils.generifyEventSourceProperties(candidatePlatformEventSources, this.servicePropertyMappingRepository);
+//
+//        EvaluationHelper evaluationHelper = new EvaluationHelper(bundle.getGam().getEventSources());
+//
+////        Map<String, List<String>> modelTranslationObject = evaluationHelper.getTranslatedTargetModel(
+////                evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources),
+////                this.serviceMappingRepository,
+////                bundle.getTargetPlatformId()
+////        );
+//
+//        return new PlatformComparisonModel(
+//                bundle.getGam().getId(),
+//                bundle.getTargetPlatformId(),
+//                evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources),
+//                evaluationHelper.evaluatePlatformCandidateCoverageScore(candidatePlatformEventSources),
+//                evaluationHelper.evaluatePropertyCoverageScores(candidatePlatformEventSources)
+//        );
     }
 
     @PutMapping(path = "/")
@@ -98,7 +138,7 @@ public class GenericApplicationModelController {
         );
 
         ModelMappingUtils utils = new ModelMappingUtils();
-        GenericApplicationModel GAM = new GenericApplicationModel(mappingConfiguration.getId(), utils.getAppAtPropertiesLevel(appProps));
+        GenericApplicationModel GAM = new GenericApplicationModel(mappingConfiguration.getId(), utils.getAppAtPropertiesLevel(appProps), deploymentModel.getName());
         GAM.setEventSources(utils.generifyEventSourceNames(GAM.getEventSources().entrySet().iterator(), this.serviceMappingRepository));
         GAM.setEventSources(utils.generifyEventSourceProperties(GAM.getEventSources(), this.servicePropertyMappingRepository));
 //        GAM.setFunctions(utils.generifyEventSourceNames(GAM.getFunctions().entrySet().iterator(), this.serviceMappingRepository));

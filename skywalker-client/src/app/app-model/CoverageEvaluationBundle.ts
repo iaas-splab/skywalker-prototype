@@ -3,7 +3,8 @@ import {AppModel} from "./AppModel";
 export class CoverageEvaluationBundle {
   constructor(
     public gam: AppModel,
-    public targetPlatformId: string
+    public targetPlatformId: string,
+    public deploymentModelId: string
   ){}
 
 }

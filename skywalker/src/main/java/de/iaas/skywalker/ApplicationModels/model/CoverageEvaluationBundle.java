@@ -1,7 +1,5 @@
 package de.iaas.skywalker.ApplicationModels.model;
 
-import de.iaas.skywalker.ApplicationModels.model.GenericApplicationModel;
-
 public class CoverageEvaluationBundle {
     private GenericApplicationModel gam;
     private String targetPlatformId;

@@ -12,7 +12,7 @@
     <mat-expansion-panel-header class="right-aligned-header">
       <mat-panel-title class="small-text">{{appModel.id}}</mat-panel-title>
       <mat-panel-description>
-        <button class="dracula-code" mat-button mat-stroked-button (click)="evaluateWithPlatformCandidate(appModel, 'azure')" matTooltip="Evaluate portability to platform candidate">
+        <button class="dracula-code" mat-button mat-stroked-button (click)="evaluateWithPlatformCandidate(appModel, 'azure', appModel.originalDeploymentModelId)" matTooltip="Evaluate portability to platform candidate">
           Evaluate
         </button>
       </mat-panel-description>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CoverageModel } from "../CoverageModel";
 import { DataService } from "../../services/data.service";
+import {AppModelService} from "../app-model.service";
 
 @Component({
   selector: 'app-comparison-view',
@@ -11,7 +12,10 @@ export class ComparisonViewComponent implements OnInit {
 
   private appCoverageModel: CoverageModel;
 
-  constructor(private data: DataService) { }
+  constructor(
+    private data: DataService,
+    private appModelService: AppModelService
+  ) { }
 
   ngOnInit() {
     this.data.currentCoverageModel.subscribe(coverageModel => {
@@ -22,6 +26,12 @@ export class ComparisonViewComponent implements OnInit {
 
   formatCoverageScore(eventCoverage: any) {
     return ((eventCoverage * 100).toString().slice(0,3) + "%").replace(/\.%/g,'%');
+  }
+
+  translateOriginalModel(coverageModel: CoverageModel) {
+    this.appModelService.translate(coverageModel).subscribe(platformSpecificModel => {
+      console.log(platformSpecificModel);
+    });
   }
 
   discoverDataStructureSinceTypescriptIsntAnyBetterThanJavascript() {

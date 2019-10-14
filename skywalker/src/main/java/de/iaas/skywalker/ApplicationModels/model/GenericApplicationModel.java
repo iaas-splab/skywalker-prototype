@@ -16,12 +16,14 @@ public class GenericApplicationModel {
     private Map<String, List<String>> eventSources;
     private Map<String, List<String>> functions;
     private Map<String, List<String>> invokedServices;
+    private String originalDeploymentModelId;
 
-    public GenericApplicationModel(String appName, Map<String, Map<String, List<String>>> appProperties) {
+    public GenericApplicationModel(String appName, Map<String, Map<String, List<String>>> appProperties, String originalDeploymentModelId) {
         this.eventSources = appProperties.get("EventSources");
         this.functions = appProperties.get("Function");
         this.invokedServices = appProperties.get("InvokedSources");
         this.id = appName;
+        this.originalDeploymentModelId = originalDeploymentModelId;
     }
 
     public Map<String, List<String>> getEventSources() {
@@ -54,5 +56,13 @@ public class GenericApplicationModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOriginalDeploymentModelId() {
+        return originalDeploymentModelId;
+    }
+
+    public void setOriginalDeploymentModelId(String originalDeploymentModelId) {
+        this.originalDeploymentModelId = originalDeploymentModelId;
     }
 }
