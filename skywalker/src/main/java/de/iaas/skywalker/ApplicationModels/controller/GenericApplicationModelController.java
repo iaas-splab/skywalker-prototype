@@ -54,7 +54,7 @@ public class GenericApplicationModelController {
     @GetMapping(path = "/")
     public Collection<GenericApplicationModel> get() { return this.genericApplicationModelRepository.findAll(); }
 
-    @PostMapping(path = "/")
+    @PostMapping(path = "/evaluation")
     public PlatformComparisonModel evaluatePortability(@RequestBody CoverageEvaluationBundle bundle) {
         ModelMappingUtils utils = new ModelMappingUtils();
 
@@ -67,12 +67,6 @@ public class GenericApplicationModelController {
         candidatePlatformEventSources = utils.generifyEventSourceProperties(candidatePlatformEventSources, this.servicePropertyMappingRepository);
 
         EvaluationHelper evaluationHelper = new EvaluationHelper(bundle.getGam().getEventSources());
-
-//        Map<String, List<String>> modelTranslationObject = evaluationHelper.getTranslatedTargetModel(
-//                evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources),
-//                this.serviceMappingRepository,
-//                bundle.getTargetPlatformId()
-//        );
 
         return new PlatformComparisonModel(
                 bundle.getGam().getId(),
@@ -91,34 +85,11 @@ public class GenericApplicationModelController {
 
         if (model.getTargetPlatform().equals("azure")) {
             TemplateGenerator generator = new AzureTemplateGenerator(deploymentModel, this.serviceMappingRepository, this.servicePropertyMappingRepository);
-            ((AzureTemplateGenerator) generator).translateSourceDeploymentModelToTargetProviderTemplate();
+            deploymentModel.setBody(((AzureTemplateGenerator) generator).translateSourceDeploymentModelToTargetProviderTemplate());
+            deploymentModel.setName("azure" + "_" + deploymentModel.getName());
+            this.deploymentModelRepository.save(deploymentModel);
         }
         return ResponseEntity.status(HttpStatus.OK).build();
-//        ModelMappingUtils utils = new ModelMappingUtils();
-//
-//        List<EventSourceMapping> candidatePlatformServices = this.serviceMappingRepository.findByProvider(bundle.getTargetPlatformId());
-//        Map<String, List<String>> candidatePlatformEventSources = new HashMap<String, List<String>>() {{
-//            for(EventSourceMapping sm : candidatePlatformServices) {
-//                put(sm.getGenericResourceId(), sm.getServiceProperties());
-//            }
-//        }};
-//        candidatePlatformEventSources = utils.generifyEventSourceProperties(candidatePlatformEventSources, this.servicePropertyMappingRepository);
-//
-//        EvaluationHelper evaluationHelper = new EvaluationHelper(bundle.getGam().getEventSources());
-//
-////        Map<String, List<String>> modelTranslationObject = evaluationHelper.getTranslatedTargetModel(
-////                evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources),
-////                this.serviceMappingRepository,
-////                bundle.getTargetPlatformId()
-////        );
-//
-//        return new PlatformComparisonModel(
-//                bundle.getGam().getId(),
-//                bundle.getTargetPlatformId(),
-//                evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources),
-//                evaluationHelper.evaluatePlatformCandidateCoverageScore(candidatePlatformEventSources),
-//                evaluationHelper.evaluatePropertyCoverageScores(candidatePlatformEventSources)
-//        );
     }
 
     @PutMapping(path = "/")
@@ -141,8 +112,6 @@ public class GenericApplicationModelController {
         GenericApplicationModel GAM = new GenericApplicationModel(mappingConfiguration.getId(), utils.getAppAtPropertiesLevel(appProps), deploymentModel.getName());
         GAM.setEventSources(utils.generifyEventSourceNames(GAM.getEventSources().entrySet().iterator(), this.serviceMappingRepository));
         GAM.setEventSources(utils.generifyEventSourceProperties(GAM.getEventSources(), this.servicePropertyMappingRepository));
-//        GAM.setFunctions(utils.generifyEventSourceNames(GAM.getFunctions().entrySet().iterator(), this.serviceMappingRepository));
-//        GAM.setInvokedServices(utils.generifyEventSourceNames(GAM.getInvokedServices().entrySet().iterator(), this.serviceMappingRepository));
         this.genericApplicationModelRepository.save(GAM);
 
         return ResponseEntity.status(HttpStatus.OK).build();

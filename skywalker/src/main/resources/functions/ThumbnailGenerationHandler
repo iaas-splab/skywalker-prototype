@@ -1,13 +1,13 @@
 
-import com.amazonaws.services.lambda.runtime.Context; // <========================================={Context}
-import com.amazonaws.services.lambda.runtime.RequestHandler; // <==========================={RequestHandler}
-import com.amazonaws.services.lambda.runtime.events.S3Event; // <=================================={S3Event}
-import com.amazonaws.services.s3.AmazonS3Client; // <======================================={AmazonS3Client}
-import com.amazonaws.services.s3.event.S3EventNotification; // <======================={S3EventNotification} // <====={S3Event}
-import com.amazonaws.services.s3.model.ObjectMetadata; // <================================={ObjectMetadata}
-import com.amazonaws.services.s3.model.PutObjectResult; // <==============================={PutObjectResult}
-import com.amazonaws.services.s3.model.S3Object; // <============================================={S3Object}
-import com.amazonaws.util.IOUtils; // <============================================================{IOUtils}
+import com.amazonaws.services.lambda.runtime.Context; // <====================================================={Context}
+import com.amazonaws.services.lambda.runtime.RequestHandler; // <======================================={RequestHandler}
+import com.amazonaws.services.lambda.runtime.events.S3Event; // <=============================================={S3Event}
+import com.amazonaws.services.s3.AmazonS3Client; // <==================================================={AmazonS3Client}
+import com.amazonaws.services.s3.event.S3EventNotification; // <==================================={S3EventNotification} // <====={S3Event}
+import com.amazonaws.services.s3.model.ObjectMetadata; // <============================================={ObjectMetadata}
+import com.amazonaws.services.s3.model.PutObjectResult; // <==========================================={PutObjectResult}
+import com.amazonaws.services.s3.model.S3Object; // <========================================================={S3Object}
+import com.amazonaws.util.IOUtils; // <========================================================================{IOUtils}
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -20,14 +20,14 @@ import static xyz.cmueller.serverless.Config.THUMBNAIL_BUCKET;
 import static xyz.cmueller.serverless.Config.WEBHOOK_URL;
 
 @SuppressWarnings("unused")
-public class ThumbnailGenerationHandler implements RequestHandler<S3Event, Void> { // <====={RequestHandler} // <====={S3Event}
+public class ThumbnailGenerationHandler implements RequestHandler<S3Event, Void> { // <================={RequestHandler} // <====={S3Event}
     private static final Logger LOG = LogManager.getLogger(ThumbnailGenerationHandler.class);
 
     private ObjectMapper mapper = new ObjectMapper();
-    private AmazonS3Client client = new AmazonS3Client(); // <=============================={AmazonS3Client} // <====={client}
+    private AmazonS3Client client = new AmazonS3Client(); // <=========================================={AmazonS3Client} // <====={client}
 
     @Override
-    public Void handleRequest(S3Event input, Context context) { // <==============================={Context} // <====={S3Event}
+    public Void handleRequest(S3Event input, Context context) { // <==========================================={Context} // <====={S3Event}
         StringBuilder bout = new StringBuilder();
 
         for (S3EventNotification.S3EventNotificationRecord record : input.getRecords()) { // <====={S3EventNotification} // <====={S3Event}
@@ -37,7 +37,7 @@ public class ThumbnailGenerationHandler implements RequestHandler<S3Event, Void>
                 S3Object obj = client.getObject(record.getS3().getBucket().getName(), record.getS3().getObject().getKey()); // <====={client} // <====={S3Object}
                 in = obj.getObjectContent();
 
-                byte[] convertedImage = Converter.createThumbnail(IOUtils.toByteArray(in)); // <====={IOUtils}
+                byte[] convertedImage = Converter.createThumbnail(IOUtils.toByteArray(in)); // <==============={IOUtils}
 
                 ByteArrayInputStream tin = new ByteArrayInputStream(convertedImage);
 

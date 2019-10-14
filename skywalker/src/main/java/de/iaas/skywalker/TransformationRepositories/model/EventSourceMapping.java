@@ -21,6 +21,8 @@ public class EventSourceMapping {
         this.id = provider + "_" + genericResourceId + "_" + providerResourceId;
     }
 
+    public EventSourceMapping(){}
+
     public String getId() {
         return id;
     }

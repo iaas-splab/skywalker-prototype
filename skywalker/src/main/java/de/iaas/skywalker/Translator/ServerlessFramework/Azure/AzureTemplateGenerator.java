@@ -6,7 +6,6 @@ import de.iaas.skywalker.TransformationRepositories.model.GenericServiceProperty
 import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
 import de.iaas.skywalker.TransformationRepositories.repository.ServicePropertyMappingRepository;
 import de.iaas.skywalker.Translator.ServerlessFramework.TemplateGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.ByteArrayInputStream;
@@ -19,6 +18,12 @@ public class AzureTemplateGenerator extends TemplateGenerator {
     private DeploymentModel deploymentModel;
     private ServiceMappingRepository serviceMappingRepository;
     private ServicePropertyMappingRepository servicePropertyMappingRepository;
+
+    private static final List<String> SPECIFIC_DECLARATION_BLOCKS = new ArrayList<String>() {{ add("resources"); }};
+    private static final Map<String, String> DEFAULT_PROPERTIES = new HashMap<String, String>() {{
+        put("provider", "azure");
+        put("location", "West US");
+    }};
 
     public AzureTemplateGenerator(DeploymentModel deploymentModel, ServiceMappingRepository serviceMappingRepository, ServicePropertyMappingRepository servicePropertyMappingRepository) {
         this.deploymentModel = deploymentModel;
@@ -38,8 +43,8 @@ public class AzureTemplateGenerator extends TemplateGenerator {
         Map<String, Object> azureConfig = new HashMap<>();
 
         // set azure provider defaults
-        azureConfig.put("name", "azure");
-        azureConfig.put("location", "West US");
+        azureConfig.put("name", DEFAULT_PROPERTIES.get("provider"));
+        azureConfig.put("location", DEFAULT_PROPERTIES.get("location"));
 
         // find generic provider configuration properties in source config
         azureConfig.put("runtime", config.get("runtime"));
@@ -67,36 +72,41 @@ public class AzureTemplateGenerator extends TemplateGenerator {
         return sourceProperties;
     }
 
-    private Map<String, Object> translateToProviderSpecificEvent(Map<String, Object> event) {
-        Map<String, Object> propertiesTemplate = new HashMap<>();
-        List<String> sourceProperties = this.getSourcePlatformEventProperties(event);
-        String sourceEventName = event.keySet().toArray()[0].toString();
-
+    private Map<String, Object> translateToProviderSpecificEvent(Map<String, Object> sourceEvent) {
+        // find the EventResourceMapping entry in ServiceMappingRepository which relates to the target providers
+        // resource mapping for the current event of the source application (sourceEvent).
+        String sourceEventName = sourceEvent.keySet().toArray()[0].toString();
         EventSourceMapping sourceEventMapping = this.serviceMappingRepository.findByProviderResourceId(sourceEventName).get(0);
         List<EventSourceMapping> genericResourceMapping = this.serviceMappingRepository.findByGenericResourceId(sourceEventMapping.getGenericResourceId());
-        String azureResourceId = "";
+        EventSourceMapping azEventSourceMapping = new EventSourceMapping();
         for (EventSourceMapping esm : genericResourceMapping) {
-            if (esm.getProvider().equals("azure")) azureResourceId = esm.getId();
+            if (esm.getProvider().equals(DEFAULT_PROPERTIES.get("provider"))) azEventSourceMapping = this.serviceMappingRepository.findById(esm.getId());
         }
-        EventSourceMapping esm = this.serviceMappingRepository.findById(azureResourceId);
-        String grid = esm.getGenericResourceId();
-        List<String> properties = esm.getServiceProperties();
+        String grid = azEventSourceMapping.getGenericResourceId();
+        List<String> azEventProperties = azEventSourceMapping.getServiceProperties();
 
-        List<GenericServiceProperty> gspList = this.servicePropertyMappingRepository.findByGenericResourceId(grid);
-        for (GenericServiceProperty gsp : gspList) {
+        // get list of properties for source application
+        List<String> sourceProperties = this.getSourcePlatformEventProperties(sourceEvent);
+
+        // workaround for not existing actual point-to-point mapping capabilities of the current state of the repositories
+        Map<String, Object> propertiesTemplate = new HashMap<>();
+        List<GenericServiceProperty> propertyMappingsForCurrentGrid = this.servicePropertyMappingRepository.findByGenericResourceId(grid);
+        for (GenericServiceProperty gsp : propertyMappingsForCurrentGrid) {
             Map<String, List<String>> propertyMapping = gsp.getGenericServicePropertyMap();
             Iterator pmit = propertyMapping.entrySet().iterator();
             while (pmit.hasNext()) {
                 Map.Entry propertyLookup = (Map.Entry) pmit.next();
                 String sourceGrid = (String) propertyLookup.getKey();
-                List<String> gridList = (List<String>) propertyLookup.getValue();
-                for (String p : gridList) {
-                    if (sourceProperties.contains(p)) {
-                        for (String s : properties) {
-                            System.out.println("aws: " + p);
-                            if (gridList.contains(s)) {
-                                System.out.println("azure: " + s);
-                                propertiesTemplate.put(s, "");
+                List<String> providerSpecificEventNames = (List<String>) propertyLookup.getValue();
+
+                // if the source provider-specific event name is in the mapping list of the current generic resource id
+                // then we can look up which of the event names in azEventProperties is also in this mapping list and
+                // replace the source providers event with this.
+                for (String providerEventName : providerSpecificEventNames) {
+                    if (sourceProperties.contains(providerEventName)) {
+                        for (String azEventProperty : azEventProperties) {
+                            if (providerSpecificEventNames.contains(azEventProperty)) {
+                                propertiesTemplate.put(azEventProperty, "");
                             }
                         }
                     }
@@ -107,10 +117,6 @@ public class AzureTemplateGenerator extends TemplateGenerator {
     }
 
     private Map<String, Object> transformEventsToAzure(Map<String, Object> function) {
-        /*
-        * {http={path=upload, method=post}}
-        * {s3={bucket=${self:custom.image_bucket_name}, event=s3:ObjectCreated:*}}
-        * */
         List<Map<String, Object>> translatedEvents = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> events = (List<Map<String, Object>>) function.get("events");
         events.forEach(event -> translatedEvents.add(this.translateToProviderSpecificEvent(event)));
@@ -118,14 +124,12 @@ public class AzureTemplateGenerator extends TemplateGenerator {
         return function;
     }
 
-    public void translateSourceDeploymentModelToTargetProviderTemplate() throws IOException {
+    public String translateSourceDeploymentModelToTargetProviderTemplate() throws IOException {
         Map<String, Object> body = this.loadContent(this.deploymentModel);
-
-        // tranform provider section of the template
         Map<String, Object> providerConfig = (Map<String, Object>) body.get("provider");
-        Map<String, Object> azureProviderConfig = this.transformToAzureProviderConfig(providerConfig);
-        body.put("provider", azureProviderConfig);
-//        System.out.println(body.toString());
+
+        // transform provider section of the template
+        body.put("provider", this.transformToAzureProviderConfig(providerConfig));
 
         // translate functions section
         Map<String, Object> functions = (Map<String, Object>) body.get("functions");
@@ -135,7 +139,12 @@ public class AzureTemplateGenerator extends TemplateGenerator {
         });
         body.put("functions", transformedFunctions);
 
-        System.out.println(body.toString());
+        // remove declaration blocks of other provider-specific resources, e.g., AWS CloudFormation declarations
+        SPECIFIC_DECLARATION_BLOCKS.forEach(excl -> body.remove(excl));
+
+        // dump and return the Hashmap in YAML format
+        Yaml yaml = new Yaml();
+        return yaml.dump(body);
     }
 
 }

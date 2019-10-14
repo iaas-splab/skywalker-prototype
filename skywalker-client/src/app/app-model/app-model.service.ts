@@ -32,6 +32,6 @@ export class AppModelService {
   }
 
   evaluatePortability(coverageEvaluationBundle: CoverageEvaluationBundle): Observable<any> {
-    return this.http.post(this.appApi + '/', coverageEvaluationBundle);
+    return this.http.post(this.appApi + '/evaluation', coverageEvaluationBundle);
   }
 }
