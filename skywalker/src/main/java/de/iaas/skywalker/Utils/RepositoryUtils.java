@@ -38,20 +38,49 @@ public class RepositoryUtils {
     }
 
     public void initDeploymentModelRepository(DeploymentModelRepository deploymentModelRepository) throws IOException {
-        DeploymentModel deploymentModel = new DeploymentModel();
-        deploymentModel.setName("template.yaml");
-        deploymentModel.setBody(readFileToString(
-                Paths.get("").toAbsolutePath().toString() + TEMPLATES + deploymentModel.getName()));
-        deploymentModelRepository.save(deploymentModel);
+        DeploymentModel thumbnailerModel = new DeploymentModel();
+        thumbnailerModel.setName("thumbnail_generation_example.yaml");
+        thumbnailerModel.setBody(readFileToString(
+                Paths.get("").toAbsolutePath().toString() + TEMPLATES + thumbnailerModel.getName()));
+        deploymentModelRepository.save(thumbnailerModel);
+
+        DeploymentModel cronModel = new DeploymentModel();
+        cronModel.setName("cron.yaml");
+        cronModel.setBody(readFileToString(
+                Paths.get("").toAbsolutePath().toString() + TEMPLATES + cronModel.getName()));
+        deploymentModelRepository.save(cronModel);
+
+        DeploymentModel eventProcessingModel = new DeploymentModel();
+        eventProcessingModel.setName("event_processing.yaml");
+        eventProcessingModel.setBody(readFileToString(
+                Paths.get("").toAbsolutePath().toString() + TEMPLATES + eventProcessingModel.getName()));
+        deploymentModelRepository.save(eventProcessingModel);
+
+        DeploymentModel snsModel = new DeploymentModel();
+        snsModel.setName("sns.yaml");
+        snsModel.setBody(readFileToString(
+                Paths.get("").toAbsolutePath().toString() + TEMPLATES + snsModel.getName()));
+        deploymentModelRepository.save(snsModel);
+
+        DeploymentModel serverLessFrameworkTemplateModel = new DeploymentModel();
+        serverLessFrameworkTemplateModel.setName("serverless.yaml");
+        serverLessFrameworkTemplateModel.setBody(readFileToString(
+                Paths.get("").toAbsolutePath().toString() + TEMPLATES + serverLessFrameworkTemplateModel.getName()));
+        deploymentModelRepository.save(serverLessFrameworkTemplateModel);
     }
 
     public void initMappingModuleRepository(MappingModuleRepository mappingModuleRepository) throws IOException {
         MappingModule mappingModule = new MappingModule();
-//        mappingModule.setName("rule_serverless_v2.yaml");
-        mappingModule.setName("rule_sam_v2.yaml");
+        mappingModule.setName("rule_serverless_v2.yaml");
         mappingModule.setBody(readFileToString(
                 Paths.get("").toAbsolutePath().toString() + MAPPINGS + mappingModule.getName()));
         mappingModuleRepository.save(mappingModule);
+
+        MappingModule readmeModule = new MappingModule();
+        readmeModule.setName("rule_manual.yaml");
+        readmeModule.setBody(readFileToString(
+                Paths.get("").toAbsolutePath().toString() + MAPPINGS + readmeModule.getName()));
+        mappingModuleRepository.save(readmeModule);
     }
 
     public void initServiceMappingRepository(ServiceMappingRepository serviceMappingRepository) {
