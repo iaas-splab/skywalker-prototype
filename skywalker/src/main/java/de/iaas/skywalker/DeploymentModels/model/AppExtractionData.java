@@ -1,8 +1,5 @@
 package de.iaas.skywalker.DeploymentModels.model;
 
-//@Entity
-//@Data
-//@NoArgsConstructor
 public class AppExtractionData {
     private String arn;
     private String provider;

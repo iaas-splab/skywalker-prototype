@@ -11,4 +11,5 @@ public interface ServiceMappingRepository extends MongoRepository<EventSourceMap
     List<EventSourceMapping> findByProviderResourceId(String providerResourceId);
     List<EventSourceMapping> findByGenericResourceId(String genericResourceId);
     List<EventSourceMapping> findByProvider(String provider);
+    EventSourceMapping findById(String id);
 }

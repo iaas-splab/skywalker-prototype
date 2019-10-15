@@ -14,19 +14,24 @@ public class PlatformComparisonModel {
     private String targetPlatform;
     private double platformCoverageScore;
     private Map<String, Double> propertyCoverageScores;
+    private String deploymentModelId;
 
     public PlatformComparisonModel(
             String id,
             String targetPlatform,
             Map<String, List<Map<String, String>>> eventSourceCoverage,
             double platformCoverageScore,
-            Map<String, Double> propertyCoverageScores) {
+            Map<String, Double> propertyCoverageScores,
+            String deploymentModelId) {
         this.id = id;
         this.targetPlatform = targetPlatform;
         this.eventSourceCoverage = eventSourceCoverage;
         this.platformCoverageScore = platformCoverageScore;
         this.propertyCoverageScores = propertyCoverageScores;
+        this.deploymentModelId = deploymentModelId;
     }
+
+    public PlatformComparisonModel() {}
 
     public double getPlatformCoverageScore() {
         return platformCoverageScore;
@@ -66,5 +71,13 @@ public class PlatformComparisonModel {
 
     public void setEventSourceCoverage(Map<String, List<Map<String, String>>> eventSourceCoverage) {
         this.eventSourceCoverage = eventSourceCoverage;
+    }
+
+    public String getDeploymentModelId() {
+        return deploymentModelId;
+    }
+
+    public void setDeploymentModelId(String deploymentModelId) {
+        this.deploymentModelId = deploymentModelId;
     }
 }

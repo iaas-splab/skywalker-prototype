@@ -4,6 +4,7 @@ export class AppModel {
     public eventSources: {[key: string]: Array<String>},
     public functions: {[key: string]: Array<String>},
     public invokedServices: {[key: string]: Array<String>},
+    public originalDeploymentModelId: string
 ){}
 
 }

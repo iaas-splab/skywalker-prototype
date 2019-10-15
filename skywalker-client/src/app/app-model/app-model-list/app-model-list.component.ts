@@ -64,8 +64,8 @@ export class AppModelListComponent implements OnInit {
     });
   }
 
-  evaluateWithPlatformCandidate(appModel: AppModel, targetPlatform: any) {
-    let bundle = new CoverageEvaluationBundle(appModel, targetPlatform);
+  evaluateWithPlatformCandidate(appModel: AppModel, targetPlatform: any, deploymentModelId: string) {
+    let bundle = new CoverageEvaluationBundle(appModel, targetPlatform, deploymentModelId);
     this.appModelService.evaluatePortability(bundle).subscribe(data => {
       this.appCoverageModel = data;
       this.data.changeCoverageModel(this.appCoverageModel);

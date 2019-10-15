@@ -14,8 +14,6 @@ import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import de.iaas.skywalker.CodeAnalysis.lambda.javalang.utils.DiscoveryHelper;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,12 +24,12 @@ public class CodeDiscoverer {
 
     private CompilationUnit compiler;
     private List<String> listOfHandlers;
-    private Set<String> criticalStmts = new HashSet<>();
+    private Set<String> criticalStatements = new HashSet<>();
     private Set<String> criticalTerms = new HashSet<>();
     private DiscoveryHelper helper = new DiscoveryHelper();
 
-    public CodeDiscoverer(String filePath, List<String> listOfHandlers) throws FileNotFoundException {
-        this.compiler = StaticJavaParser.parse(new File(filePath));
+    public CodeDiscoverer(String function, List<String> listOfHandlers) {
+        this.compiler = StaticJavaParser.parse(function);
         this.listOfHandlers = listOfHandlers;
     }
 
@@ -44,7 +42,7 @@ public class CodeDiscoverer {
     }
 
     /**
-     * Returns import identifiers which implement provider specific api usage.
+     * Sets import identifiers which implement provider specific api usage as critical terms.
      * These identifiers can be used to track down expressions with provider specific
      * interface type usage, e.g.:
      * - Context (signature of lambda handlers)
@@ -61,6 +59,9 @@ public class CodeDiscoverer {
         });
     }
 
+    /**
+     *
+     */
     public void discoverClassMethods() {
         ClassOrInterfaceDeclaration javaClass =
                 (ClassOrInterfaceDeclaration) this.compiler.getChildNodes().stream()
@@ -83,6 +84,11 @@ public class CodeDiscoverer {
         return isHandler && implementsInterface;
     }
 
+    /**
+     * Discovery of field declarations in a class declaration which can be associated with the usage of provider-specific
+     * SDK.
+     * @param javaClass to be investigated
+     */
     private void collectCriticalFieldDeclarations(ClassOrInterfaceDeclaration javaClass) {
         List<FieldDeclaration> fieldDeclarations = new ArrayList<>();
         for (BodyDeclaration member: javaClass.getMembers()) {
@@ -92,7 +98,7 @@ public class CodeDiscoverer {
             Set<String> buffer = new HashSet<>();
             this.criticalTerms.forEach(type -> {
                 if (field.toString().contains(type)) {
-                    this.criticalStmts.add(field.toString());
+                    this.criticalStatements.add(field.toString());
                     buffer.add(field.getVariable(0).getNameAsString());
                 }
             });
@@ -100,6 +106,11 @@ public class CodeDiscoverer {
         }
     }
 
+    /**
+     * Discovery of field declarations in a method of the current class declaration which can be associated with the
+     * usage of provider-specific SDK.
+     * @param method to be investigated
+     */
     private void collectCriticalClassMethodFieldDeclarations(MethodDeclaration method) {
         NodeList<Statement> statements = method.getBody().get().getStatements();
         Set<String> buffer = new HashSet<>();
@@ -107,7 +118,7 @@ public class CodeDiscoverer {
             if (statement instanceof ExpressionStmt) {
                 this.criticalTerms.forEach(type -> {
                     if (statement.toString().contains(type)) {
-                        this.criticalStmts.add(statement.toString());
+                        this.criticalStatements.add(statement.toString());
                         buffer.add(((VariableDeclarationExpr)
                                 ((ExpressionStmt) statement).getExpression()).getVariables().get(0).getNameAsString());
                     }
@@ -117,13 +128,17 @@ public class CodeDiscoverer {
         this.criticalTerms.addAll(buffer);
     }
 
+    /**
+     * Analyze the method body and extract the lines which contain potential provider-specific SDK usage.
+     * @param method to be analyzed
+     */
     private void discoverClassMethodBody(MethodDeclaration method) {
         NodeList<Statement> statements = method.getBody().get().getStatements();
         for (Statement statement : statements) {
             if (!(statement instanceof ExpressionStmt)) {
                 this.criticalTerms.forEach(type -> {
                     if (statement.toString().contains(type)) {
-                        this.criticalStmts.add(statement.toString());
+                        this.criticalStatements.add(statement.toString());
                     }
                 });
             }
@@ -138,12 +153,21 @@ public class CodeDiscoverer {
         return classMethods;
     }
 
+    /**
+     * Checks if the method is an implementation by checking its annotations (for @Override)
+     * @param method to be checked
+     * @return true if annotation @Override exists for current method, false otherwise
+     */
     private boolean isImplementedMethod(MethodDeclaration method) {
         if (method.getAnnotations().isEmpty()) return false;
         else if (method.getAnnotations().contains("@Override")) return true;
         else return false;
     }
 
+    /**
+     * Discover potential provider-specific SDK usage in the current method header's parameters
+     * @param method to be checked for passed provider-specific parameters
+     */
     private void checkClassMethodHeader(MethodDeclaration method) {
         Set<String> buffer = new HashSet<>();
         for (String term : this.getCriticalTerms()) {

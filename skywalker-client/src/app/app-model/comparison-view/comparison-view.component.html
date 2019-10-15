@@ -1,6 +1,9 @@
 <mat-card class="mat-card-lavender">
   <!--<mat-card-title><h4>Portability to {{appCoverageModel.targetPlatform}}: {{(appCoverageModel.platformCoverageScore*100).toString().slice(0,3)}}%</h4></mat-card-title>-->
   <mat-card-title><h4>Portability to {{appCoverageModel.targetPlatform}}: {{formatCoverageScore(appCoverageModel.platformCoverageScore)}}</h4></mat-card-title>
+  <mat-card-actions>
+    <button mat-stroked-button color="primary" (click)="translateOriginalModel(appCoverageModel)">Translate</button>
+  </mat-card-actions>
 </mat-card>
 
 <mat-accordion *ngFor="let eventSource of appCoverageModel.eventSourceCoverage | keyvalue">
