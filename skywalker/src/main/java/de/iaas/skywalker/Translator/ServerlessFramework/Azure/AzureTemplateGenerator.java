@@ -47,16 +47,20 @@ public class AzureTemplateGenerator extends TemplateGenerator {
      * @return List of property names for the current event mapping
      */
     private List<String> getSourcePlatformEventProperties(Map<String, Object> sourceApplicationEvent) {
-        Map.Entry event = sourceApplicationEvent.entrySet().iterator().next();
-        Map<String, String> properties = (Map<String, String>) event.getValue();
-        return new ArrayList<String>(){{
-            Iterator propertyMap = properties.entrySet().iterator();
-            while (propertyMap.hasNext()) {
-                Map.Entry property = (Map.Entry) propertyMap.next();
-                String pName = (String) property.getKey();
-                add(pName);
-            }
-        }};
+        try {
+            Map.Entry event = sourceApplicationEvent.entrySet().iterator().next();
+            Map<String, String> properties = (Map<String, String>) event.getValue();
+            return new ArrayList<String>(){{
+                Iterator propertyMap = properties.entrySet().iterator();
+                while (propertyMap.hasNext()) {
+                    Map.Entry property = (Map.Entry) propertyMap.next();
+                    String pName = (String) property.getKey();
+                    add(pName);
+                }
+            }};
+        } catch (ClassCastException c) {
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -120,7 +124,9 @@ public class AzureTemplateGenerator extends TemplateGenerator {
                 propertiesTemplate.put(assignableAzProperty, "");
             }
         }
-        Map<String, Object> eventTemplate = new HashMap<String, Object>(){{put(azGRID, propertiesTemplate);}};
+        Map<String, Object> eventTemplate = new HashMap<String, Object>(){{
+            put(azEventSourceMapping.getProviderResourceId(), propertiesTemplate);
+        }};
         return eventTemplate;
     }
 
