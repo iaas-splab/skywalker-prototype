@@ -3,11 +3,13 @@ package de.iaas.skywalker.DeploymentModels.controller;
 import de.iaas.skywalker.DeploymentModels.model.AppExtractionData;
 import de.iaas.skywalker.DeploymentModels.repository.DeploymentModelRepository;
 import de.iaas.skywalker.MappingModules.model.DeploymentModel;
+import de.iaas.skywalker.Utils.ExecUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -24,8 +26,13 @@ public class DeploymentModelController {
     public Collection<DeploymentModel> getAll() { return this.repository.findAll(); }
 
     @PostMapping(path = "/crawl")
-    public ResponseEntity<Object> crawlFromPlatform(@RequestBody AppExtractionData appExtractionData) {
+    public ResponseEntity<Object> crawlFromPlatform(@RequestBody AppExtractionData appExtractionData) throws IOException {
         System.out.println("ARN: " + appExtractionData.getArn() + "\n" + "Provider: " + appExtractionData.getProvider());
+
+        ExecUtils execUtils = new ExecUtils();
+        execUtils.runScript("sh /src/main/crawler/aws/grab_lambdas.sh");
+        execUtils.runScript("sh /src/main/crawler/aws/grab_functions.sh");
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
