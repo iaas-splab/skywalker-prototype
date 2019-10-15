@@ -229,4 +229,31 @@ public class EvaluationHandlerTests {
         assertTrue(result.equals(mockCoverageModelWhenValid));
     }
 
+    @Test
+    public void testGetPlatformCandidateEventCoverageModelWithEmptySetOfSourceAppEventProperties()  {
+        Map<String, List<String>> mockEventSourcesWithEmptySetOfProperties = new HashMap<String, List<String>>() {{
+            put("http", new ArrayList<>());
+            put("storage", new ArrayList<>());
+        }};
+
+        Map<String, List<String>> mockTargetEventSources = new HashMap<String, List<String>>() {{
+            put("http", new ArrayList<String>(){{
+                add("path");
+                add("methods");
+            }});
+            put("storage", new ArrayList<String>(){{
+                add("resourceId");
+                add("events");
+            }});
+        }};
+
+        Map<String, List<Map<String, String>>> mockCoverageModel = new HashMap<String, List<Map<String, String>>>() {{
+            put("http", new ArrayList<Map<String, String>>(){{}});
+            put("storage", new ArrayList<Map<String, String>>(){{}});
+        }};
+        EvaluationHelper evaluationHelper = new EvaluationHelper(mockEventSourcesWithEmptySetOfProperties);
+        Map<String, List<Map<String, String>>> result = evaluationHelper.getPlatformCandidateEventCoverageModel(mockTargetEventSources);
+        assertTrue(result.equals(mockCoverageModel));
+    }
+
 }
