@@ -81,13 +81,13 @@ public class GenericApplicationModelController {
     @PostMapping(path = "/translation")
     public ResponseEntity<Object> translateToTargetPlatformModel(@RequestBody PlatformComparisonModel model) throws IOException {
         String sourceDeploymentModel = model.getDeploymentModelId();
-        DeploymentModel deploymentModel = this.deploymentModelRepository.findByName(sourceDeploymentModel).get(0);
-
+        DeploymentModel deploymentModel = this.deploymentModelRepository.findByName(sourceDeploymentModel).iterator().next();
         if (model.getTargetPlatform().equals("azure")) {
             TemplateGenerator generator = new AzureTemplateGenerator(deploymentModel, this.serviceMappingRepository, this.servicePropertyMappingRepository);
-            deploymentModel.setBody(((AzureTemplateGenerator) generator).translateSourceDeploymentModelToTargetProviderTemplate());
-            deploymentModel.setName("azure" + "_" + deploymentModel.getName());
-            this.deploymentModelRepository.save(deploymentModel);
+            DeploymentModel azDeploymentTemplate = new DeploymentModel();
+            azDeploymentTemplate.setBody(((AzureTemplateGenerator) generator).translateSourceDeploymentModelToTargetProviderTemplate());
+            azDeploymentTemplate.setName("azure" + "_" + deploymentModel.getName());
+            this.deploymentModelRepository.save(azDeploymentTemplate);
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -95,11 +95,8 @@ public class GenericApplicationModelController {
     @PutMapping(path = "/")
     public ResponseEntity<Object> generateApplicationModel(@RequestBody MappingConfiguration mappingConfiguration) throws IOException {
         // get deployment model and mapping model from repository
-        List<DeploymentModel> deploymentModels = this.deploymentModelRepository.findByName(mappingConfiguration.getDeploymentModel());
-        DeploymentModel deploymentModel = ((!(deploymentModels.size() > 1)) ? deploymentModels.get(0) : new DeploymentModel());
-        List<MappingModule> mappingModules =  this.mappingModuleRepository.findByName(mappingConfiguration.getMappingModule());
-        MappingModule mappingModule = ((!(mappingModules.size() > 1)) ? mappingModules.get(0) : new MappingModule());
-
+        DeploymentModel deploymentModel = this.deploymentModelRepository.findByName(mappingConfiguration.getDeploymentModel()).iterator().next();
+        MappingModule mappingModule =  this.mappingModuleRepository.findByName(mappingConfiguration.getMappingModule()).iterator().next();
 
         DeploymentModelMapper mapper = new DeploymentModelMapper(deploymentModel, "mapping.configurations/" + mappingModule.getName());
         ApplicationProperties appProps = new ApplicationProperties(

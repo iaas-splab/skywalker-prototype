@@ -11,18 +11,17 @@ import java.util.*;
 public class DeploymentModelMapper {
 
     private Map<String, Object> deploymentModel;
-    private String ruleFilePath;
+    private String module_path;
 
     private static final String SELECT = "select";
     private static final String ROOT = "root";
     private static final String PATH = "path";
     private static final String VALUE = "value";
     private static final String WHERE = "where";
-    private static final String ARRAY_LIST = "ArrayList";
 
-    public DeploymentModelMapper(DeploymentModel deploymentModel, String ruleFilePath) throws IOException {
+    public DeploymentModelMapper(DeploymentModel deploymentModel, String module_path) throws IOException {
         this.deploymentModel = this.loadHashMap(deploymentModel);
-        this.ruleFilePath = ruleFilePath;
+        this.module_path = module_path;
     }
 
     public DeploymentModelMapper() {}
@@ -36,78 +35,69 @@ public class DeploymentModelMapper {
     }
 
     public Map<String, Object> extractApplicationProperties(String appProperty) {
-        // Read mapping template from config file
-        Map<String, Object> mapping_template = getMappingTemplate();
+        // Read mapping template from config file and limit the scope to the passed appProperty, e.g., 'eventSources'
+        final Map<String, Object> MAPPING_MODULE = (Map<String, Object>) getMappingTemplate().get(appProperty);
 
-        // Limit to mapping rule set for this appProperty of the generic application model
-        mapping_template = (Map<String, Object>) mapping_template.get(appProperty);
-
-        // get SELECT config for mapping the resources
-        Map<String, Object> mapping_config = (Map<String, Object>) mapping_template.get(SELECT);
-        List<String> mapping_config_root = (mapping_config.get(ROOT) != null) ? (List<String>) mapping_config.get(ROOT) : new ArrayList<>();
-        List<String> mapping_config_path = (mapping_config.get(PATH) != null) ? (List<String>) mapping_config.get(PATH) : new ArrayList<>();
+        // Get SELECT config for mapping the resources
+        final Map<String, Object> MAPPING_CONFIG = (Map<String, Object>) MAPPING_MODULE.get(SELECT);
+        final List<String> MAPPING_CONFIG_ROOT = (MAPPING_CONFIG.get(ROOT) != null) ? (List<String>) MAPPING_CONFIG.get(ROOT) : new ArrayList<>();
+        final List<String> MAPPING_CONFIG_PATH = (MAPPING_CONFIG.get(PATH) != null) ? (List<String>) MAPPING_CONFIG.get(PATH) : new ArrayList<>();
 
         // get WHERE config
-        Map<String, Object> statement_config = (mapping_template.get(WHERE) != null) ? (Map<String, Object>) mapping_template.get(WHERE) : new HashMap<>();
-        List<String> statement_path = (statement_config.get(PATH) != null) ? (List<String>) statement_config.get(PATH) : new ArrayList<>();
-        String statement_value = (statement_config.get(VALUE) != null) ? (String) statement_config.get(VALUE) : "";
+        final Map<String, Object> STATEMENT_CONFIG = (MAPPING_MODULE.get(WHERE) != null) ? (Map<String, Object>) MAPPING_MODULE.get(WHERE) : new HashMap<>();
+        final List<String> STATEMENT_PATH = (STATEMENT_CONFIG.get(PATH) != null) ? (List<String>) STATEMENT_CONFIG.get(PATH) : new ArrayList<>();
+        final String STATEMENT_VALUE = (STATEMENT_CONFIG.get(VALUE) != null) ? (String) STATEMENT_CONFIG.get(VALUE) : "";
 
         // first get all resources from the SELECT ROOT
         Map<String, Object> root = this.deploymentModel;
-        for (String node : mapping_config_root) {
-            try {
-                root = (Map<String, Object>) root.get(node);
-            } catch (ClassCastException e) {
-                if (root.get(node).getClass().getSimpleName().equals(ARRAY_LIST))
-                    root = this.handleArrayListCastExceptions(root, node);
-            } finally { if (root==null) return new HashMap<>(); }
+        for (String node : MAPPING_CONFIG_ROOT) {
+            try { root = (Map<String, Object>) root.get(node); }
+            catch (ClassCastException e) {
+                if (root.get(node) instanceof ArrayList) { root = this.handleArrayListCastExceptions(root, node);}
+            }
+            finally { if (root==null) return new HashMap<>(); }
         }
 
         // check WHERE statement inside of the ROOT
         Map<String, Object> results = new HashMap<>();
-        Iterator it = root.entrySet().iterator();
-        while (it.hasNext()) {
+        root.forEach( (key,value) -> {
             String template_value = "";
-            Map.Entry nextRoot = (Map.Entry) it.next();
             Map<String, Object> rootCopy = new HashMap<>();
-            try {
-                rootCopy = (Map<String, Object>) nextRoot.getValue();
-            } catch (ClassCastException e) {
+            try { rootCopy = (Map<String, Object>) value; } // inhalt der potenziellen Lambda function #resourceInhalt
+            catch (ClassCastException e) {
                 try {
-                    List<Map<String, Object>> rootCopyList = (List<Map<String, Object>>) nextRoot.getValue();
+                    List<Map<String, Object>> rootCopyList = (List<Map<String, Object>>) value;
                     for (Map<String, Object> map : rootCopyList) {
                         results.put(map.keySet().iterator().next(), map.entrySet().iterator().next());
                     }
                 } catch (ClassCastException c) {
                     try {
-                        List<String> rootCopyList = (List<String>) nextRoot.getValue();
-                        for (String s : rootCopyList) {
-                            results.put(s, s);
-                        }
-                    } catch (ClassCastException cs) {
-                        results.put((String) nextRoot.getValue(), nextRoot.getValue());
+                        List<String> rootCopyList = (List<String>) value;
+                        for (String s : rootCopyList) { results.put(s, s); }
                     }
+                    catch (ClassCastException cs) { results.put((String) value, value); }
                 }
-            } catch (NullPointerException e) { continue; }
-            for (String node : statement_path) {
+            } catch (NullPointerException e) { return; }
+
+            for (String node : STATEMENT_PATH) {
                 try { rootCopy = (Map<String, Object>) rootCopy.get(node); }
                 catch (ClassCastException e) { template_value = (String) rootCopy.get(node); }
             }
-            if (template_value.equals(statement_value)) {
-                if (mapping_config_path.isEmpty()) { results.put(nextRoot.getKey().toString(), nextRoot.getValue()); }
+            if (template_value.equals(STATEMENT_VALUE)) {
+                if (MAPPING_CONFIG_PATH.isEmpty()) { results.put(key.toString(), value); } // falls nicht explizit anders definiert, adde #resourceInhalt
                 else {
-                    Map<String, Object> thisRootTree = (Map<String, Object>) nextRoot.getValue();
-                    for (String node : mapping_config_path) {
+                    Map<String, Object> thisRootTree = (Map<String, Object>) value;
+                    for (String node : MAPPING_CONFIG_PATH) {
                         try { thisRootTree = (Map<String, Object>) thisRootTree.get(node); }
                         catch (ClassCastException e) {
-                            if (thisRootTree.get(node).getClass().getSimpleName().equals(ARRAY_LIST))
+                            if (thisRootTree.get(node) instanceof ArrayList)
                                 thisRootTree = this.handleArrayListCastExceptions(thisRootTree, node);
                         }
                     }
                     results.putAll(thisRootTree);
                 }
             }
-        }
+        });
         return results;
     }
 
@@ -115,7 +105,7 @@ public class DeploymentModelMapper {
         Yaml yaml = new Yaml();
         InputStream inputStream = this.getClass()
                 .getClassLoader()
-                .getResourceAsStream(this.ruleFilePath);
+                .getResourceAsStream(this.module_path);
         return yaml.load(inputStream);
     }
 

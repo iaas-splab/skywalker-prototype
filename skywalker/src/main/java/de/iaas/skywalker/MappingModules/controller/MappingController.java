@@ -27,10 +27,8 @@ public class MappingController {
         this.mappingModuleRepository.deleteByName(module.getName()); // TOdo: crashes when already existing mapping module is tried to be added again
         if(this.mappingModuleRepository.findByName(module.getName()) != null) this.mappingModuleRepository.save(module);
         String currentPath = Paths.get("").toAbsolutePath().toString() + "\\src\\main\\resources";
-        try {
-            FileWriter fw = new FileWriter(currentPath + "\\mapping.configurations\\" + module.getName());
+        try (FileWriter fw = new FileWriter(currentPath + "\\mapping.configurations\\" + module.getName())) {
             fw.write(module.getBody());
-            fw.close();
         } catch (Exception e) {
             System.out.println(e);
         } finally {}
