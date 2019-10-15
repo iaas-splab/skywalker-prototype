@@ -33,6 +33,10 @@ public class CodeDiscoverer {
         this.listOfHandlers = listOfHandlers;
     }
 
+    public CodeDiscoverer(String function) {
+        this.compiler = StaticJavaParser.parse(function);
+    }
+
     public Set<String> getCriticalTerms() {
         return criticalTerms;
     }
@@ -59,9 +63,6 @@ public class CodeDiscoverer {
         });
     }
 
-    /**
-     *
-     */
     public void discoverClassMethods() {
         ClassOrInterfaceDeclaration javaClass =
                 (ClassOrInterfaceDeclaration) this.compiler.getChildNodes().stream()

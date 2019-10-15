@@ -1,0 +1,18 @@
+service: thumbnail-generator
+custom: {image_bucket_name: cmueller-tgen-images, thumb_bucket_name: cmueller-tgen-thumbnails}
+provider:
+  environment: {IMAGE_UPLOAD_BUCKET: '${self:custom.image_bucket_name}', THUMBNAIL_BUCKET: '${self:custom.thumb_bucket_name}'}
+  stage: dev
+  name: azure
+  runtime: java8
+  location: West US
+package: {artifact: target/thumbnail-generator-dev.jar}
+functions:
+  thumbnail-generator:
+    handler: xyz.cmueller.serverless.ThumbnailGenerationHandler
+    events:
+    - blob: {path: ''}
+  upload:
+    handler: xyz.cmueller.serverless.UploadHandler
+    events:
+    - http: {route: '', methods: ''}
