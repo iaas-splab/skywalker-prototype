@@ -1,26 +1,13 @@
 package de.iaas.skywalker.ApplicationModels.util;
 
-import de.iaas.skywalker.TransformationRepositories.model.EventSourceMapping;
-import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
-
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class EvaluationHelper {
 
     private Map<String, List<String>> sourceApplicationEvents;
-    private DecimalFormat format = new DecimalFormat("00.##");
 
     public EvaluationHelper(Map<String, List<String>> sourceApplicationEvents) {
-        this.sourceApplicationEvents = sourceApplicationEvents;
-    }
-
-    public Map<String, List<String>> getSourceApplicationEvents() {
-        return sourceApplicationEvents;
-    }
-
-    public void setSourceApplicationEvents(Map<String, List<String>> sourceApplicationEvents) {
         this.sourceApplicationEvents = sourceApplicationEvents;
     }
 
@@ -85,10 +72,8 @@ public class EvaluationHelper {
      *                             applicable for the selected target platform.
      * @return Map of coverage scores for each event type that gets compared on the source application and target platform
      */
-    public Map<String, Double> evaluteEventCoverageScores(Map<String, List<String>> targetPlatformEvents) {
+    public Map<String, Double> evaluateEventCoverageScores(Map<String, List<String>> targetPlatformEvents) {
         Map<String, Double> eventCoverageScores = new HashMap<>();
-        double weight = 1.0 / this.sourceApplicationEvents.size();
-
         Iterator sEvents = this.sourceApplicationEvents.entrySet().iterator();
         while (sEvents.hasNext()) {
             Map.Entry sEvent = (Map.Entry) sEvents.next();
@@ -97,35 +82,10 @@ public class EvaluationHelper {
             if (targetPlatformEvents.containsKey(sGRID)) {
                 double eventSimilarity = this.evaluateEventSimilarity(sProperties, targetPlatformEvents.get(sGRID));
                 eventCoverageScores.put(sGRID, eventSimilarity);
-            } else {
-                eventCoverageScores.put(sGRID, 0.0);
             }
+            else { eventCoverageScores.put(sGRID, 0.0); }
         }
         return eventCoverageScores;
-    }
-
-    public Map<String, List<String>> getTranslatedTargetModel(Map<String, List<Map<String, String>>> coverageModel, ServiceMappingRepository repository, String provider) {
-        Map<String, List<String>> targetEventSources = new HashMap<String, List<String>>();
-        Iterator coverageModelIt = coverageModel.entrySet().iterator();
-        while(coverageModelIt.hasNext()) {
-            Map.Entry coverageModelEntry = (Map.Entry) coverageModelIt.next();
-            List<Map<String, String>> value = (List<Map<String, String>>) coverageModelEntry.getValue();
-            for (Map<String, String> prop : value) {
-                Iterator iti = prop.entrySet().iterator();
-                while(iti.hasNext()) {
-                    Map.Entry pair = (Map.Entry) iti.next();
-                    if(!pair.getValue().equals("-")) {
-                        List<EventSourceMapping> esm = repository.findByGenericResourceId(coverageModelEntry.getKey().toString());
-                        for (EventSourceMapping e : esm) {
-                            if (e.getProvider().equals(provider)) {
-                                targetEventSources.put(e.getProviderResourceId(), e.getServiceProperties());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return targetEventSources;
     }
 
     /**
@@ -145,7 +105,6 @@ public class EvaluationHelper {
 
         Iterator sourceApplicationEvents = this.sourceApplicationEvents.entrySet().iterator();
         while(sourceApplicationEvents.hasNext()) {
-            List<Map<String, String>> propCoverageList = new ArrayList<>();
             Map.Entry sEvent = (Map.Entry) sourceApplicationEvents.next();
             String sGRID = (String) sEvent.getKey();
             List<String> sProperties = (List<String>) sEvent.getValue();

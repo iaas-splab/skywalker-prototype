@@ -139,7 +139,7 @@ public class AzureTemplateGenerator extends TemplateGenerator {
      */
     public String translateSourceDeploymentModelToTargetProviderTemplate() throws IOException {
         DeploymentModelMapper dm = new DeploymentModelMapper();
-        Map<String, Object> body = dm.loadHashMap(this.deploymentModel);
+        Map<String, Object> body = dm.load_deployment_model(this.deploymentModel);
         Map<String, Object> providerConfig = (Map<String, Object>) body.get("provider");
 
         // Transform provider section of the template

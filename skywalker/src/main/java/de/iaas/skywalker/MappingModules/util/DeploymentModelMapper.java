@@ -20,13 +20,13 @@ public class DeploymentModelMapper {
     private static final String WHERE = "where";
 
     public DeploymentModelMapper(DeploymentModel deploymentModel, String module_path) throws IOException {
-        this.deploymentModel = this.loadHashMap(deploymentModel);
+        this.deploymentModel = this.load_deployment_model(deploymentModel);
         this.module_path = module_path;
     }
 
     public DeploymentModelMapper() {}
 
-    public Map<String, Object> loadHashMap(DeploymentModel deploymentModel) throws IOException {
+    public Map<String, Object> load_deployment_model(DeploymentModel deploymentModel) throws IOException {
         Yaml yaml = new Yaml();
         InputStream inputStream = new ByteArrayInputStream(deploymentModel.getBody().getBytes());
         Map<String, Object> templateMap = yaml.load(inputStream);
@@ -34,9 +34,17 @@ public class DeploymentModelMapper {
         return templateMap;
     }
 
+    private Map<String, Object> load_mapping_module() {
+        Yaml yaml = new Yaml();
+        InputStream inputStream = this.getClass()
+                .getClassLoader()
+                .getResourceAsStream(this.module_path);
+        return yaml.load(inputStream);
+    }
+
     public Map<String, Object> extractApplicationProperties(String appProperty) {
         // Read mapping template from config file and limit the scope to the passed appProperty, e.g., 'eventSources'
-        final Map<String, Object> MAPPING_MODULE = (Map<String, Object>) getMappingTemplate().get(appProperty);
+        final Map<String, Object> MAPPING_MODULE = (Map<String, Object>) load_mapping_module().get(appProperty);
 
         // Get SELECT config for mapping the resources
         final Map<String, Object> MAPPING_CONFIG = (Map<String, Object>) MAPPING_MODULE.get(SELECT);
@@ -63,7 +71,7 @@ public class DeploymentModelMapper {
         root.forEach( (key,value) -> {
             String template_value = "";
             Map<String, Object> rootCopy = new HashMap<>();
-            try { rootCopy = (Map<String, Object>) value; } // inhalt der potenziellen Lambda function #resourceInhalt
+            try { rootCopy = (Map<String, Object>) value; }
             catch (ClassCastException e) {
                 try {
                     List<Map<String, Object>> rootCopyList = (List<Map<String, Object>>) value;
@@ -84,7 +92,7 @@ public class DeploymentModelMapper {
                 catch (ClassCastException e) { template_value = (String) rootCopy.get(node); }
             }
             if (template_value.equals(STATEMENT_VALUE)) {
-                if (MAPPING_CONFIG_PATH.isEmpty()) { results.put(key.toString(), value); } // falls nicht explizit anders definiert, adde #resourceInhalt
+                if (MAPPING_CONFIG_PATH.isEmpty()) { results.put(key.toString(), value); }
                 else {
                     Map<String, Object> thisRootTree = (Map<String, Object>) value;
                     for (String node : MAPPING_CONFIG_PATH) {
@@ -101,25 +109,21 @@ public class DeploymentModelMapper {
         return results;
     }
 
-    private Map<String, Object> getMappingTemplate() {
-        Yaml yaml = new Yaml();
-        InputStream inputStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream(this.module_path);
-        return yaml.load(inputStream);
-    }
-
     private Map<String, Object> handleArrayListCastExceptions(Map<String, Object> root, String node) {
         Map<String, Object> tempTree = new HashMap<>();
         try {
-            for(Map<String, Object> property : (List<Map<String, Object>>) root.get(node)) {
+            for(Map<String, Object> property : (List<Map<String, Object>>) root.get(node)){
                 tempTree.putAll(property);
             }
-        } catch (ClassCastException cMap) {
+        }
+        catch (ClassCastException wasNotAListOfHashMaps) {
             try {
-                for(String property : (List<String>) root.get(node)) { tempTree.put(property, property); }
-            } catch (ClassCastException cList) {
-                cList.printStackTrace();
+                for(String property : (List<String>) root.get(node)) {
+                    tempTree.put(property, property);
+                }
+            }
+            catch (ClassCastException wasNotAStringList) {
+                wasNotAStringList.printStackTrace();
             }
         }
         return tempTree;
