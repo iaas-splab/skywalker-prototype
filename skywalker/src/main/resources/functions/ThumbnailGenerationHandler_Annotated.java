@@ -1,3 +1,12 @@
+package xyz.cmueller.serverless;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context; // <====================================================={Context}
 import com.amazonaws.services.lambda.runtime.RequestHandler; // <======================================={RequestHandler}
