@@ -72,8 +72,8 @@ public class GenericApplicationModelController {
                 bundle.getGam().getId(),
                 bundle.getTargetPlatformId(),
                 evaluationHelper.getPlatformCandidateEventCoverageModel(candidatePlatformEventSources),
-                evaluationHelper.evaluatePlatformCandidateCoverageScore(candidatePlatformEventSources),
-                evaluationHelper.evaluatePropertyCoverageScores(candidatePlatformEventSources),
+                evaluationHelper.evaluateTargetPlatformCoverageScore(candidatePlatformEventSources),
+                evaluationHelper.evaluteEventCoverageScores(candidatePlatformEventSources),
                 bundle.getGam().getOriginalDeploymentModelId()
         );
     }

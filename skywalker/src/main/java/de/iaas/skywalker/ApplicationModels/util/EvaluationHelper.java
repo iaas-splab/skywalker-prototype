@@ -2,7 +2,6 @@ package de.iaas.skywalker.ApplicationModels.util;
 
 import de.iaas.skywalker.TransformationRepositories.model.EventSourceMapping;
 import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
-import org.hibernate.event.spi.EventSource;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -10,26 +9,34 @@ import java.util.stream.Collectors;
 
 public class EvaluationHelper {
 
-    private Map<String, List<String>> sourceApplicationEventSources;
+    private Map<String, List<String>> sourceApplicationEvents;
     private DecimalFormat format = new DecimalFormat("00.##");
 
-    public EvaluationHelper(Map<String, List<String>> sourceApplicationEventSources) {
-        this.sourceApplicationEventSources = sourceApplicationEventSources;
+    public EvaluationHelper(Map<String, List<String>> sourceApplicationEvents) {
+        this.sourceApplicationEvents = sourceApplicationEvents;
     }
 
-    public Map<String, List<String>> getSourceApplicationEventSources() {
-        return sourceApplicationEventSources;
+    public Map<String, List<String>> getSourceApplicationEvents() {
+        return sourceApplicationEvents;
     }
 
-    public void setSourceApplicationEventSources(Map<String, List<String>> sourceApplicationEventSources) {
-        this.sourceApplicationEventSources = sourceApplicationEventSources;
+    public void setSourceApplicationEvents(Map<String, List<String>> sourceApplicationEvents) {
+        this.sourceApplicationEvents = sourceApplicationEvents;
     }
 
-    private double evaluateServiceSimilarity(List<String> sourceProperties, List<String> targetProperties) {
-        double propertyWeight = 1.0 / sourceProperties.size();
+    /**
+     * Compares the set of properties for one specific event type for both source application and target platform and
+     * returns the relative coverage.
+     *
+     * @param sourceAppEventProperties Properties of the current event type for the source application
+     * @param targetPlatformEventProperties Properties of the current event type at the event source of the target platform
+     * @return The relative similarity score of the event with respect to the coverage of available event properties.
+     */
+    private double evaluateEventSimilarity(List<String> sourceAppEventProperties, List<String> targetPlatformEventProperties) {
+        double weight = 1.0 / sourceAppEventProperties.size();
         double coverage = 0.0;
-        for(String sProp : sourceProperties) {
-            if(targetProperties.stream().anyMatch(tProp -> tProp.equals(sProp))) coverage += propertyWeight;
+        for(String sProp : sourceAppEventProperties) {
+            if(targetPlatformEventProperties.stream().anyMatch(tProp -> tProp.equals(sProp))) coverage += weight;
         }
         return coverage;
     }
@@ -45,38 +52,56 @@ public class EvaluationHelper {
         return propertyCoverageList;
     }
 
-    public double evaluatePlatformCandidateCoverageScore(Map<String, List<String>> candidatePlatformServices) {
-        double serviceWeight = 1.0 / this.sourceApplicationEventSources.size();
-        double platformCoverage = 0.0;
-        Iterator sourceServices = this.sourceApplicationEventSources.entrySet().iterator();
-        while(sourceServices.hasNext()) {
-            Map.Entry sService = (Map.Entry) sourceServices.next();
-            String sGRID = (String) sService.getKey();
-            List<String> sProperties = (List<String>) sService.getValue();
-            if(candidatePlatformServices.containsKey(sGRID)) {
-                platformCoverage += serviceWeight * this.evaluateServiceSimilarity(sProperties, candidatePlatformServices.get(sGRID));
+    /**
+     * Compares the event sources in the source application with those available for the selected target platform and
+     * returns a score which represents the relative coverage of their similarity.
+     *
+     * @param targetPlatformEvents Map of generic resources each with a list of generic properties which are
+     *                             applicable for the selected target platform.
+     *
+     * @return The relative similarity score of the events in the source application and the target platform with respect
+     * to their properties.
+     */
+    public double evaluateTargetPlatformCoverageScore(Map<String, List<String>> targetPlatformEvents) {
+        double weight = 1.0 / this.sourceApplicationEvents.size();
+        double coverage = 0.0;
+        Iterator sEvents = this.sourceApplicationEvents.entrySet().iterator();
+        while(sEvents.hasNext()) {
+            Map.Entry sEvent = (Map.Entry) sEvents.next();
+            String sGRID = (String) sEvent.getKey();
+            List<String> sProperties = (List<String>) sEvent.getValue();
+            if(targetPlatformEvents.containsKey(sGRID)) {
+                coverage += weight * this.evaluateEventSimilarity(sProperties, targetPlatformEvents.get(sGRID));
             }
         }
-        return platformCoverage;
+        return coverage;
     }
 
-    public Map<String, Double> evaluatePropertyCoverageScores(Map<String, List<String>> candidatePlatformEventSources) {
-        Map<String, Double> serviceCoverageScores = new HashMap<>();
-        double serviceWeight = 1.0 / this.sourceApplicationEventSources.size();
+    /**
+     * Compares the event sources in the source application with those available for the selected target platform and
+     * returns a map of event types and their coverage scores with respect to their properties for each event type.
+     *
+     * @param targetPlatformEvents Map of generic resources each with a list of generic properties which are
+     *                             applicable for the selected target platform.
+     * @return Map of coverage scores for each event type that gets compared on the source application and target platform
+     */
+    public Map<String, Double> evaluteEventCoverageScores(Map<String, List<String>> targetPlatformEvents) {
+        Map<String, Double> eventCoverageScores = new HashMap<>();
+        double weight = 1.0 / this.sourceApplicationEvents.size();
 
-        Iterator sourceServices = this.sourceApplicationEventSources.entrySet().iterator();
-        while (sourceServices.hasNext()) {
-            Map.Entry sService = (Map.Entry) sourceServices.next();
-            String sName = (String) sService.getKey();
-            List<String> sProperties = (List<String>) sService.getValue();
-            if (candidatePlatformEventSources.containsKey(sName)) {
-                double serviceSimilarty = this.evaluateServiceSimilarity(sProperties, candidatePlatformEventSources.get(sName));
-                serviceCoverageScores.put(sName, serviceSimilarty);
+        Iterator sEvents = this.sourceApplicationEvents.entrySet().iterator();
+        while (sEvents.hasNext()) {
+            Map.Entry sEvent = (Map.Entry) sEvents.next();
+            String sGRID = (String) sEvent.getKey();
+            List<String> sProperties = (List<String>) sEvent.getValue();
+            if (targetPlatformEvents.containsKey(sGRID)) {
+                double eventSimilarity = this.evaluateEventSimilarity(sProperties, targetPlatformEvents.get(sGRID));
+                eventCoverageScores.put(sGRID, eventSimilarity);
             } else {
-                serviceCoverageScores.put(sName, 0.0);
+                eventCoverageScores.put(sGRID, 0.0);
             }
         }
-        return serviceCoverageScores;
+        return eventCoverageScores;
     }
 
     public Map<String, List<String>> getTranslatedTargetModel(Map<String, List<Map<String, String>>> coverageModel, ServiceMappingRepository repository, String provider) {
@@ -103,28 +128,39 @@ public class EvaluationHelper {
         return targetEventSources;
     }
 
+    /**
+     * Compares the event sources in the source application with those available for the selected target platform and
+     * returns a map describing their similarities.
+     *
+     * @param targetPlatformEvents Map of generic resources each with a list of generic properties which are
+     *                             applicable for the selected target platform.
+     *
+     * @return Map of generic resources each with a list of mappings in which the generic properties of the source
+     * application event are mapped to the same property of the target platform, if available. Otherwise, the source
+     * property is mapped to "-" to illustrate that there is no counterpart of the property at the event source of the
+     * target platform.
+     */
+    public Map<String, List<Map<String, String>>> getPlatformCandidateEventCoverageModel(Map<String, List<String>> targetPlatformEvents) {
+        Map<String, List<Map<String, String>>> eventSourceCoverageMap = new HashMap<>();
 
-    public Map<String, List<Map<String, String>>> getPlatformCandidateEventCoverageModel(Map<String, List<String>> candidatePlatformEventSources) {
-        Map<String, List<Map<String, String>>> cutSetServices = new HashMap<>();
-
-        Iterator sourceServices = this.sourceApplicationEventSources.entrySet().iterator();
-        while(sourceServices.hasNext()) {
+        Iterator sourceApplicationEvents = this.sourceApplicationEvents.entrySet().iterator();
+        while(sourceApplicationEvents.hasNext()) {
             List<Map<String, String>> propCoverageList = new ArrayList<>();
-            Map.Entry sService = (Map.Entry) sourceServices.next();
-            String sGRID = (String) sService.getKey();
-            List<String> sProperties = (List<String>) sService.getValue();
-            if(candidatePlatformEventSources.containsKey(sGRID)) {
-                cutSetServices.put(
+            Map.Entry sEvent = (Map.Entry) sourceApplicationEvents.next();
+            String sGRID = (String) sEvent.getKey();
+            List<String> sProperties = (List<String>) sEvent.getValue();
+            if(targetPlatformEvents.containsKey(sGRID)) {
+                eventSourceCoverageMap.put(
                         sGRID,
-                        getServicePropertyCoverage(sProperties, candidatePlatformEventSources.get(sGRID))
+                        getServicePropertyCoverage(sProperties, targetPlatformEvents.get(sGRID))
                 );
             } else {
-                cutSetServices.put(
+                eventSourceCoverageMap.put(
                         sGRID,
                         sProperties.stream().map(x -> new HashMap<String, String>(){{put(x, "-");}}).collect(Collectors.toList())
                 );
             }
         }
-        return cutSetServices;
+        return eventSourceCoverageMap;
     }
 }

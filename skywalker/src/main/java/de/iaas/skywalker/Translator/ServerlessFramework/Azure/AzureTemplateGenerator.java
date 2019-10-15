@@ -1,6 +1,7 @@
 package de.iaas.skywalker.Translator.ServerlessFramework.Azure;
 
 import de.iaas.skywalker.MappingModules.model.DeploymentModel;
+import de.iaas.skywalker.MappingModules.util.DeploymentModelMapper;
 import de.iaas.skywalker.TransformationRepositories.model.EventSourceMapping;
 import de.iaas.skywalker.TransformationRepositories.model.GenericServiceProperty;
 import de.iaas.skywalker.TransformationRepositories.repository.ServiceMappingRepository;
@@ -8,10 +9,9 @@ import de.iaas.skywalker.TransformationRepositories.repository.ServicePropertyMa
 import de.iaas.skywalker.Translator.ServerlessFramework.TemplateGenerator;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AzureTemplateGenerator extends TemplateGenerator {
 
@@ -31,89 +31,97 @@ public class AzureTemplateGenerator extends TemplateGenerator {
         this.servicePropertyMappingRepository = servicePropertyMappingRepository;
     }
 
-    private Map<String, Object> loadContent(DeploymentModel deploymentModel) throws IOException {
-        Yaml yaml = new Yaml();
-        InputStream inputStream = new ByteArrayInputStream(deploymentModel.getBody().getBytes());
-        Map<String, Object> templateMap = yaml.load(inputStream);
-        inputStream.close();
-        return templateMap;
-    }
-
     private Map<String, Object> transformToAzureProviderConfig(Map<String, Object> config) {
-        Map<String, Object> azureConfig = new HashMap<>();
-
-        // set azure provider defaults
-        azureConfig.put("name", DEFAULT_PROPERTIES.get("provider"));
-        azureConfig.put("location", DEFAULT_PROPERTIES.get("location"));
-
-        // find generic provider configuration properties in source config
-        azureConfig.put("runtime", config.get("runtime"));
-        azureConfig.put("stage", config.get("stage"));
-        azureConfig.put("environment", config.get("environment"));
-
-        return azureConfig;
+        return new HashMap<String, Object>() {{
+            put("name", DEFAULT_PROPERTIES.get("provider"));             // Set azure provider defaults
+            put("location", DEFAULT_PROPERTIES.get("location"));
+            put("runtime", config.get("runtime"));                       // Find generic provider configuration
+            put("stage", config.get("stage"));                           // properties in source config
+            put("environment", config.get("environment"));
+        }};
     }
 
-    private List<String> getSourcePlatformEventProperties(Map<String, Object> event) {
-        List<String> sourceProperties = new ArrayList<>();
-        Iterator it = event.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            String key = (String) pair.getKey();
-            Map<String, String> value = (Map<String, String>) pair.getValue();
-            Iterator propMap = value.entrySet().iterator();
-            while (propMap.hasNext()) {
-                Map.Entry prop = (Map.Entry) propMap.next();
-                String p = (String) prop.getKey();
-                String pVal = (String) prop.getValue();
-                sourceProperties.add(p);
+    /**
+     * Get a list of properties for the current event type at the source applications platform
+     * @param sourceApplicationEvent Event map to iterate through
+     * @return List of property names for the current event mapping
+     */
+    private List<String> getSourcePlatformEventProperties(Map<String, Object> sourceApplicationEvent) {
+        Map.Entry event = sourceApplicationEvent.entrySet().iterator().next();
+        Map<String, String> properties = (Map<String, String>) event.getValue();
+        return new ArrayList<String>(){{
+            Iterator propertyMap = properties.entrySet().iterator();
+            while (propertyMap.hasNext()) {
+                Map.Entry property = (Map.Entry) propertyMap.next();
+                String pName = (String) property.getKey();
+                add(pName);
+            }
+        }};
+    }
+
+    /**
+     * Find the EventSourceMapping entry in the ServiceMappingRepository for Azure by first finding the generic resource
+     * id (GRID) of the current source application event and subsequently use this GRID to find the entry for Azure.
+     * @param sourceApplicationEvent Map of the source applications current event type and its properties
+     * @return EventSourceMapping of Azure for the current event type
+     */
+    private EventSourceMapping getAzureEventSourceMappingForCurrentEvent(Map<String, Object> sourceApplicationEvent) {
+        String sourceAppEventName = sourceApplicationEvent.keySet().toArray()[0].toString();
+        EventSourceMapping sourceEventMapping = this.serviceMappingRepository.findByProviderResourceId(sourceAppEventName).get(0);
+        List<EventSourceMapping> genericResourceMapping =
+                this.serviceMappingRepository.findByGenericResourceId(sourceEventMapping.getGenericResourceId());
+        for (EventSourceMapping esm : genericResourceMapping) {
+            if (esm.getProvider().equals(DEFAULT_PROPERTIES.get("provider"))) {
+                return this.serviceMappingRepository.findById(esm.getId());
             }
         }
-        return sourceProperties;
+        return null;
     }
 
-    private Map<String, Object> translateToProviderSpecificEvent(Map<String, Object> sourceEvent) {
-        // find the EventResourceMapping entry in ServiceMappingRepository which relates to the target providers
-        // resource mapping for the current event of the source application (sourceEvent).
-        String sourceEventName = sourceEvent.keySet().toArray()[0].toString();
-        EventSourceMapping sourceEventMapping = this.serviceMappingRepository.findByProviderResourceId(sourceEventName).get(0);
-        List<EventSourceMapping> genericResourceMapping = this.serviceMappingRepository.findByGenericResourceId(sourceEventMapping.getGenericResourceId());
-        EventSourceMapping azEventSourceMapping = new EventSourceMapping();
-        for (EventSourceMapping esm : genericResourceMapping) {
-            if (esm.getProvider().equals(DEFAULT_PROPERTIES.get("provider"))) azEventSourceMapping = this.serviceMappingRepository.findById(esm.getId());
-        }
-        String grid = azEventSourceMapping.getGenericResourceId();
+    private boolean hasIntersection(List<String> listA, List<String> listB) {
+        return !listA
+                .stream()
+                .filter(listB::contains)
+                .collect(Collectors.toSet())
+                .isEmpty();
+    }
+
+    /**
+     * Find the corresponding event properties at the target provider by utilizing the source application's properties
+     * and checking for generic property mapping repo entries in which both property lists are contained.
+     * @param sourceApplicationEvent Event map of the source applications current event config
+     * @return Boilerplate for the mapped event at the target provider with empty property values.
+     */
+    private Map<String, Object> translateToProviderSpecificEvent(Map<String, Object> sourceApplicationEvent) {
+        EventSourceMapping azEventSourceMapping = this.getAzureEventSourceMappingForCurrentEvent(sourceApplicationEvent);
+        String azGRID = azEventSourceMapping.getGenericResourceId();
         List<String> azEventProperties = azEventSourceMapping.getServiceProperties();
 
-        // get list of properties for source application
-        List<String> sourceProperties = this.getSourcePlatformEventProperties(sourceEvent);
+        List<String> sourceAppEventProperties = this.getSourcePlatformEventProperties(sourceApplicationEvent);
 
-        // workaround for not existing actual point-to-point mapping capabilities of the current state of the repositories
+        GenericServiceProperty azEventPropertyMapping = this.servicePropertyMappingRepository.findByGenericResourceId(azGRID).iterator().next();
+        Map<String, List<String>> providerPropertyMap = azEventPropertyMapping.getGenericServicePropertyMap();
+        Iterator propertyMappingLookups = providerPropertyMap.entrySet().iterator();
         Map<String, Object> propertiesTemplate = new HashMap<>();
-        List<GenericServiceProperty> propertyMappingsForCurrentGrid = this.servicePropertyMappingRepository.findByGenericResourceId(grid);
-        for (GenericServiceProperty gsp : propertyMappingsForCurrentGrid) {
-            Map<String, List<String>> propertyMapping = gsp.getGenericServicePropertyMap();
-            Iterator pmit = propertyMapping.entrySet().iterator();
-            while (pmit.hasNext()) {
-                Map.Entry propertyLookup = (Map.Entry) pmit.next();
-                String sourceGrid = (String) propertyLookup.getKey();
-                List<String> providerSpecificEventNames = (List<String>) propertyLookup.getValue();
-
-                // if the source provider-specific event name is in the mapping list of the current generic resource id
-                // then we can look up which of the event names in azEventProperties is also in this mapping list and
-                // replace the source providers event with this.
-                for (String providerEventName : providerSpecificEventNames) {
-                    if (sourceProperties.contains(providerEventName)) {
-                        for (String azEventProperty : azEventProperties) {
-                            if (providerSpecificEventNames.contains(azEventProperty)) {
-                                propertiesTemplate.put(azEventProperty, "");
-                            }
-                        }
-                    }
-                }
+        while (propertyMappingLookups.hasNext()) {
+            Map.Entry propertyLookup = (Map.Entry) propertyMappingLookups.next();
+            List<String> assignableProviderSpecificProperties = (List<String>) propertyLookup.getValue();
+            /* if the event's assignable provider specific properties for the current generic property type contains
+             * one of the source application properties, return the property in azEventProperties which is also in this
+             * list and put it in the map of properties for the boilerplate template. */
+            if (this.hasIntersection(assignableProviderSpecificProperties, sourceAppEventProperties)
+                    && this.hasIntersection(assignableProviderSpecificProperties, azEventProperties)) {
+                String assignableAzProperty = assignableProviderSpecificProperties
+                        .stream()
+                        .filter(azEventProperties::contains)
+                        .collect(Collectors.toSet())
+                        .iterator()
+                        .next();
+                propertiesTemplate.put(assignableAzProperty, "");
             }
         }
-        return propertiesTemplate;
+        Map<String, Object> eventTemplate = new HashMap<String, Object>(){{put(azGRID, propertiesTemplate);}};
+        return eventTemplate;
     }
 
     private Map<String, Object> transformEventsToAzure(Map<String, Object> function) {
@@ -124,27 +132,31 @@ public class AzureTemplateGenerator extends TemplateGenerator {
         return function;
     }
 
+    /**
+     * Generation of a boilerplate template for Azure Functions template in format of a Serverless Framework YAML file.
+     * @return YAML formatted string which represents the target platform deployment model's body.
+     * @throws IOException
+     */
     public String translateSourceDeploymentModelToTargetProviderTemplate() throws IOException {
-        Map<String, Object> body = this.loadContent(this.deploymentModel);
+        DeploymentModelMapper dm = new DeploymentModelMapper();
+        Map<String, Object> body = dm.loadHashMap(this.deploymentModel);
         Map<String, Object> providerConfig = (Map<String, Object>) body.get("provider");
 
-        // transform provider section of the template
+        // Transform provider section of the template
         body.put("provider", this.transformToAzureProviderConfig(providerConfig));
 
-        // translate functions section
+        // Translate functions section
         Map<String, Object> functions = (Map<String, Object>) body.get("functions");
         Map<String, Object> transformedFunctions = new HashMap<>();
-        functions.forEach((fName, fBody) -> {
-            transformedFunctions.put(fName, this.transformEventsToAzure((Map<String, Object>) fBody));
-        });
+        functions.forEach((fName, fBody)
+                -> transformedFunctions.put(fName, this.transformEventsToAzure((Map<String, Object>) fBody)));
         body.put("functions", transformedFunctions);
 
-        // remove declaration blocks of other provider-specific resources, e.g., AWS CloudFormation declarations
+        // Remove declaration blocks of other provider-specific resources, e.g., AWS CloudFormation declarations
         SPECIFIC_DECLARATION_BLOCKS.forEach(excl -> body.remove(excl));
 
-        // dump and return the Hashmap in YAML format
-        Yaml yaml = new Yaml();
-        return yaml.dump(body);
+        // Dump and return the Hashmap in YAML format
+        return new Yaml().dump(body);
     }
 
 }

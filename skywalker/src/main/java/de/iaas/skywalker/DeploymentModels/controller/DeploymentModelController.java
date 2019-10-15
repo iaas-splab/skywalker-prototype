@@ -44,7 +44,6 @@ public class DeploymentModelController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
     @DeleteMapping(path = "/")
     public ResponseEntity<Object> deleteAll() {
         this.repository.deleteAll();

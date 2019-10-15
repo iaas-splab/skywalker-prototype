@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-
 public class DeploymentModelMapper {
 
     private Map<String, Object> deploymentModel;
@@ -26,20 +25,14 @@ public class DeploymentModelMapper {
         this.ruleFilePath = ruleFilePath;
     }
 
-    private Map<String, Object> loadHashMap(DeploymentModel deploymentModel) throws IOException {
+    public DeploymentModelMapper() {}
+
+    public Map<String, Object> loadHashMap(DeploymentModel deploymentModel) throws IOException {
         Yaml yaml = new Yaml();
         InputStream inputStream = new ByteArrayInputStream(deploymentModel.getBody().getBytes());
         Map<String, Object> templateMap = yaml.load(inputStream);
         inputStream.close();
         return templateMap;
-    }
-
-    public Map<String, Map<String, Object>> translateIntoGenericModel(List<String> genericPropertyTypes) {
-        Map<String, Map<String, Object>> genericModel = new HashMap<>();
-        for(String genericPropType : genericPropertyTypes) {
-            genericModel.put(genericPropType, this.extractApplicationProperties(genericPropType));
-        }
-        return genericModel;
     }
 
     public Map<String, Object> extractApplicationProperties(String appProperty) {
@@ -57,7 +50,7 @@ public class DeploymentModelMapper {
         // get WHERE config
         Map<String, Object> statement_config = (mapping_template.get(WHERE) != null) ? (Map<String, Object>) mapping_template.get(WHERE) : new HashMap<>();
         List<String> statement_path = (statement_config.get(PATH) != null) ? (List<String>) statement_config.get(PATH) : new ArrayList<>();
-        String statement_value = ((String) statement_config.get(VALUE) != null) ? (String) statement_config.get(VALUE) : "";
+        String statement_value = (statement_config.get(VALUE) != null) ? (String) statement_config.get(VALUE) : "";
 
         // first get all resources from the SELECT ROOT
         Map<String, Object> root = this.deploymentModel;
@@ -92,27 +85,21 @@ public class DeploymentModelMapper {
                             results.put(s, s);
                         }
                     } catch (ClassCastException cs) {
-                        results.put((String) nextRoot.getValue(), (String) nextRoot.getValue());
+                        results.put((String) nextRoot.getValue(), nextRoot.getValue());
                     }
                 }
-            } catch (NullPointerException e) {
-                continue;
-            }
+            } catch (NullPointerException e) { continue; }
             for (String node : statement_path) {
-                try {
-                    rootCopy = (Map<String, Object>) rootCopy.get(node);
-                } catch (ClassCastException e) {
-                    template_value = (String) rootCopy.get(node);
-                }
+                try { rootCopy = (Map<String, Object>) rootCopy.get(node); }
+                catch (ClassCastException e) { template_value = (String) rootCopy.get(node); }
             }
             if (template_value.equals(statement_value)) {
-                if (mapping_config_path.isEmpty()) results.put(nextRoot.getKey().toString(), nextRoot.getValue());
+                if (mapping_config_path.isEmpty()) { results.put(nextRoot.getKey().toString(), nextRoot.getValue()); }
                 else {
                     Map<String, Object> thisRootTree = (Map<String, Object>) nextRoot.getValue();
                     for (String node : mapping_config_path) {
-                        try {
-                            thisRootTree = (Map<String, Object>) thisRootTree.get(node);
-                        } catch (ClassCastException e) {
+                        try { thisRootTree = (Map<String, Object>) thisRootTree.get(node); }
+                        catch (ClassCastException e) {
                             if (thisRootTree.get(node).getClass().getSimpleName().equals(ARRAY_LIST))
                                 thisRootTree = this.handleArrayListCastExceptions(thisRootTree, node);
                         }
@@ -122,28 +109,6 @@ public class DeploymentModelMapper {
             }
         }
         return results;
-    }
-
-    private String stringifyObject(Object object) {
-        String oString = "";
-        try {
-            Map<String, Object> oMap = (Map<String, Object>) object;
-            oString += oMap.keySet().iterator().next() + " { " + this.stringifyObject(oMap.entrySet().iterator().next().getValue());
-        } catch (ClassCastException c) {
-            try {
-                List<Object> oList = (List<Object>) object;
-                for (Object o : oList) {
-                    oString += this.stringifyObject(o);
-                }
-            } catch (ClassCastException cList) {
-                try {
-                    oString += (String) object;
-                } catch (ClassCastException cString) {
-                    cString.printStackTrace();
-                }
-            }
-        }
-        return oString;
     }
 
     private Map<String, Object> getMappingTemplate() {
@@ -157,14 +122,12 @@ public class DeploymentModelMapper {
     private Map<String, Object> handleArrayListCastExceptions(Map<String, Object> root, String node) {
         Map<String, Object> tempTree = new HashMap<>();
         try {
-            for(Map<String, Object> property : (List<Map<String, Object>> ) root.get(node)) {
+            for(Map<String, Object> property : (List<Map<String, Object>>) root.get(node)) {
                 tempTree.putAll(property);
             }
         } catch (ClassCastException cMap) {
             try {
-                for(String property : (List<String> ) root.get(node)) {
-                    tempTree.put(property, property);
-                }
+                for(String property : (List<String>) root.get(node)) { tempTree.put(property, property); }
             } catch (ClassCastException cList) {
                 cList.printStackTrace();
             }
