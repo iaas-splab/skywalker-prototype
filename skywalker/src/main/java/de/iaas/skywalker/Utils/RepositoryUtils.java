@@ -19,8 +19,8 @@ import java.util.List;
 
 public class RepositoryUtils {
 
-    private static final String MAPPINGS = "/src/main/resources/mapping.configurations/rule_serverless_v2.yaml";
-    private static final String TEMPLATES = "/src/main/resources/templates/serverless.yml";
+    private static final String MAPPINGS = "/src/main/resources/mapping.configurations/";
+    private static final String TEMPLATES = "/src/main/resources/templates/";
 
     public void initDeploymentPackageRepository(DeploymentPackageRepository deploymentPackageRepository) throws IOException {
         DeploymentPackage deploymentPackage = new DeploymentPackage();
@@ -38,16 +38,19 @@ public class RepositoryUtils {
     }
 
     public void initDeploymentModelRepository(DeploymentModelRepository deploymentModelRepository) throws IOException {
-        DeploymentModel dm = new DeploymentModel();
-        dm.setName("serverless.yml");
-        dm.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + TEMPLATES));
-        deploymentModelRepository.save(dm);
+        DeploymentModel deploymentModel = new DeploymentModel();
+        deploymentModel.setName("template.yaml");
+        deploymentModel.setBody(readFileToString(
+                Paths.get("").toAbsolutePath().toString() + TEMPLATES + deploymentModel.getName()));
+        deploymentModelRepository.save(deploymentModel);
     }
 
     public void initMappingModuleRepository(MappingModuleRepository mappingModuleRepository) throws IOException {
         MappingModule mappingModule = new MappingModule();
-        mappingModule.setName("rule_serverless_v2.yaml");
-        mappingModule.setBody(readFileToString(Paths.get("").toAbsolutePath().toString() + MAPPINGS));
+//        mappingModule.setName("rule_serverless_v2.yaml");
+        mappingModule.setName("rule_sam_v2.yaml");
+        mappingModule.setBody(readFileToString(
+                Paths.get("").toAbsolutePath().toString() + MAPPINGS + mappingModule.getName()));
         mappingModuleRepository.save(mappingModule);
     }
 
