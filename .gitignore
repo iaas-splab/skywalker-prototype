@@ -37,5 +37,3 @@ transaction-logs
 secrets.yml
 .gradletasknamecache
 .sts4-cache
-skywalker/src/main/resources/mapping.configurations/*.yaml
-skywalker/src/main/resources/templates/*.yaml

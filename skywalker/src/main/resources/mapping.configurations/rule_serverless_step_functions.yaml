@@ -1,0 +1,15 @@
+EventSources:
+  select:
+    root:
+      - functions
+    path:
+      - events
+InvokedServices:
+  select:
+    root:
+      - provider
+      - iamRoleStatements
+Function:
+  select:
+    root:
+      - functions
