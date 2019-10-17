@@ -7,7 +7,7 @@ It comprises an Angular powered frontend and a Spring-based backend with an inte
 ![skywalker](https://github.com/iaas-splab/skywalker-prototype/blob/master/media/system_architecture_generic.PNG)
 
 ### Templates
-*Transient for current session - needs to be added again when rebooting server*
+*- Transient for current session - needs to be added again when rebooting server -*
 * The Deployment Model Templates view provides a list of available deployment models
 * They can be expanded to investigate the body of the deployment model
 * Add more deployment model files via `Add`  
@@ -24,7 +24,7 @@ It comprises an Angular powered frontend and a Spring-based backend with an inte
     delete all models, they will be available again when restarting the server.
     
 ### Modules
-*Transient for current session - needs to be added again when rebooting server*
+*- Transient for current session - needs to be added again when rebooting server -*
 * The Mapping Modules view provides a list of available mapping modules
 * They can be expanded to investigate the body of the mapping module
 * Add more mapping modules via `Add`  
@@ -37,7 +37,7 @@ It comprises an Angular powered frontend and a Spring-based backend with an inte
     delete all models, they will be available again when restarting the server.
         
 ### Models
-*Persisted even when rebooting the server*
+*- Persisted even when rebooting the server -*
 * The Generic Application Models view provides a list of available generic application models
 * They can be expanded and investigated for `Event sources`, `Invoked services` and `Functions`  
     * **Event sources**: Shows all declared event sources in form of generic resource identifiers in the current 
@@ -65,7 +65,7 @@ them
     counterpart for Azure Functions in the same format.
 
 ### ServiceRepo
-*Transient for current session - needs to be added again when rebooting server*
+*- Transient for current session - needs to be added again when rebooting server -*
 * The Service Mapping Repository View provides the table of generic event source mappings
 * Add more mapping rules by clicking `Add`  
     * For creating a new mapping rule, the following fields must be filled out:  
@@ -81,7 +81,7 @@ them
     delete all table data, it will be available again when restarting the server.
 
 ### PropertyRepo
-*Transient for current session - needs to be added again when rebooting server*
+*- Transient for current session - needs to be added again when rebooting server -*
 * The Property Mapping Repository View provides the table of generic event source property mappings
 * Add more mapping rules by clicking `Add`  
     * For creating a new mapping rule, the following fields must be filled out:  
@@ -122,24 +122,23 @@ them
 ## Getting started
 
 ### Prerequisites
-- mongod 4.2.0
-- Java 8
-- JavaParser 3.15.0
-- snakeyaml 1.23
-- Spring Boot 2.1.7.RELEASE
-- Angular CLI 7.1.4
-- Node 10.16.3
-- Angular 7.1.4
+- **mongod** 4.2.0
+- **Java** 8
+- **JavaParser** 3.15.0
+- **snakeyaml** 1.23
+- **Spring Boot** 2.1.7.RELEASE
+- **Angular CLI** 7.1.4
+- **Node** 10.16.3
+- **Angular** 7.1.4
 
 #### Development Environments
 While developing this system, we used the following IDEs/tools:
 * **Visual Studio Code** 1.24.1
-    * Shell 1.7.12
-    * Renderer 58.0.3029.110
-    * Node 7.9.0
+    * *Shell* 1.7.12
+    * *Node* 7.9.0
 * **IntelliJ IDEA** 2018.1.3 (Ultimate Edition)  
-  * **JRE**: 1.8.0_152-release-1136-b38 amd64  
-  * **JVM**: OpenJDK 64-Bit Server VM by JetBrains s.r.o  
+  * *JRE* 1.8.0_152-release-1136-b38 amd64  
+  * *JVM* OpenJDK 64-Bit Server VM by JetBrains s.r.o  
 * **Windows 10 10.0** and **macOS Mojave 10.14**
 
 ### Start database server
