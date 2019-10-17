@@ -207,14 +207,14 @@ The project is divided in a frontend application *skywalker-client* and the serv
             * **util** (optional): Contains helper classes for features, such as, Portability Evaluation, DeploymentModelMapping,
             general mapping services
         * *CodeAnalysis*  
-            * **<platform-name>**  
-                * **<programming-language>**  
+            * **platform-name**  
+                * **programming-language**  
                     * **utils**: package for helper classes
                     * *CodeDiscoverer*: Class for analyzing the function's source code for the current platform in the current
                     programming language
         * *Translator*  
-            * **<format-name>**  
-                * **<platform-name>**: Contains the PlatformGeneration-Adapter class for the selected platform
+            * **format-name**  
+                * **platform-name**: Contains the PlatformGeneration-Adapter class for the selected platform
                 * *TemplateGenerator*: Class which the PlatformGenerators extend from
         * **Utils**  
             * *ExecUtils*: Class for integrating features which are not Java-based and executes them from command line executions
