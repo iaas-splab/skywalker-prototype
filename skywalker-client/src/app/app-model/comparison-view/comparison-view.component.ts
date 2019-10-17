@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CoverageModel } from "../CoverageModel";
 import { DataService } from "../../services/data.service";
 import {AppModelService} from "../app-model.service";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-comparison-view',
@@ -14,7 +15,8 @@ export class ComparisonViewComponent implements OnInit {
 
   constructor(
     private data: DataService,
-    private appModelService: AppModelService
+    private appModelService: AppModelService,
+    public router: Router
   ) { }
 
   ngOnInit() {
@@ -31,6 +33,7 @@ export class ComparisonViewComponent implements OnInit {
   translateOriginalModel(coverageModel: CoverageModel) {
     this.appModelService.translate(coverageModel).subscribe(platformSpecificModel => {
       console.log(platformSpecificModel);
+      this.router.navigate(['template-list']);
     });
   }
 
