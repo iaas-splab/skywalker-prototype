@@ -1,4 +1,4 @@
-# skywalker
+# skywalker-prototype
 ![skywalker](https://github.com/iaas-splab/skywalker-prototype/blob/master/media/skywalker_icon.PNG)  
 Skywalker is a framework to support developers in porting existing FaaS from one provider/platform to another.
 It comprises an Angular powered frontend and a Spring-based backend with an interaction via REST API.
@@ -230,3 +230,10 @@ If there should be any problem in regards of Maven dependencies, please check th
 #### Exclude resources
 In order to push the example data for demonstration purposes, we did not exclude the resources folder in .gitignore.
 However, we highly recommend to exclude them when testing the framework with malformed example files or similar.
+
+## Governance
+Skywalker is a project for a masters thesis at the [Institute of Architecture of Application Systems (IAAS)](https://www.iaas.uni-stuttgart.de/en/) of the University of Stuttgart.
+Until 18.10.2019 it will be maintained by [Ayhan Kaplan](https://github.com/kaplanan). After this point of time, the project will most likely developed by research associates of IAAS.
+
+## License
+Skywalker is free to use and completely open source under Apache License (Version 2.0). See [License](https://github.com/iaas-splab/skywalker-prototype/blob/master/LICENSE) for more information.
