@@ -1,10 +1,10 @@
 # skywalker
-![skywalker](https://github.com/kaplanan/skywalker-prototype/blob/master/media/skywalker_icon.PNG)  
+![skywalker](https://github.com/iaas-splab/skywalker-prototype/blob/master/media/skywalker_icon.PNG)  
 Skywalker is a framework to support developers in porting existing FaaS from one provider/platform to another.
 It comprises an Angular powered frontend and a Spring-based backend with an interaction via REST API.
 
 ## Technical overview
-![skywalker](https://github.com/kaplanan/skywalker-prototype/blob/master/media/system_architecture_generic.PNG)
+![skywalker](https://github.com/iaas-splab/skywalker-prototype/blob/master/media/system_architecture_generic.PNG)
 
 ### Templates
 *Transient for current session - needs to be added again when rebooting server*
@@ -180,7 +180,7 @@ The landing page of the skywalker application can be opened on a web browser at
   > http://localhost:4200/
 
 
-![skywalker](https://github.com/kaplanan/skywalker-prototype/blob/master/media/skywalker_landing_page.PNG)
+![skywalker](https://github.com/iaas-splab/skywalker-prototype/blob/master/media/skywalker_landing_page.PNG)
 
 ## General notes
 #### Preventing live-reload in angular
