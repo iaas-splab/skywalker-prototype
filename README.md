@@ -1,6 +1,6 @@
 # skywalker-prototype
 ![skywalker](https://github.com/iaas-splab/skywalker-prototype/blob/master/media/skywalker_icon.PNG)  
-Skywalker is a framework to support developers in porting existing FaaS from one provider/platform to another.
+Skywalker is a framework to support developers in porting existing FaaS applications from one provider/platform to another.
 It comprises an Angular powered frontend and a Spring-based backend with an interaction via REST API.
 
 ## Technical overview
