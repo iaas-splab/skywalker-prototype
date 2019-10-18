@@ -1,7 +1,7 @@
-# skywalker-prototype
+# skywalker - a framework for stepping over the boundaries of cloud platforms
 ![skywalker](https://github.com/iaas-splab/skywalker-prototype/blob/master/media/skywalker_icon.PNG)  
 Skywalker is a framework to support developers in porting existing FaaS applications from one provider/platform to another.
-It comprises an Angular powered frontend and a Spring-based backend with an interaction via REST API.
+It comprises an [Angular](https://angular.io/) powered frontend and a [Spring-based backend](https://spring.io/projects/spring-boot) with an interaction via REST API.
 
 ## Technical overview
 ![skywalker](https://github.com/iaas-splab/skywalker-prototype/blob/master/media/system_architecture_generic.PNG)
@@ -175,7 +175,7 @@ or simply via
     $ npm start
 ```
 
-The landing page of the skywalker application can be opened on a web browser at  
+The landing page of the skywalker can be accessed on a web browser at  
   > http://localhost:4200/
 
 
@@ -191,41 +191,17 @@ so that the current view which holds temporary data is not reloaded by mistake a
 
 #### Further toolings and CLIs
 The listed prerequisites are for the general functionality of the framework
-* **Crawler** can only be used on UNIX-based systems since it utilizes bash scripts and other dependencies such as `wget`
+* **[Crawler](https://github.com/iaas-splab/skywalker-prototype/tree/master/skywalker/src/main/crawler/aws)** can only be used on UNIX-based systems since it utilizes bash scripts and other dependencies such as `wget`
 * Further, it is mandatory that the corresponding CLI is installed and configured in a way that the user rights are sufficient
 to access the desired resources (in this case `awscli`)
 
 #### Project structure
 The project is divided in a frontend application *skywalker-client* and the server application *skywalker*
-* Inside skywalker, the Features are bundled with respect to their functionality:  
-    * Each service feature is in its own package which contains the following sub-packages: 
-        * *ApplicationModels, DeploymentModels, MappingModules, DeploymentPackages*  
-            * **controller**: RestController which exposes this service to the client application
-            * **model**: Entities and Classes needed for this feature
-            * **repository**: Contains interface of the RepositoryRestResource for CRUD operations
-            * **util** (optional): Contains helper classes for features, such as, Portability Evaluation, DeploymentModelMapping,
-            general mapping services
-        * *CodeAnalysis*  
-            * **platform-name**  
-                * **programming-language**  
-                    * **utils**: package for helper classes
-                    * *CodeDiscoverer*: Class for analyzing the function's source code for the current platform in the current
-                    programming language
-        * *Translator*  
-            * **format-name**  
-                * **platform-name**: Contains the PlatformGeneration-Adapter class for the selected platform
-                * *TemplateGenerator*: Class which the PlatformGenerators extend from
-        * **Utils**  
-            * *ExecUtils*: Class for integrating features which are not Java-based and executes them from command line executions
-            * *RepositoryUtils*: Intializing the repositories with the example data
-    * Under **resources**, the example files are stored which are loaded in *RepositoryUtils*  
-        * **functions**: Here the Java functions are stored
-        * **mapping.configurations**: Here the Mapping Module files are stored
-        * **packages**: Here the Deployment Packages are stored
-        * **templates**: Here the Deployment Model files are stored
+For a detailed view of the project structure and to get an idea of how to extend the capabilities of this framework, take
+a look at the [project structure docs](https://github.com/iaas-splab/skywalker-prototype/blob/master/docs/project_structure/README.md)
 
 #### Dependency management
-If there should be any problem in regards of Maven dependencies, please check them under `skywalker/pom.xml`.
+If there should be any problem in regards of Maven dependencies, please check them under [skywalker/pom.xml](https://github.com/iaas-splab/skywalker-prototype/blob/master/skywalker/pom.xml).
 
 #### Exclude resources
 In order to push the example data for demonstration purposes, we did not exclude the resources folder in .gitignore.
