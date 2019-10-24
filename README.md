@@ -6,7 +6,7 @@ It comprises an [Angular](https://angular.io/) powered frontend and a [Spring-ba
 ## Technical overview
 ![skywalker](https://github.com/iaas-splab/skywalker-prototype/blob/master/media/system_architecture_generic.PNG)
 
-### Templates
+### :zap: Templates :zap: 
 *- Transient for current session - needs to be added again when rebooting server -*
 * The Deployment Model Templates view provides a list of available deployment models
 * They can be expanded to investigate the body of the deployment model
@@ -23,7 +23,7 @@ It comprises an [Angular](https://angular.io/) powered frontend and a [Spring-ba
     * Note that there is a set of examples which will be automatically loaded every time the server reboots. So if you 
     delete all models, they will be available again when restarting the server.
     
-### Modules
+### :zap: Modules :zap: 
 *- Transient for current session - needs to be added again when rebooting server -*
 * The Mapping Modules view provides a list of available mapping modules
 * They can be expanded to investigate the body of the mapping module
@@ -36,7 +36,7 @@ It comprises an [Angular](https://angular.io/) powered frontend and a [Spring-ba
     * Note that there is a set of examples which will be automatically loaded every time the server reboots. So if you 
     delete all models, they will be available again when restarting the server.
         
-### Models
+### :zap: Models :zap: 
 *- Persisted even when rebooting the server -*
 * The Generic Application Models view provides a list of available generic application models
 * They can be expanded and investigated for `Event sources`, `Invoked services` and `Functions`  
@@ -50,7 +50,7 @@ It comprises an [Angular](https://angular.io/) powered frontend and a [Spring-ba
     * Note that there is a set of examples which will be automatically loaded every time the server reboots. So if you 
     delete all table data, it will be available again when restarting the server.
 
-### Evaluation
+### :zap: Evaluation :zap: 
 * When the evaluation is triggered, the current application model is analyzed with a given target platform
 * Currently, this automatically is triggered to compare the model with Azure's platform
 * For each generic event source in the application model, the target platforms supported event sources are compared with 
@@ -64,7 +64,7 @@ them
     Serverless Framework deployment models of AWS Lambda-based applications and generates a boilerplate template of its
     counterpart for Azure Functions in the same format.
 
-### ServiceRepo
+### :zap: ServiceRepo :zap: 
 *- Transient for current session - needs to be added again when rebooting server -*
 * The Service Mapping Repository View provides the table of generic event source mappings
 * Add more mapping rules by clicking `Add`  
@@ -80,7 +80,7 @@ them
     * Note that there is a set of examples which will be automatically loaded every time the server reboots. So if you 
     delete all table data, it will be available again when restarting the server.
 
-### PropertyRepo
+### :zap: PropertyRepo :zap: 
 *- Transient for current session - needs to be added again when rebooting server -*
 * The Property Mapping Repository View provides the table of generic event source property mappings
 * Add more mapping rules by clicking `Add`  
@@ -93,7 +93,7 @@ them
     * Note that there is a set of examples which will be automatically loaded every time the server reboots. So if you 
     delete all table data, it will be available again when restarting the server.
 
-### Packages
+### :zap: Packages :zap: 
 * The Deployment Packages View provides the list of all available deployment packages
 * They can be expanded and investigated for `Deployment Model` and `Functions`  
     * **Deployment Model**:  
